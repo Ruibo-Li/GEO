@@ -8,10 +8,6 @@ def initialboard():
         Line(Point(500 + 30 * i, 100), Point(500 + 30 * i, 400)).draw(window)
         Line(Point(100, 100 + 30 * i), Point(400, 100 + 30 * i)).draw(window)
         Line(Point(500, 100 + 30 * i), Point(800, 100 + 30 * i)).draw(window)
-    Rectangle(Point(425, 200), Point(475, 225)).draw(window)
-    Rectangle(Point(425, 275), Point(475, 300)).draw(window)
-    Text(Point(450, 212.5), 'Start').draw(window)
-    Text(Point(450, 287.5), 'Exit').draw(window)
     return window
 
 def print_board(s,board):
@@ -72,18 +68,16 @@ def user_place_ships(board,ships,win):
 		while(not valid):
 			print_board("u",board)
 			print "Placing a/an " + ship
-			x,y = get_coor(win)
+			x,y = get_coor(win,'l')
 			ori = v_or_h()
 			valid = validate(board,ships[ship],x,y,ori)
 			if not valid:
 				print "Cannot place a ship there.\nPlease take a look at the board and try again."
-				raw_input("Hit ENTER to continue")
 
 		#place the ship
 		board = place_ship(board,ships[ship],ship[0],ori,x,y,win,'u')
 		print_board("u",board)
-		
-	raw_input("Done placing user ships. Hit ENTER to continue")
+
 	return board
 
 
@@ -117,18 +111,18 @@ def place_ship(board,ship,s,ori,x,y,win,u):
 	if ori == "v":
 		x0 = 100+30*y
 		y0 = 100+30*x
-		if u == 'u':
-			for i in range(ship):
-				board[x+i][y] = s
+		for i in range(ship):
+			board[x+i][y] = s
+			if u == 'u':
 				line = Line(Point(x0,y0+i*30),Point(x0+30,y0+i*30+30))
 				line.draw(win)
 
 	elif ori == "h":
 		x0 = 100+30*y
-		y0 = 100+30*x	
-		if u == 'u':	
-			for i in range(ship):
-				board[x][y+i] = s
+		y0 = 100+30*x		
+		for i in range(ship):
+			board[x][y+i] = s
+			if u == 'u':
 				line = Line(Point(x0+i*30,y0),Point(x0+i*30+30,y0+30))
 				line.draw(win)
 
@@ -154,42 +148,24 @@ def validate(board,ship,x,y,ori):
 	return True
 
 def v_or_h():
+    user_input = None
+    direction = GraphWin("Horizontal or Vertical", 350, 100)
+    Rectangle(Point(50, 25), Point(150, 75)).draw(direction)
+    Rectangle(Point(200, 25), Point(300, 75)).draw(direction)
+    Text(Point(100, 50), 'Horizontal').draw(direction)
+    Text(Point(250, 50), 'Vertical').draw(direction)
+    while not user_input:
+        click = direction.getMouse()
+        x, y = click.getX(), click.getY()
+        if 25 < y < 75:
+            if 50 < x < 150:
+                user_input = 'h'
+            elif 200 < x < 300:
+                user_input = 'v'
+    direction.close()
+    return user_input
 
-	#get ship orientation from user
-	while(True):
-		user_input = raw_input("vertical or horizontal (v,h) ? ")
-		if user_input == "v" or user_input == "h":
-			return user_input
-		else:
-			print "Invalid input. Please only enter v or h"
-'''
-def get_coor():
-	
-	while (True):
-		user_input = raw_input("Please enter coordinates (row,col) ? ")
-		try:
-			#see that user entered 2 values seprated by comma
-			coor = user_input.split(",")
-			if len(coor) != 2:
-				raise Exception("Invalid entry, too few/many coordinates.");
-
-			#check that 2 values are integers
-			coor[0] = int(coor[0])-1
-			coor[1] = int(coor[1])-1
-
-			#check that values of integers are between 1 and 10 for both coordinates
-			if coor[0] > 9 or coor[0] < 0 or coor[1] > 9 or coor[1] < 0:
-				raise Exception("Invalid entry. Please use values between 1 to 10 only.")
-
-			#if everything is ok, return coordinates
-			return coor
-		
-		except ValueError:
-			print "Invalid entry. Please enter only numeric values for coordinates"
-		except Exception as e:
-			print e
-'''
-def get_coor(window):
+def get_coor(window,flag):
 
     while True:
         click = window.getMouse()
@@ -203,7 +179,7 @@ def get_coor(window):
 
             count = 0
             for i in xrange(100, 400, 30):
-                if i < x < i + 30 or i + 400 < x < i + 430:
+                if (flag == 'l' and i < x < i + 30) or (flag == 'r' and i + 400 < x < i + 430):
                     coor[1] = count
                     break
                 count = count + 1
@@ -252,7 +228,7 @@ def user_move(board,win):
 	#get coordinates from the user and try to make move
 	#if move is a hit, check ship sunk and win condition
 	while(True):
-		x,y = get_coor(win)
+		x,y = get_coor(win,'r')
 		res = make_move(board,x,y,win,'u')
 		if res == "hit":
 			print "Hit at " + str(x+1) + "," + str(y+1)
@@ -321,6 +297,18 @@ def check_win(board):
 				return False
 	return True
 
+def start_game():
+    start_window = GraphWin('Start Game', 100, 50)
+    Rectangle(Point(20, 15), Point(80, 35)).draw(start_window)
+    Text(Point(50, 25), 'Start').draw(start_window)
+    click = start_window.getMouse()
+    x, y = click.getX(), click.getY()
+    while not (20 < x < 80 and 15 < y < 35):
+        click = start_window.getMouse()
+        x, y = click.getX(), click.getY()
+    start_window.close()
+    print 'Game started. Good luck!'
+
 def main():
 	win = initialboard()
 	#types of ships
@@ -349,10 +337,10 @@ def main():
 	#ship placement
 	user_board = user_place_ships(user_board,ships,win)
 	comp_board = computer_place_ships(comp_board,ships,win)
+	start_game()
 
 	#game main loop
 	while(1):
-
 		#user move
 		print_board("c",comp_board)
 		comp_board = user_move(comp_board,win)
@@ -364,7 +352,6 @@ def main():
 			
 		#display current computer board
 		print_board("c",comp_board)
-		raw_input("To end user turn hit ENTER")
 
 		#computer move
 		user_board = computer_move(user_board,win)
@@ -376,7 +363,6 @@ def main():
 			
 		#display user board
 		print_board("u",user_board)
-		raw_input("To end computer turn hit ENTER")
 	
 if __name__=="__main__":
 	main()
