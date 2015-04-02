@@ -2,45 +2,27 @@ Created by PLY version 3.4 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
-    K_DOUBLE
     NEG
     K_NULL
-    K_TRUE
     K_END
-    K_STRING
     K_IF
     MINUS
     COMMENT
     GEQ
-    K_DICT
-    K_SET
     LT
-    PLUS
     K_EL
-    INTEGER
     NEQ
-    K_TRIANGLE
-    ASSIGN
-    K_CIRCLE
     K_EF
     GT
     DIVIDE
-    K_SHAPE
     K_CONTINUE
     K_WHILE
     TIMES
     K_POINT
-    K_INT
-    K_LIST
     EQ
     AND
-    K_BOOL
-    DOUBLE
     K_DONE
     LEQ
-    K_RECTANGLE
-    K_WINDOW
-    K_FALSE
     OR
     MOD
 
@@ -52,69 +34,108 @@ Rule 2     statement_list -> <empty>
 Rule 3     statement_list -> statement_list statement
 Rule 4     statement -> compound_statement
 Rule 5     compound_statement -> function_call_statement
-Rule 6     function_call_statement -> ID LPAREN parameter_list RPAREN
-Rule 7     function_call_statement -> ID LPAREN RPAREN
-Rule 8     parameter_list -> parameter_list COMMA STRING
-Rule 9     parameter_list -> STRING
+Rule 6     compound_statement -> variable_declaration
+Rule 7     function_call_statement -> ID LPAREN parameter_list RPAREN
+Rule 8     function_call_statement -> ID LPAREN RPAREN
+Rule 9     parameter_list -> parameter_list COMMA expression
+Rule 10    parameter_list -> expression
+Rule 11    variable_declaration -> pre_type_modifier type ID
+Rule 12    variable_declaration -> pre_type_modifier type ID ASSIGN expression
+Rule 13    variable_declaration -> ID ASSIGN expression
+Rule 14    pre_type_modifier -> <empty>
+Rule 15    pre_type_modifier -> K_LIST
+Rule 16    pre_type_modifier -> K_DICT
+Rule 17    pre_type_modifier -> K_SET
+Rule 18    type -> K_INT
+Rule 19    type -> K_DOUBLE
+Rule 20    type -> K_STRING
+Rule 21    type -> K_BOOL
+Rule 22    type -> K_WINDOW
+Rule 23    type -> K_SHAPE
+Rule 24    type -> K_TRIANGLE
+Rule 25    type -> K_RECTANGLE
+Rule 26    type -> K_CIRCLE
+Rule 27    type -> K_TEXT
+Rule 28    expression -> string_expression
+Rule 29    expression -> unary_expression
+Rule 30    string_expression -> string_expression PLUS string_term
+Rule 31    string_expression -> STRING
+Rule 32    string_term -> function_call_statement
+Rule 33    string_term -> STRING
+Rule 34    unary_expression -> ID
+Rule 35    unary_expression -> STRING
+Rule 36    unary_expression -> INTEGER
+Rule 37    unary_expression -> function_call_statement
+Rule 38    unary_expression -> DOUBLE
+Rule 39    unary_expression -> K_TRUE
+Rule 40    unary_expression -> K_FALSE
 
 Terminals, with rules where they appear
 
 AND                  : 
-ASSIGN               : 
-COMMA                : 8
+ASSIGN               : 12 13
+COMMA                : 9
 COMMENT              : 
 DIVIDE               : 
-DOUBLE               : 
+DOUBLE               : 38
 EQ                   : 
 GEQ                  : 
 GT                   : 
-ID                   : 6 7
-INTEGER              : 
-K_BOOL               : 
-K_CIRCLE             : 
+ID                   : 7 8 11 12 13 34
+INTEGER              : 36
+K_BOOL               : 21
+K_CIRCLE             : 26
 K_CONTINUE           : 
-K_DICT               : 
+K_DICT               : 16
 K_DONE               : 
-K_DOUBLE             : 
+K_DOUBLE             : 19
 K_EF                 : 
 K_EL                 : 
 K_END                : 
-K_FALSE              : 
+K_FALSE              : 40
 K_IF                 : 
-K_INT                : 
-K_LIST               : 
+K_INT                : 18
+K_LIST               : 15
 K_NULL               : 
 K_POINT              : 
-K_RECTANGLE          : 
-K_SET                : 
-K_SHAPE              : 
-K_STRING             : 
-K_TRIANGLE           : 
-K_TRUE               : 
+K_RECTANGLE          : 25
+K_SET                : 17
+K_SHAPE              : 23
+K_STRING             : 20
+K_TEXT               : 27
+K_TRIANGLE           : 24
+K_TRUE               : 39
 K_WHILE              : 
-K_WINDOW             : 
+K_WINDOW             : 22
 LEQ                  : 
-LPAREN               : 6 7
+LPAREN               : 7 8
 LT                   : 
 MINUS                : 
 MOD                  : 
 NEG                  : 
 NEQ                  : 
 OR                   : 
-PLUS                 : 
-RPAREN               : 6 7
-STRING               : 8 9
+PLUS                 : 30
+RPAREN               : 7 8
+STRING               : 31 33 35
 TIMES                : 
 error                : 
 
 Nonterminals, with rules where they appear
 
 compound_statement   : 4
-function_call_statement : 5
-parameter_list       : 6 8
+expression           : 9 10 12 13
+function_call_statement : 5 32 37
+parameter_list       : 7 9
+pre_type_modifier    : 11 12
 program              : 0
 statement            : 3
 statement_list       : 1 3
+string_expression    : 28 30
+string_term          : 30
+type                 : 11 12
+unary_expression     : 29
+variable_declaration : 6
 
 Parsing method: LALR
 
@@ -126,6 +147,19 @@ state 0
     (3) statement_list -> . statement_list statement
 
     ID              reduce using rule 2 (statement_list -> .)
+    K_LIST          reduce using rule 2 (statement_list -> .)
+    K_DICT          reduce using rule 2 (statement_list -> .)
+    K_SET           reduce using rule 2 (statement_list -> .)
+    K_INT           reduce using rule 2 (statement_list -> .)
+    K_DOUBLE        reduce using rule 2 (statement_list -> .)
+    K_STRING        reduce using rule 2 (statement_list -> .)
+    K_BOOL          reduce using rule 2 (statement_list -> .)
+    K_WINDOW        reduce using rule 2 (statement_list -> .)
+    K_SHAPE         reduce using rule 2 (statement_list -> .)
+    K_TRIANGLE      reduce using rule 2 (statement_list -> .)
+    K_RECTANGLE     reduce using rule 2 (statement_list -> .)
+    K_CIRCLE        reduce using rule 2 (statement_list -> .)
+    K_TEXT          reduce using rule 2 (statement_list -> .)
     $end            reduce using rule 2 (statement_list -> .)
 
     statement_list                 shift and go to state 1
@@ -137,15 +171,38 @@ state 1
     (3) statement_list -> statement_list . statement
     (4) statement -> . compound_statement
     (5) compound_statement -> . function_call_statement
-    (6) function_call_statement -> . ID LPAREN parameter_list RPAREN
-    (7) function_call_statement -> . ID LPAREN RPAREN
+    (6) compound_statement -> . variable_declaration
+    (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
+    (8) function_call_statement -> . ID LPAREN RPAREN
+    (11) variable_declaration -> . pre_type_modifier type ID
+    (12) variable_declaration -> . pre_type_modifier type ID ASSIGN expression
+    (13) variable_declaration -> . ID ASSIGN expression
+    (14) pre_type_modifier -> .
+    (15) pre_type_modifier -> . K_LIST
+    (16) pre_type_modifier -> . K_DICT
+    (17) pre_type_modifier -> . K_SET
 
     $end            reduce using rule 1 (program -> statement_list .)
-    ID              shift and go to state 6
+    ID              shift and go to state 11
+    K_INT           reduce using rule 14 (pre_type_modifier -> .)
+    K_DOUBLE        reduce using rule 14 (pre_type_modifier -> .)
+    K_STRING        reduce using rule 14 (pre_type_modifier -> .)
+    K_BOOL          reduce using rule 14 (pre_type_modifier -> .)
+    K_WINDOW        reduce using rule 14 (pre_type_modifier -> .)
+    K_SHAPE         reduce using rule 14 (pre_type_modifier -> .)
+    K_TRIANGLE      reduce using rule 14 (pre_type_modifier -> .)
+    K_RECTANGLE     reduce using rule 14 (pre_type_modifier -> .)
+    K_CIRCLE        reduce using rule 14 (pre_type_modifier -> .)
+    K_TEXT          reduce using rule 14 (pre_type_modifier -> .)
+    K_LIST          shift and go to state 9
+    K_DICT          shift and go to state 7
+    K_SET           shift and go to state 4
 
+    compound_statement             shift and go to state 3
     function_call_statement        shift and go to state 5
-    statement                      shift and go to state 3
-    compound_statement             shift and go to state 4
+    statement                      shift and go to state 8
+    pre_type_modifier              shift and go to state 10
+    variable_declaration           shift and go to state 6
 
 state 2
 
@@ -155,18 +212,39 @@ state 2
 
 state 3
 
-    (3) statement_list -> statement_list statement .
+    (4) statement -> compound_statement .
 
-    ID              reduce using rule 3 (statement_list -> statement_list statement .)
-    $end            reduce using rule 3 (statement_list -> statement_list statement .)
+    ID              reduce using rule 4 (statement -> compound_statement .)
+    K_LIST          reduce using rule 4 (statement -> compound_statement .)
+    K_DICT          reduce using rule 4 (statement -> compound_statement .)
+    K_SET           reduce using rule 4 (statement -> compound_statement .)
+    K_INT           reduce using rule 4 (statement -> compound_statement .)
+    K_DOUBLE        reduce using rule 4 (statement -> compound_statement .)
+    K_STRING        reduce using rule 4 (statement -> compound_statement .)
+    K_BOOL          reduce using rule 4 (statement -> compound_statement .)
+    K_WINDOW        reduce using rule 4 (statement -> compound_statement .)
+    K_SHAPE         reduce using rule 4 (statement -> compound_statement .)
+    K_TRIANGLE      reduce using rule 4 (statement -> compound_statement .)
+    K_RECTANGLE     reduce using rule 4 (statement -> compound_statement .)
+    K_CIRCLE        reduce using rule 4 (statement -> compound_statement .)
+    K_TEXT          reduce using rule 4 (statement -> compound_statement .)
+    $end            reduce using rule 4 (statement -> compound_statement .)
 
 
 state 4
 
-    (4) statement -> compound_statement .
+    (17) pre_type_modifier -> K_SET .
 
-    ID              reduce using rule 4 (statement -> compound_statement .)
-    $end            reduce using rule 4 (statement -> compound_statement .)
+    K_INT           reduce using rule 17 (pre_type_modifier -> K_SET .)
+    K_DOUBLE        reduce using rule 17 (pre_type_modifier -> K_SET .)
+    K_STRING        reduce using rule 17 (pre_type_modifier -> K_SET .)
+    K_BOOL          reduce using rule 17 (pre_type_modifier -> K_SET .)
+    K_WINDOW        reduce using rule 17 (pre_type_modifier -> K_SET .)
+    K_SHAPE         reduce using rule 17 (pre_type_modifier -> K_SET .)
+    K_TRIANGLE      reduce using rule 17 (pre_type_modifier -> K_SET .)
+    K_RECTANGLE     reduce using rule 17 (pre_type_modifier -> K_SET .)
+    K_CIRCLE        reduce using rule 17 (pre_type_modifier -> K_SET .)
+    K_TEXT          reduce using rule 17 (pre_type_modifier -> K_SET .)
 
 
 state 5
@@ -174,73 +252,816 @@ state 5
     (5) compound_statement -> function_call_statement .
 
     ID              reduce using rule 5 (compound_statement -> function_call_statement .)
+    K_LIST          reduce using rule 5 (compound_statement -> function_call_statement .)
+    K_DICT          reduce using rule 5 (compound_statement -> function_call_statement .)
+    K_SET           reduce using rule 5 (compound_statement -> function_call_statement .)
+    K_INT           reduce using rule 5 (compound_statement -> function_call_statement .)
+    K_DOUBLE        reduce using rule 5 (compound_statement -> function_call_statement .)
+    K_STRING        reduce using rule 5 (compound_statement -> function_call_statement .)
+    K_BOOL          reduce using rule 5 (compound_statement -> function_call_statement .)
+    K_WINDOW        reduce using rule 5 (compound_statement -> function_call_statement .)
+    K_SHAPE         reduce using rule 5 (compound_statement -> function_call_statement .)
+    K_TRIANGLE      reduce using rule 5 (compound_statement -> function_call_statement .)
+    K_RECTANGLE     reduce using rule 5 (compound_statement -> function_call_statement .)
+    K_CIRCLE        reduce using rule 5 (compound_statement -> function_call_statement .)
+    K_TEXT          reduce using rule 5 (compound_statement -> function_call_statement .)
     $end            reduce using rule 5 (compound_statement -> function_call_statement .)
 
 
 state 6
 
-    (6) function_call_statement -> ID . LPAREN parameter_list RPAREN
-    (7) function_call_statement -> ID . LPAREN RPAREN
+    (6) compound_statement -> variable_declaration .
 
-    LPAREN          shift and go to state 7
+    ID              reduce using rule 6 (compound_statement -> variable_declaration .)
+    K_LIST          reduce using rule 6 (compound_statement -> variable_declaration .)
+    K_DICT          reduce using rule 6 (compound_statement -> variable_declaration .)
+    K_SET           reduce using rule 6 (compound_statement -> variable_declaration .)
+    K_INT           reduce using rule 6 (compound_statement -> variable_declaration .)
+    K_DOUBLE        reduce using rule 6 (compound_statement -> variable_declaration .)
+    K_STRING        reduce using rule 6 (compound_statement -> variable_declaration .)
+    K_BOOL          reduce using rule 6 (compound_statement -> variable_declaration .)
+    K_WINDOW        reduce using rule 6 (compound_statement -> variable_declaration .)
+    K_SHAPE         reduce using rule 6 (compound_statement -> variable_declaration .)
+    K_TRIANGLE      reduce using rule 6 (compound_statement -> variable_declaration .)
+    K_RECTANGLE     reduce using rule 6 (compound_statement -> variable_declaration .)
+    K_CIRCLE        reduce using rule 6 (compound_statement -> variable_declaration .)
+    K_TEXT          reduce using rule 6 (compound_statement -> variable_declaration .)
+    $end            reduce using rule 6 (compound_statement -> variable_declaration .)
 
 
 state 7
 
-    (6) function_call_statement -> ID LPAREN . parameter_list RPAREN
-    (7) function_call_statement -> ID LPAREN . RPAREN
-    (8) parameter_list -> . parameter_list COMMA STRING
-    (9) parameter_list -> . STRING
+    (16) pre_type_modifier -> K_DICT .
 
-    RPAREN          shift and go to state 8
-    STRING          shift and go to state 9
+    K_INT           reduce using rule 16 (pre_type_modifier -> K_DICT .)
+    K_DOUBLE        reduce using rule 16 (pre_type_modifier -> K_DICT .)
+    K_STRING        reduce using rule 16 (pre_type_modifier -> K_DICT .)
+    K_BOOL          reduce using rule 16 (pre_type_modifier -> K_DICT .)
+    K_WINDOW        reduce using rule 16 (pre_type_modifier -> K_DICT .)
+    K_SHAPE         reduce using rule 16 (pre_type_modifier -> K_DICT .)
+    K_TRIANGLE      reduce using rule 16 (pre_type_modifier -> K_DICT .)
+    K_RECTANGLE     reduce using rule 16 (pre_type_modifier -> K_DICT .)
+    K_CIRCLE        reduce using rule 16 (pre_type_modifier -> K_DICT .)
+    K_TEXT          reduce using rule 16 (pre_type_modifier -> K_DICT .)
 
-    parameter_list                 shift and go to state 10
 
 state 8
 
-    (7) function_call_statement -> ID LPAREN RPAREN .
+    (3) statement_list -> statement_list statement .
 
-    ID              reduce using rule 7 (function_call_statement -> ID LPAREN RPAREN .)
-    $end            reduce using rule 7 (function_call_statement -> ID LPAREN RPAREN .)
+    ID              reduce using rule 3 (statement_list -> statement_list statement .)
+    K_LIST          reduce using rule 3 (statement_list -> statement_list statement .)
+    K_DICT          reduce using rule 3 (statement_list -> statement_list statement .)
+    K_SET           reduce using rule 3 (statement_list -> statement_list statement .)
+    K_INT           reduce using rule 3 (statement_list -> statement_list statement .)
+    K_DOUBLE        reduce using rule 3 (statement_list -> statement_list statement .)
+    K_STRING        reduce using rule 3 (statement_list -> statement_list statement .)
+    K_BOOL          reduce using rule 3 (statement_list -> statement_list statement .)
+    K_WINDOW        reduce using rule 3 (statement_list -> statement_list statement .)
+    K_SHAPE         reduce using rule 3 (statement_list -> statement_list statement .)
+    K_TRIANGLE      reduce using rule 3 (statement_list -> statement_list statement .)
+    K_RECTANGLE     reduce using rule 3 (statement_list -> statement_list statement .)
+    K_CIRCLE        reduce using rule 3 (statement_list -> statement_list statement .)
+    K_TEXT          reduce using rule 3 (statement_list -> statement_list statement .)
+    $end            reduce using rule 3 (statement_list -> statement_list statement .)
 
 
 state 9
 
-    (9) parameter_list -> STRING .
+    (15) pre_type_modifier -> K_LIST .
 
-    RPAREN          reduce using rule 9 (parameter_list -> STRING .)
-    COMMA           reduce using rule 9 (parameter_list -> STRING .)
+    K_INT           reduce using rule 15 (pre_type_modifier -> K_LIST .)
+    K_DOUBLE        reduce using rule 15 (pre_type_modifier -> K_LIST .)
+    K_STRING        reduce using rule 15 (pre_type_modifier -> K_LIST .)
+    K_BOOL          reduce using rule 15 (pre_type_modifier -> K_LIST .)
+    K_WINDOW        reduce using rule 15 (pre_type_modifier -> K_LIST .)
+    K_SHAPE         reduce using rule 15 (pre_type_modifier -> K_LIST .)
+    K_TRIANGLE      reduce using rule 15 (pre_type_modifier -> K_LIST .)
+    K_RECTANGLE     reduce using rule 15 (pre_type_modifier -> K_LIST .)
+    K_CIRCLE        reduce using rule 15 (pre_type_modifier -> K_LIST .)
+    K_TEXT          reduce using rule 15 (pre_type_modifier -> K_LIST .)
 
 
 state 10
 
-    (6) function_call_statement -> ID LPAREN parameter_list . RPAREN
-    (8) parameter_list -> parameter_list . COMMA STRING
+    (11) variable_declaration -> pre_type_modifier . type ID
+    (12) variable_declaration -> pre_type_modifier . type ID ASSIGN expression
+    (18) type -> . K_INT
+    (19) type -> . K_DOUBLE
+    (20) type -> . K_STRING
+    (21) type -> . K_BOOL
+    (22) type -> . K_WINDOW
+    (23) type -> . K_SHAPE
+    (24) type -> . K_TRIANGLE
+    (25) type -> . K_RECTANGLE
+    (26) type -> . K_CIRCLE
+    (27) type -> . K_TEXT
 
-    RPAREN          shift and go to state 11
-    COMMA           shift and go to state 12
+    K_INT           shift and go to state 19
+    K_DOUBLE        shift and go to state 13
+    K_STRING        shift and go to state 20
+    K_BOOL          shift and go to state 12
+    K_WINDOW        shift and go to state 21
+    K_SHAPE         shift and go to state 16
+    K_TRIANGLE      shift and go to state 14
+    K_RECTANGLE     shift and go to state 18
+    K_CIRCLE        shift and go to state 22
+    K_TEXT          shift and go to state 17
 
+    type                           shift and go to state 15
 
 state 11
 
-    (6) function_call_statement -> ID LPAREN parameter_list RPAREN .
+    (7) function_call_statement -> ID . LPAREN parameter_list RPAREN
+    (8) function_call_statement -> ID . LPAREN RPAREN
+    (13) variable_declaration -> ID . ASSIGN expression
 
-    ID              reduce using rule 6 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
-    $end            reduce using rule 6 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    LPAREN          shift and go to state 24
+    ASSIGN          shift and go to state 23
 
 
 state 12
 
-    (8) parameter_list -> parameter_list COMMA . STRING
+    (21) type -> K_BOOL .
 
-    STRING          shift and go to state 13
+    ID              reduce using rule 21 (type -> K_BOOL .)
 
 
 state 13
 
-    (8) parameter_list -> parameter_list COMMA STRING .
+    (19) type -> K_DOUBLE .
 
-    RPAREN          reduce using rule 8 (parameter_list -> parameter_list COMMA STRING .)
-    COMMA           reduce using rule 8 (parameter_list -> parameter_list COMMA STRING .)
+    ID              reduce using rule 19 (type -> K_DOUBLE .)
 
+
+state 14
+
+    (24) type -> K_TRIANGLE .
+
+    ID              reduce using rule 24 (type -> K_TRIANGLE .)
+
+
+state 15
+
+    (11) variable_declaration -> pre_type_modifier type . ID
+    (12) variable_declaration -> pre_type_modifier type . ID ASSIGN expression
+
+    ID              shift and go to state 25
+
+
+state 16
+
+    (23) type -> K_SHAPE .
+
+    ID              reduce using rule 23 (type -> K_SHAPE .)
+
+
+state 17
+
+    (27) type -> K_TEXT .
+
+    ID              reduce using rule 27 (type -> K_TEXT .)
+
+
+state 18
+
+    (25) type -> K_RECTANGLE .
+
+    ID              reduce using rule 25 (type -> K_RECTANGLE .)
+
+
+state 19
+
+    (18) type -> K_INT .
+
+    ID              reduce using rule 18 (type -> K_INT .)
+
+
+state 20
+
+    (20) type -> K_STRING .
+
+    ID              reduce using rule 20 (type -> K_STRING .)
+
+
+state 21
+
+    (22) type -> K_WINDOW .
+
+    ID              reduce using rule 22 (type -> K_WINDOW .)
+
+
+state 22
+
+    (26) type -> K_CIRCLE .
+
+    ID              reduce using rule 26 (type -> K_CIRCLE .)
+
+
+state 23
+
+    (13) variable_declaration -> ID ASSIGN . expression
+    (28) expression -> . string_expression
+    (29) expression -> . unary_expression
+    (30) string_expression -> . string_expression PLUS string_term
+    (31) string_expression -> . STRING
+    (34) unary_expression -> . ID
+    (35) unary_expression -> . STRING
+    (36) unary_expression -> . INTEGER
+    (37) unary_expression -> . function_call_statement
+    (38) unary_expression -> . DOUBLE
+    (39) unary_expression -> . K_TRUE
+    (40) unary_expression -> . K_FALSE
+    (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
+    (8) function_call_statement -> . ID LPAREN RPAREN
+
+    STRING          shift and go to state 27
+    ID              shift and go to state 34
+    INTEGER         shift and go to state 31
+    DOUBLE          shift and go to state 29
+    K_TRUE          shift and go to state 32
+    K_FALSE         shift and go to state 35
+
+    string_expression              shift and go to state 26
+    unary_expression               shift and go to state 28
+    function_call_statement        shift and go to state 30
+    expression                     shift and go to state 33
+
+state 24
+
+    (7) function_call_statement -> ID LPAREN . parameter_list RPAREN
+    (8) function_call_statement -> ID LPAREN . RPAREN
+    (9) parameter_list -> . parameter_list COMMA expression
+    (10) parameter_list -> . expression
+    (28) expression -> . string_expression
+    (29) expression -> . unary_expression
+    (30) string_expression -> . string_expression PLUS string_term
+    (31) string_expression -> . STRING
+    (34) unary_expression -> . ID
+    (35) unary_expression -> . STRING
+    (36) unary_expression -> . INTEGER
+    (37) unary_expression -> . function_call_statement
+    (38) unary_expression -> . DOUBLE
+    (39) unary_expression -> . K_TRUE
+    (40) unary_expression -> . K_FALSE
+    (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
+    (8) function_call_statement -> . ID LPAREN RPAREN
+
+    RPAREN          shift and go to state 36
+    STRING          shift and go to state 27
+    ID              shift and go to state 34
+    INTEGER         shift and go to state 31
+    DOUBLE          shift and go to state 29
+    K_TRUE          shift and go to state 32
+    K_FALSE         shift and go to state 35
+
+    string_expression              shift and go to state 26
+    parameter_list                 shift and go to state 37
+    unary_expression               shift and go to state 28
+    function_call_statement        shift and go to state 30
+    expression                     shift and go to state 38
+
+state 25
+
+    (11) variable_declaration -> pre_type_modifier type ID .
+    (12) variable_declaration -> pre_type_modifier type ID . ASSIGN expression
+
+    ID              reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
+    K_LIST          reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
+    K_DICT          reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
+    K_SET           reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
+    K_INT           reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
+    K_DOUBLE        reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
+    K_STRING        reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
+    K_BOOL          reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
+    K_WINDOW        reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
+    K_SHAPE         reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
+    K_TRIANGLE      reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
+    K_RECTANGLE     reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
+    K_CIRCLE        reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
+    K_TEXT          reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
+    $end            reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
+    ASSIGN          shift and go to state 39
+
+
+state 26
+
+    (28) expression -> string_expression .
+    (30) string_expression -> string_expression . PLUS string_term
+
+    RPAREN          reduce using rule 28 (expression -> string_expression .)
+    COMMA           reduce using rule 28 (expression -> string_expression .)
+    ID              reduce using rule 28 (expression -> string_expression .)
+    K_LIST          reduce using rule 28 (expression -> string_expression .)
+    K_DICT          reduce using rule 28 (expression -> string_expression .)
+    K_SET           reduce using rule 28 (expression -> string_expression .)
+    K_INT           reduce using rule 28 (expression -> string_expression .)
+    K_DOUBLE        reduce using rule 28 (expression -> string_expression .)
+    K_STRING        reduce using rule 28 (expression -> string_expression .)
+    K_BOOL          reduce using rule 28 (expression -> string_expression .)
+    K_WINDOW        reduce using rule 28 (expression -> string_expression .)
+    K_SHAPE         reduce using rule 28 (expression -> string_expression .)
+    K_TRIANGLE      reduce using rule 28 (expression -> string_expression .)
+    K_RECTANGLE     reduce using rule 28 (expression -> string_expression .)
+    K_CIRCLE        reduce using rule 28 (expression -> string_expression .)
+    K_TEXT          reduce using rule 28 (expression -> string_expression .)
+    $end            reduce using rule 28 (expression -> string_expression .)
+    PLUS            shift and go to state 40
+
+
+state 27
+
+    (31) string_expression -> STRING .
+    (35) unary_expression -> STRING .
+
+  ! reduce/reduce conflict for RPAREN resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for COMMA resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for ID resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_LIST resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_DICT resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_SET resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_INT resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_DOUBLE resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_STRING resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_BOOL resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_WINDOW resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_SHAPE resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_TRIANGLE resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_RECTANGLE resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_CIRCLE resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_TEXT resolved using rule 31 (string_expression -> STRING .)
+  ! reduce/reduce conflict for $end resolved using rule 31 (string_expression -> STRING .)
+    PLUS            reduce using rule 31 (string_expression -> STRING .)
+    ID              reduce using rule 31 (string_expression -> STRING .)
+    K_LIST          reduce using rule 31 (string_expression -> STRING .)
+    K_DICT          reduce using rule 31 (string_expression -> STRING .)
+    K_SET           reduce using rule 31 (string_expression -> STRING .)
+    K_INT           reduce using rule 31 (string_expression -> STRING .)
+    K_DOUBLE        reduce using rule 31 (string_expression -> STRING .)
+    K_STRING        reduce using rule 31 (string_expression -> STRING .)
+    K_BOOL          reduce using rule 31 (string_expression -> STRING .)
+    K_WINDOW        reduce using rule 31 (string_expression -> STRING .)
+    K_SHAPE         reduce using rule 31 (string_expression -> STRING .)
+    K_TRIANGLE      reduce using rule 31 (string_expression -> STRING .)
+    K_RECTANGLE     reduce using rule 31 (string_expression -> STRING .)
+    K_CIRCLE        reduce using rule 31 (string_expression -> STRING .)
+    K_TEXT          reduce using rule 31 (string_expression -> STRING .)
+    $end            reduce using rule 31 (string_expression -> STRING .)
+    RPAREN          reduce using rule 31 (string_expression -> STRING .)
+    COMMA           reduce using rule 31 (string_expression -> STRING .)
+
+  ! RPAREN          [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! COMMA           [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! ID              [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! K_LIST          [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! K_DICT          [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! K_SET           [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! K_INT           [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! K_DOUBLE        [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! K_STRING        [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! K_BOOL          [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! K_WINDOW        [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! K_SHAPE         [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! K_TRIANGLE      [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! K_RECTANGLE     [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! K_CIRCLE        [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! K_TEXT          [ reduce using rule 35 (unary_expression -> STRING .) ]
+  ! $end            [ reduce using rule 35 (unary_expression -> STRING .) ]
+
+
+state 28
+
+    (29) expression -> unary_expression .
+
+    RPAREN          reduce using rule 29 (expression -> unary_expression .)
+    COMMA           reduce using rule 29 (expression -> unary_expression .)
+    ID              reduce using rule 29 (expression -> unary_expression .)
+    K_LIST          reduce using rule 29 (expression -> unary_expression .)
+    K_DICT          reduce using rule 29 (expression -> unary_expression .)
+    K_SET           reduce using rule 29 (expression -> unary_expression .)
+    K_INT           reduce using rule 29 (expression -> unary_expression .)
+    K_DOUBLE        reduce using rule 29 (expression -> unary_expression .)
+    K_STRING        reduce using rule 29 (expression -> unary_expression .)
+    K_BOOL          reduce using rule 29 (expression -> unary_expression .)
+    K_WINDOW        reduce using rule 29 (expression -> unary_expression .)
+    K_SHAPE         reduce using rule 29 (expression -> unary_expression .)
+    K_TRIANGLE      reduce using rule 29 (expression -> unary_expression .)
+    K_RECTANGLE     reduce using rule 29 (expression -> unary_expression .)
+    K_CIRCLE        reduce using rule 29 (expression -> unary_expression .)
+    K_TEXT          reduce using rule 29 (expression -> unary_expression .)
+    $end            reduce using rule 29 (expression -> unary_expression .)
+
+
+state 29
+
+    (38) unary_expression -> DOUBLE .
+
+    RPAREN          reduce using rule 38 (unary_expression -> DOUBLE .)
+    COMMA           reduce using rule 38 (unary_expression -> DOUBLE .)
+    ID              reduce using rule 38 (unary_expression -> DOUBLE .)
+    K_LIST          reduce using rule 38 (unary_expression -> DOUBLE .)
+    K_DICT          reduce using rule 38 (unary_expression -> DOUBLE .)
+    K_SET           reduce using rule 38 (unary_expression -> DOUBLE .)
+    K_INT           reduce using rule 38 (unary_expression -> DOUBLE .)
+    K_DOUBLE        reduce using rule 38 (unary_expression -> DOUBLE .)
+    K_STRING        reduce using rule 38 (unary_expression -> DOUBLE .)
+    K_BOOL          reduce using rule 38 (unary_expression -> DOUBLE .)
+    K_WINDOW        reduce using rule 38 (unary_expression -> DOUBLE .)
+    K_SHAPE         reduce using rule 38 (unary_expression -> DOUBLE .)
+    K_TRIANGLE      reduce using rule 38 (unary_expression -> DOUBLE .)
+    K_RECTANGLE     reduce using rule 38 (unary_expression -> DOUBLE .)
+    K_CIRCLE        reduce using rule 38 (unary_expression -> DOUBLE .)
+    K_TEXT          reduce using rule 38 (unary_expression -> DOUBLE .)
+    $end            reduce using rule 38 (unary_expression -> DOUBLE .)
+
+
+state 30
+
+    (37) unary_expression -> function_call_statement .
+
+    RPAREN          reduce using rule 37 (unary_expression -> function_call_statement .)
+    COMMA           reduce using rule 37 (unary_expression -> function_call_statement .)
+    ID              reduce using rule 37 (unary_expression -> function_call_statement .)
+    K_LIST          reduce using rule 37 (unary_expression -> function_call_statement .)
+    K_DICT          reduce using rule 37 (unary_expression -> function_call_statement .)
+    K_SET           reduce using rule 37 (unary_expression -> function_call_statement .)
+    K_INT           reduce using rule 37 (unary_expression -> function_call_statement .)
+    K_DOUBLE        reduce using rule 37 (unary_expression -> function_call_statement .)
+    K_STRING        reduce using rule 37 (unary_expression -> function_call_statement .)
+    K_BOOL          reduce using rule 37 (unary_expression -> function_call_statement .)
+    K_WINDOW        reduce using rule 37 (unary_expression -> function_call_statement .)
+    K_SHAPE         reduce using rule 37 (unary_expression -> function_call_statement .)
+    K_TRIANGLE      reduce using rule 37 (unary_expression -> function_call_statement .)
+    K_RECTANGLE     reduce using rule 37 (unary_expression -> function_call_statement .)
+    K_CIRCLE        reduce using rule 37 (unary_expression -> function_call_statement .)
+    K_TEXT          reduce using rule 37 (unary_expression -> function_call_statement .)
+    $end            reduce using rule 37 (unary_expression -> function_call_statement .)
+
+
+state 31
+
+    (36) unary_expression -> INTEGER .
+
+    RPAREN          reduce using rule 36 (unary_expression -> INTEGER .)
+    COMMA           reduce using rule 36 (unary_expression -> INTEGER .)
+    ID              reduce using rule 36 (unary_expression -> INTEGER .)
+    K_LIST          reduce using rule 36 (unary_expression -> INTEGER .)
+    K_DICT          reduce using rule 36 (unary_expression -> INTEGER .)
+    K_SET           reduce using rule 36 (unary_expression -> INTEGER .)
+    K_INT           reduce using rule 36 (unary_expression -> INTEGER .)
+    K_DOUBLE        reduce using rule 36 (unary_expression -> INTEGER .)
+    K_STRING        reduce using rule 36 (unary_expression -> INTEGER .)
+    K_BOOL          reduce using rule 36 (unary_expression -> INTEGER .)
+    K_WINDOW        reduce using rule 36 (unary_expression -> INTEGER .)
+    K_SHAPE         reduce using rule 36 (unary_expression -> INTEGER .)
+    K_TRIANGLE      reduce using rule 36 (unary_expression -> INTEGER .)
+    K_RECTANGLE     reduce using rule 36 (unary_expression -> INTEGER .)
+    K_CIRCLE        reduce using rule 36 (unary_expression -> INTEGER .)
+    K_TEXT          reduce using rule 36 (unary_expression -> INTEGER .)
+    $end            reduce using rule 36 (unary_expression -> INTEGER .)
+
+
+state 32
+
+    (39) unary_expression -> K_TRUE .
+
+    RPAREN          reduce using rule 39 (unary_expression -> K_TRUE .)
+    COMMA           reduce using rule 39 (unary_expression -> K_TRUE .)
+    ID              reduce using rule 39 (unary_expression -> K_TRUE .)
+    K_LIST          reduce using rule 39 (unary_expression -> K_TRUE .)
+    K_DICT          reduce using rule 39 (unary_expression -> K_TRUE .)
+    K_SET           reduce using rule 39 (unary_expression -> K_TRUE .)
+    K_INT           reduce using rule 39 (unary_expression -> K_TRUE .)
+    K_DOUBLE        reduce using rule 39 (unary_expression -> K_TRUE .)
+    K_STRING        reduce using rule 39 (unary_expression -> K_TRUE .)
+    K_BOOL          reduce using rule 39 (unary_expression -> K_TRUE .)
+    K_WINDOW        reduce using rule 39 (unary_expression -> K_TRUE .)
+    K_SHAPE         reduce using rule 39 (unary_expression -> K_TRUE .)
+    K_TRIANGLE      reduce using rule 39 (unary_expression -> K_TRUE .)
+    K_RECTANGLE     reduce using rule 39 (unary_expression -> K_TRUE .)
+    K_CIRCLE        reduce using rule 39 (unary_expression -> K_TRUE .)
+    K_TEXT          reduce using rule 39 (unary_expression -> K_TRUE .)
+    $end            reduce using rule 39 (unary_expression -> K_TRUE .)
+
+
+state 33
+
+    (13) variable_declaration -> ID ASSIGN expression .
+
+    ID              reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
+    K_LIST          reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
+    K_DICT          reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
+    K_SET           reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
+    K_INT           reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
+    K_DOUBLE        reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
+    K_STRING        reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
+    K_BOOL          reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
+    K_WINDOW        reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
+    K_SHAPE         reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
+    K_TRIANGLE      reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
+    K_RECTANGLE     reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
+    K_CIRCLE        reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
+    K_TEXT          reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
+    $end            reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
+
+
+state 34
+
+    (34) unary_expression -> ID .
+    (7) function_call_statement -> ID . LPAREN parameter_list RPAREN
+    (8) function_call_statement -> ID . LPAREN RPAREN
+
+    RPAREN          reduce using rule 34 (unary_expression -> ID .)
+    COMMA           reduce using rule 34 (unary_expression -> ID .)
+    ID              reduce using rule 34 (unary_expression -> ID .)
+    K_LIST          reduce using rule 34 (unary_expression -> ID .)
+    K_DICT          reduce using rule 34 (unary_expression -> ID .)
+    K_SET           reduce using rule 34 (unary_expression -> ID .)
+    K_INT           reduce using rule 34 (unary_expression -> ID .)
+    K_DOUBLE        reduce using rule 34 (unary_expression -> ID .)
+    K_STRING        reduce using rule 34 (unary_expression -> ID .)
+    K_BOOL          reduce using rule 34 (unary_expression -> ID .)
+    K_WINDOW        reduce using rule 34 (unary_expression -> ID .)
+    K_SHAPE         reduce using rule 34 (unary_expression -> ID .)
+    K_TRIANGLE      reduce using rule 34 (unary_expression -> ID .)
+    K_RECTANGLE     reduce using rule 34 (unary_expression -> ID .)
+    K_CIRCLE        reduce using rule 34 (unary_expression -> ID .)
+    K_TEXT          reduce using rule 34 (unary_expression -> ID .)
+    $end            reduce using rule 34 (unary_expression -> ID .)
+    LPAREN          shift and go to state 24
+
+
+state 35
+
+    (40) unary_expression -> K_FALSE .
+
+    RPAREN          reduce using rule 40 (unary_expression -> K_FALSE .)
+    COMMA           reduce using rule 40 (unary_expression -> K_FALSE .)
+    ID              reduce using rule 40 (unary_expression -> K_FALSE .)
+    K_LIST          reduce using rule 40 (unary_expression -> K_FALSE .)
+    K_DICT          reduce using rule 40 (unary_expression -> K_FALSE .)
+    K_SET           reduce using rule 40 (unary_expression -> K_FALSE .)
+    K_INT           reduce using rule 40 (unary_expression -> K_FALSE .)
+    K_DOUBLE        reduce using rule 40 (unary_expression -> K_FALSE .)
+    K_STRING        reduce using rule 40 (unary_expression -> K_FALSE .)
+    K_BOOL          reduce using rule 40 (unary_expression -> K_FALSE .)
+    K_WINDOW        reduce using rule 40 (unary_expression -> K_FALSE .)
+    K_SHAPE         reduce using rule 40 (unary_expression -> K_FALSE .)
+    K_TRIANGLE      reduce using rule 40 (unary_expression -> K_FALSE .)
+    K_RECTANGLE     reduce using rule 40 (unary_expression -> K_FALSE .)
+    K_CIRCLE        reduce using rule 40 (unary_expression -> K_FALSE .)
+    K_TEXT          reduce using rule 40 (unary_expression -> K_FALSE .)
+    $end            reduce using rule 40 (unary_expression -> K_FALSE .)
+
+
+state 36
+
+    (8) function_call_statement -> ID LPAREN RPAREN .
+
+    ID              reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    K_LIST          reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    K_DICT          reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    K_SET           reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    K_INT           reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    K_DOUBLE        reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    K_STRING        reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    K_BOOL          reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    K_WINDOW        reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    K_SHAPE         reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    K_TRIANGLE      reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    K_RECTANGLE     reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    K_CIRCLE        reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    K_TEXT          reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    $end            reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    RPAREN          reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    COMMA           reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    PLUS            reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+
+
+state 37
+
+    (7) function_call_statement -> ID LPAREN parameter_list . RPAREN
+    (9) parameter_list -> parameter_list . COMMA expression
+
+    RPAREN          shift and go to state 41
+    COMMA           shift and go to state 42
+
+
+state 38
+
+    (10) parameter_list -> expression .
+
+    RPAREN          reduce using rule 10 (parameter_list -> expression .)
+    COMMA           reduce using rule 10 (parameter_list -> expression .)
+
+
+state 39
+
+    (12) variable_declaration -> pre_type_modifier type ID ASSIGN . expression
+    (28) expression -> . string_expression
+    (29) expression -> . unary_expression
+    (30) string_expression -> . string_expression PLUS string_term
+    (31) string_expression -> . STRING
+    (34) unary_expression -> . ID
+    (35) unary_expression -> . STRING
+    (36) unary_expression -> . INTEGER
+    (37) unary_expression -> . function_call_statement
+    (38) unary_expression -> . DOUBLE
+    (39) unary_expression -> . K_TRUE
+    (40) unary_expression -> . K_FALSE
+    (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
+    (8) function_call_statement -> . ID LPAREN RPAREN
+
+    STRING          shift and go to state 27
+    ID              shift and go to state 34
+    INTEGER         shift and go to state 31
+    DOUBLE          shift and go to state 29
+    K_TRUE          shift and go to state 32
+    K_FALSE         shift and go to state 35
+
+    string_expression              shift and go to state 26
+    unary_expression               shift and go to state 28
+    function_call_statement        shift and go to state 30
+    expression                     shift and go to state 43
+
+state 40
+
+    (30) string_expression -> string_expression PLUS . string_term
+    (32) string_term -> . function_call_statement
+    (33) string_term -> . STRING
+    (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
+    (8) function_call_statement -> . ID LPAREN RPAREN
+
+    STRING          shift and go to state 44
+    ID              shift and go to state 47
+
+    string_term                    shift and go to state 46
+    function_call_statement        shift and go to state 45
+
+state 41
+
+    (7) function_call_statement -> ID LPAREN parameter_list RPAREN .
+
+    ID              reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    K_LIST          reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    K_DICT          reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    K_SET           reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    K_INT           reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    K_DOUBLE        reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    K_STRING        reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    K_BOOL          reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    K_WINDOW        reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    K_SHAPE         reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    K_TRIANGLE      reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    K_RECTANGLE     reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    K_CIRCLE        reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    K_TEXT          reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    $end            reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    RPAREN          reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    COMMA           reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    PLUS            reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+
+
+state 42
+
+    (9) parameter_list -> parameter_list COMMA . expression
+    (28) expression -> . string_expression
+    (29) expression -> . unary_expression
+    (30) string_expression -> . string_expression PLUS string_term
+    (31) string_expression -> . STRING
+    (34) unary_expression -> . ID
+    (35) unary_expression -> . STRING
+    (36) unary_expression -> . INTEGER
+    (37) unary_expression -> . function_call_statement
+    (38) unary_expression -> . DOUBLE
+    (39) unary_expression -> . K_TRUE
+    (40) unary_expression -> . K_FALSE
+    (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
+    (8) function_call_statement -> . ID LPAREN RPAREN
+
+    STRING          shift and go to state 27
+    ID              shift and go to state 34
+    INTEGER         shift and go to state 31
+    DOUBLE          shift and go to state 29
+    K_TRUE          shift and go to state 32
+    K_FALSE         shift and go to state 35
+
+    string_expression              shift and go to state 26
+    unary_expression               shift and go to state 28
+    function_call_statement        shift and go to state 30
+    expression                     shift and go to state 48
+
+state 43
+
+    (12) variable_declaration -> pre_type_modifier type ID ASSIGN expression .
+
+    ID              reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
+    K_LIST          reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
+    K_DICT          reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
+    K_SET           reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
+    K_INT           reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
+    K_DOUBLE        reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
+    K_STRING        reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
+    K_BOOL          reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
+    K_WINDOW        reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
+    K_SHAPE         reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
+    K_TRIANGLE      reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
+    K_RECTANGLE     reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
+    K_CIRCLE        reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
+    K_TEXT          reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
+    $end            reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
+
+
+state 44
+
+    (33) string_term -> STRING .
+
+    PLUS            reduce using rule 33 (string_term -> STRING .)
+    ID              reduce using rule 33 (string_term -> STRING .)
+    K_LIST          reduce using rule 33 (string_term -> STRING .)
+    K_DICT          reduce using rule 33 (string_term -> STRING .)
+    K_SET           reduce using rule 33 (string_term -> STRING .)
+    K_INT           reduce using rule 33 (string_term -> STRING .)
+    K_DOUBLE        reduce using rule 33 (string_term -> STRING .)
+    K_STRING        reduce using rule 33 (string_term -> STRING .)
+    K_BOOL          reduce using rule 33 (string_term -> STRING .)
+    K_WINDOW        reduce using rule 33 (string_term -> STRING .)
+    K_SHAPE         reduce using rule 33 (string_term -> STRING .)
+    K_TRIANGLE      reduce using rule 33 (string_term -> STRING .)
+    K_RECTANGLE     reduce using rule 33 (string_term -> STRING .)
+    K_CIRCLE        reduce using rule 33 (string_term -> STRING .)
+    K_TEXT          reduce using rule 33 (string_term -> STRING .)
+    $end            reduce using rule 33 (string_term -> STRING .)
+    RPAREN          reduce using rule 33 (string_term -> STRING .)
+    COMMA           reduce using rule 33 (string_term -> STRING .)
+
+
+state 45
+
+    (32) string_term -> function_call_statement .
+
+    PLUS            reduce using rule 32 (string_term -> function_call_statement .)
+    ID              reduce using rule 32 (string_term -> function_call_statement .)
+    K_LIST          reduce using rule 32 (string_term -> function_call_statement .)
+    K_DICT          reduce using rule 32 (string_term -> function_call_statement .)
+    K_SET           reduce using rule 32 (string_term -> function_call_statement .)
+    K_INT           reduce using rule 32 (string_term -> function_call_statement .)
+    K_DOUBLE        reduce using rule 32 (string_term -> function_call_statement .)
+    K_STRING        reduce using rule 32 (string_term -> function_call_statement .)
+    K_BOOL          reduce using rule 32 (string_term -> function_call_statement .)
+    K_WINDOW        reduce using rule 32 (string_term -> function_call_statement .)
+    K_SHAPE         reduce using rule 32 (string_term -> function_call_statement .)
+    K_TRIANGLE      reduce using rule 32 (string_term -> function_call_statement .)
+    K_RECTANGLE     reduce using rule 32 (string_term -> function_call_statement .)
+    K_CIRCLE        reduce using rule 32 (string_term -> function_call_statement .)
+    K_TEXT          reduce using rule 32 (string_term -> function_call_statement .)
+    $end            reduce using rule 32 (string_term -> function_call_statement .)
+    RPAREN          reduce using rule 32 (string_term -> function_call_statement .)
+    COMMA           reduce using rule 32 (string_term -> function_call_statement .)
+
+
+state 46
+
+    (30) string_expression -> string_expression PLUS string_term .
+
+    PLUS            reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    ID              reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    K_LIST          reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    K_DICT          reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    K_SET           reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    K_INT           reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    K_DOUBLE        reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    K_STRING        reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    K_BOOL          reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    K_WINDOW        reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    K_SHAPE         reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    K_TRIANGLE      reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    K_RECTANGLE     reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    K_CIRCLE        reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    K_TEXT          reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    $end            reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    RPAREN          reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    COMMA           reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+
+
+state 47
+
+    (7) function_call_statement -> ID . LPAREN parameter_list RPAREN
+    (8) function_call_statement -> ID . LPAREN RPAREN
+
+    LPAREN          shift and go to state 24
+
+
+state 48
+
+    (9) parameter_list -> parameter_list COMMA expression .
+
+    RPAREN          reduce using rule 9 (parameter_list -> parameter_list COMMA expression .)
+    COMMA           reduce using rule 9 (parameter_list -> parameter_list COMMA expression .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: reduce/reduce conflict in state 27 resolved using rule (string_expression -> STRING)
+WARNING: rejected rule (unary_expression -> STRING) in state 27
+WARNING: Rule (unary_expression -> STRING) is never reduced
