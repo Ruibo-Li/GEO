@@ -1,4 +1,5 @@
 import ply.lex as lex
+import ply.yacc as yacc
 import sys
 
 
@@ -116,19 +117,77 @@ def t_error(t):
 # Build the lexer
 lexer = lex.lex()
 
+indent = 0
 
-# Test it out
-try:
-    f = open(sys.argv[1])
-    data = f.read()
+def p_program(p):
+    """
+    program: STRING
+    """
+    p[0] = p[1]
+    print p[0]
 
-    # Give the lexer some input
-    lexer.input(data)
 
-    # Tokenize
-    while True:
-        tok = lexer.token()
-        if not tok: break      # No more input
-        print tok
-except:
-   print sys.exc_info()[0]
+def p_statement_list(p):
+    """
+    statement_list:
+    statement_list: statement_list statement
+    """
+    #Somehow keep track of indentation
+    if len(p) == 1:
+        p[0] = ""
+    else:
+        p[0] = p[1] + "\n" + p[2]
+
+def p_statement(p):
+    """    
+    statement: compound_statement
+    """
+    p[0] = p[1]
+
+
+def p_compound_statement(p):
+    """
+    compound_statement: function_call_statement
+    """
+    p[0] = p[1]
+
+def p_function_call_statement(p):
+    """
+    function_call_statement: id LPAREN parameter_list RPAREN
+    function_call_statement: id LPAREN RPAREN
+    """
+    if len(p) == 5:
+        p[0] = p[1] + "(" + p[3] + ")"
+    else:
+        p[0] = p[1] + "()"
+
+
+def p_parameter_list(p):
+    """
+    parameter_list: parameter_list COMMA STRING
+    parameter_list: STRING
+    """
+    if len(p) == 4:
+        p[0] = p[1] + ", " + p[2]
+    else:
+        p[0] = p[1]
+
+def p_error(p):
+    print "unknown text at " + p.value
+
+
+parser = yacc.yacc()
+
+while True:
+    try:
+        expressions = raw_input("> ")
+    except EOFError:
+        break
+    if expressions:
+        parser.parse(expressions)
+
+
+
+
+
+

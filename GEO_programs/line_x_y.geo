@@ -12,8 +12,9 @@ double b := 10
 
 
 x := 0
+print("x\ty");
 while (x < 10)
 	y := m*x + b
-print(str(x) + " " + str(y))
+print(str(x) + "\t" + str(y))
 	x := x + 1
 end
