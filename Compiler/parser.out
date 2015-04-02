@@ -1,1 +1,246 @@
 Created by PLY version 3.4 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    K_DOUBLE
+    NEG
+    K_NULL
+    K_TRUE
+    K_END
+    K_STRING
+    K_IF
+    MINUS
+    COMMENT
+    GEQ
+    K_DICT
+    K_SET
+    LT
+    PLUS
+    K_EL
+    INTEGER
+    NEQ
+    K_TRIANGLE
+    ASSIGN
+    K_CIRCLE
+    K_EF
+    GT
+    DIVIDE
+    K_SHAPE
+    K_CONTINUE
+    K_WHILE
+    TIMES
+    K_POINT
+    K_INT
+    K_LIST
+    EQ
+    AND
+    K_BOOL
+    DOUBLE
+    K_DONE
+    LEQ
+    K_RECTANGLE
+    K_WINDOW
+    K_FALSE
+    OR
+    MOD
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> statement_list
+Rule 2     statement_list -> <empty>
+Rule 3     statement_list -> statement_list statement
+Rule 4     statement -> compound_statement
+Rule 5     compound_statement -> function_call_statement
+Rule 6     function_call_statement -> ID LPAREN parameter_list RPAREN
+Rule 7     function_call_statement -> ID LPAREN RPAREN
+Rule 8     parameter_list -> parameter_list COMMA STRING
+Rule 9     parameter_list -> STRING
+
+Terminals, with rules where they appear
+
+AND                  : 
+ASSIGN               : 
+COMMA                : 8
+COMMENT              : 
+DIVIDE               : 
+DOUBLE               : 
+EQ                   : 
+GEQ                  : 
+GT                   : 
+ID                   : 6 7
+INTEGER              : 
+K_BOOL               : 
+K_CIRCLE             : 
+K_CONTINUE           : 
+K_DICT               : 
+K_DONE               : 
+K_DOUBLE             : 
+K_EF                 : 
+K_EL                 : 
+K_END                : 
+K_FALSE              : 
+K_IF                 : 
+K_INT                : 
+K_LIST               : 
+K_NULL               : 
+K_POINT              : 
+K_RECTANGLE          : 
+K_SET                : 
+K_SHAPE              : 
+K_STRING             : 
+K_TRIANGLE           : 
+K_TRUE               : 
+K_WHILE              : 
+K_WINDOW             : 
+LEQ                  : 
+LPAREN               : 6 7
+LT                   : 
+MINUS                : 
+MOD                  : 
+NEG                  : 
+NEQ                  : 
+OR                   : 
+PLUS                 : 
+RPAREN               : 6 7
+STRING               : 8 9
+TIMES                : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+compound_statement   : 4
+function_call_statement : 5
+parameter_list       : 6 8
+program              : 0
+statement            : 3
+statement_list       : 1 3
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . statement_list
+    (2) statement_list -> .
+    (3) statement_list -> . statement_list statement
+
+    ID              reduce using rule 2 (statement_list -> .)
+    $end            reduce using rule 2 (statement_list -> .)
+
+    statement_list                 shift and go to state 1
+    program                        shift and go to state 2
+
+state 1
+
+    (1) program -> statement_list .
+    (3) statement_list -> statement_list . statement
+    (4) statement -> . compound_statement
+    (5) compound_statement -> . function_call_statement
+    (6) function_call_statement -> . ID LPAREN parameter_list RPAREN
+    (7) function_call_statement -> . ID LPAREN RPAREN
+
+    $end            reduce using rule 1 (program -> statement_list .)
+    ID              shift and go to state 6
+
+    function_call_statement        shift and go to state 5
+    statement                      shift and go to state 3
+    compound_statement             shift and go to state 4
+
+state 2
+
+    (0) S' -> program .
+
+
+
+state 3
+
+    (3) statement_list -> statement_list statement .
+
+    ID              reduce using rule 3 (statement_list -> statement_list statement .)
+    $end            reduce using rule 3 (statement_list -> statement_list statement .)
+
+
+state 4
+
+    (4) statement -> compound_statement .
+
+    ID              reduce using rule 4 (statement -> compound_statement .)
+    $end            reduce using rule 4 (statement -> compound_statement .)
+
+
+state 5
+
+    (5) compound_statement -> function_call_statement .
+
+    ID              reduce using rule 5 (compound_statement -> function_call_statement .)
+    $end            reduce using rule 5 (compound_statement -> function_call_statement .)
+
+
+state 6
+
+    (6) function_call_statement -> ID . LPAREN parameter_list RPAREN
+    (7) function_call_statement -> ID . LPAREN RPAREN
+
+    LPAREN          shift and go to state 7
+
+
+state 7
+
+    (6) function_call_statement -> ID LPAREN . parameter_list RPAREN
+    (7) function_call_statement -> ID LPAREN . RPAREN
+    (8) parameter_list -> . parameter_list COMMA STRING
+    (9) parameter_list -> . STRING
+
+    RPAREN          shift and go to state 8
+    STRING          shift and go to state 9
+
+    parameter_list                 shift and go to state 10
+
+state 8
+
+    (7) function_call_statement -> ID LPAREN RPAREN .
+
+    ID              reduce using rule 7 (function_call_statement -> ID LPAREN RPAREN .)
+    $end            reduce using rule 7 (function_call_statement -> ID LPAREN RPAREN .)
+
+
+state 9
+
+    (9) parameter_list -> STRING .
+
+    RPAREN          reduce using rule 9 (parameter_list -> STRING .)
+    COMMA           reduce using rule 9 (parameter_list -> STRING .)
+
+
+state 10
+
+    (6) function_call_statement -> ID LPAREN parameter_list . RPAREN
+    (8) parameter_list -> parameter_list . COMMA STRING
+
+    RPAREN          shift and go to state 11
+    COMMA           shift and go to state 12
+
+
+state 11
+
+    (6) function_call_statement -> ID LPAREN parameter_list RPAREN .
+
+    ID              reduce using rule 6 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    $end            reduce using rule 6 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+
+
+state 12
+
+    (8) parameter_list -> parameter_list COMMA . STRING
+
+    STRING          shift and go to state 13
+
+
+state 13
+
+    (8) parameter_list -> parameter_list COMMA STRING .
+
+    RPAREN          reduce using rule 8 (parameter_list -> parameter_list COMMA STRING .)
+    COMMA           reduce using rule 8 (parameter_list -> parameter_list COMMA STRING .)
+

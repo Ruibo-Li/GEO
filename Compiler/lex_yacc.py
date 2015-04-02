@@ -103,8 +103,8 @@ def t_newline(t):
     t.lexer.lineno += len(t.value)
 
 def t_COMMENT(t):
-  r'/\*(/|(\*)*[^\*])*(\*)+/|//.*'
-  return t  
+    r'/\*(/|(\*)*[^\*])*(\*)+/|//.*'
+    return t  
 
 # A string containing ignored characters (spaces and tabs)
 t_ignore  = ' \t'
@@ -121,7 +121,7 @@ indent = 0
 
 def p_program(p):
     """
-    program: STRING
+    program : statement_list
     """
     p[0] = p[1]
     print p[0]
@@ -129,32 +129,32 @@ def p_program(p):
 
 def p_statement_list(p):
     """
-    statement_list:
-    statement_list: statement_list statement
+    statement_list :
+    statement_list : statement_list statement
     """
     #Somehow keep track of indentation
     if len(p) == 1:
         p[0] = ""
     else:
-        p[0] = p[1] + "\n" + p[2]
+        p[0] = p[1] + ("\n" if p[1] else "") + p[2]
 
 def p_statement(p):
     """    
-    statement: compound_statement
+    statement : compound_statement
     """
     p[0] = p[1]
 
 
 def p_compound_statement(p):
     """
-    compound_statement: function_call_statement
+    compound_statement : function_call_statement
     """
     p[0] = p[1]
 
 def p_function_call_statement(p):
-    """
-    function_call_statement: id LPAREN parameter_list RPAREN
-    function_call_statement: id LPAREN RPAREN
+    """    
+    function_call_statement : ID LPAREN parameter_list RPAREN
+    function_call_statement : ID LPAREN RPAREN
     """
     if len(p) == 5:
         p[0] = p[1] + "(" + p[3] + ")"
@@ -164,11 +164,11 @@ def p_function_call_statement(p):
 
 def p_parameter_list(p):
     """
-    parameter_list: parameter_list COMMA STRING
-    parameter_list: STRING
+    parameter_list : parameter_list COMMA STRING
+    parameter_list : STRING
     """
     if len(p) == 4:
-        p[0] = p[1] + ", " + p[2]
+        p[0] = p[1] + ", " + p[3]
     else:
         p[0] = p[1]
 

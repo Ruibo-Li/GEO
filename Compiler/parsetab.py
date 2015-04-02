@@ -5,9 +5,9 @@ _tabversion = '3.2'
 
 _lr_method = 'LALR'
 
-_lr_signature = '\x80\xabT\x1b\xc4\xbf\xb7\xe0\xe52\xff!\x9e\x8e\xe6\x99'
+_lr_signature = '\xa3-U\xfb\xbbL\x07\x88\x15GC\xd9\xbe\xfd\x870'
     
-_lr_action_items = {'COUNT':([2,],[5,]),'SYMBOL':([0,2,3,4,5,6,],[2,-5,2,-4,-6,-3,]),'$end':([0,1,2,3,4,5,6,],[-1,0,-5,-2,-4,-6,-3,]),}
+_lr_action_items = {'RPAREN':([7,9,10,13,],[8,-9,11,-8,]),'STRING':([7,12,],[9,13,]),'COMMA':([9,10,13,],[-9,12,-8,]),'LPAREN':([6,],[7,]),'ID':([0,1,3,4,5,8,11,],[-2,6,-3,-4,-5,-7,-6,]),'$end':([0,1,2,3,4,5,8,11,],[-2,-1,0,-3,-4,-5,-7,-6,]),}
 
 _lr_action = { }
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'chemical_equation':([0,],[1,]),'species_list':([0,],[3,]),'species':([0,3,],[4,6,]),}
+_lr_goto_items = {'parameter_list':([7,],[10,]),'compound_statement':([1,],[4,]),'function_call_statement':([1,],[5,]),'program':([0,],[2,]),'statement':([1,],[3,]),'statement_list':([0,],[1,]),}
 
 _lr_goto = { }
 for _k, _v in _lr_goto_items.items():
@@ -25,11 +25,14 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> chemical_equation","S'",1,None,None,None),
-  ('chemical_equation -> <empty>','chemical_equation',0,'p_chemical_equation','parser.py',42),
-  ('chemical_equation -> species_list','chemical_equation',1,'p_chemical_equation','parser.py',43),
-  ('species_list -> species_list species','species_list',2,'p_species_list','parser.py',52),
-  ('species_list -> species','species_list',1,'p_species','parser.py',56),
-  ('species -> SYMBOL','species',1,'p_single_species','parser.py',61),
-  ('species -> SYMBOL COUNT','species',2,'p_single_species','parser.py',62),
+  ("S' -> program","S'",1,None,None,None),
+  ('program -> statement_list','program',1,'p_program','lex_yacc.py',124),
+  ('statement_list -> <empty>','statement_list',0,'p_statement_list','lex_yacc.py',132),
+  ('statement_list -> statement_list statement','statement_list',2,'p_statement_list','lex_yacc.py',133),
+  ('statement -> compound_statement','statement',1,'p_statement','lex_yacc.py',143),
+  ('compound_statement -> function_call_statement','compound_statement',1,'p_compound_statement','lex_yacc.py',150),
+  ('function_call_statement -> ID LPAREN parameter_list RPAREN','function_call_statement',4,'p_function_call_statement','lex_yacc.py',156),
+  ('function_call_statement -> ID LPAREN RPAREN','function_call_statement',3,'p_function_call_statement','lex_yacc.py',157),
+  ('parameter_list -> parameter_list COMMA STRING','parameter_list',3,'p_parameter_list','lex_yacc.py',167),
+  ('parameter_list -> STRING','parameter_list',1,'p_parameter_list','lex_yacc.py',168),
 ]
