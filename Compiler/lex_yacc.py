@@ -141,6 +141,7 @@ def p_compound_statement(p):
     """
     compound_statement : function_call_statement
     compound_statement : variable_declaration
+    compound_statement : selection_statement
     """
     p[0] = p[1]
 
@@ -371,6 +372,67 @@ def p_number(p):
     number : DOUBLE
     """
     p[0] = p[1]
+
+
+
+def p_selection_statement(p):
+    """
+    selection_statement : K_IF LPAREN boolean_expression RPAREN \
+                                compound_statement_list \
+                            else_if_statement_list \
+                            else_statement \
+                        K_END
+    """
+    p[0] = "if " + p[3] + ":\n" + p[5] + ("\n" if p[6] else "") + p[6] + ("\n" if p[7] else "") + p[7]
+
+
+def p_else_if_statement_list(p):
+    """
+    else_if_statement_list :
+    else_if_statement_list : else_if_statement_list else_if_statement
+    """
+    if len(p) == 1:
+        p[0] = ""
+    else:
+        if p[1] == "":
+            p[0] = p[2]
+        else:
+            p[0] = p[1] + "\n" + p[2]
+
+    print indent
+
+
+def p_else_if_statement(p):
+    """
+    else_if_statement : K_EF LPAREN boolean_expression RPAREN \
+                                compound_statement_list
+    """
+    p[0] = "elif " + p[3] + ":\n" + p[5]
+
+
+def p_else_statement(p):
+    """
+    else_statement :
+    else_statement : K_EL compound_statement_list
+    """
+    if len(p) == 1:
+        p[0] = ""
+    else:
+        p[0] = "else:\n" + p[2]
+
+def p_compound_statement_list(p):
+    """
+    compound_statement_list :
+    compound_statement_list : compound_statement_list compound_statement
+    """
+    if len(p) == 1:
+        p[0] = ""
+    else:
+        if p[1] == "":
+            p[0] = p[2]
+        else:
+            # @todo indent
+            p[0] = p[1] + "\n" + p[2]
 
 def p_error(p):
     print "unknown text at " + p.value
