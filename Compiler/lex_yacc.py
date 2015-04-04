@@ -27,7 +27,8 @@ reserved = {
     'true' : 'K_TRUE',
     'false' : 'K_FALSE',
     'done' : 'K_DONE',
-    'continue' : 'K_CONTINUE'
+    'continue' : 'K_CONTINUE',
+    'break' : 'K_BREAK'
 }
 
 
@@ -142,6 +143,8 @@ def p_compound_statement(p):
     compound_statement : function_call_statement
     compound_statement : variable_declaration
     compound_statement : selection_statement
+    compound_statement : iteration_statement
+    compound_statement : jump_statement
     """
     p[0] = p[1]
 
@@ -355,6 +358,7 @@ def p_arithmetic_factor(p):
     """
     arithmetic_factor : LPAREN arithmetic_expression RPAREN
     arithmetic_factor : number
+    arithmetic_factor : ID
     arithmetic_factor : function_call_statement
     arithmetic_factor : MINUS arithmetic_factor
     """
@@ -383,8 +387,7 @@ def p_selection_statement(p):
                             else_statement \
                         K_END
     """
-    p[0] = "if " + p[3] + ":\n" + p[5] + ("\n" if p[6] else "") + p[6] + ("\n" if p[7] else "") + p[7]
-
+    p[0] = "if " + p[3] + ":\n" +indent(p[5])+ ("\n" if p[6] else "") + p[6] + ("\n" if p[7] else "") + p[7]
 
 def p_else_if_statement_list(p):
     """
@@ -399,7 +402,6 @@ def p_else_if_statement_list(p):
         else:
             p[0] = p[1] + "\n" + p[2]
 
-    print indent
 
 
 def p_else_if_statement(p):
@@ -407,7 +409,7 @@ def p_else_if_statement(p):
     else_if_statement : K_EF LPAREN boolean_expression RPAREN \
                                 compound_statement_list
     """
-    p[0] = "elif " + p[3] + ":\n" + p[5]
+    p[0] = "elif " + p[3] + ":\n" + indent(p[5])
 
 
 def p_else_statement(p):
@@ -418,7 +420,7 @@ def p_else_statement(p):
     if len(p) == 1:
         p[0] = ""
     else:
-        p[0] = "else:\n" + p[2]
+        p[0] = "else:\n" + indent(p[2])
 
 def p_compound_statement_list(p):
     """
@@ -433,6 +435,36 @@ def p_compound_statement_list(p):
         else:
             # @todo indent
             p[0] = p[1] + "\n" + p[2]
+
+
+def p_iteration_statement(p):
+    """
+    iteration_statement : K_WHILE LPAREN boolean_expression RPAREN \
+                            compound_statement_list \
+                        K_END
+    """
+    p[0] = "while " + p[3] + ":\n" + indent(p[5])
+
+
+def p_jump_statement(p):
+    """
+    jump_statement : K_CONTINUE
+    jump_statement : K_BREAK
+    jump_statement : K_DONE
+    """
+    if p[1] == "done":
+        p[0] = "return"
+    elif p[1] == "break":
+        p[0] = "break"
+    else:
+        p[0] = "continue"
+
+
+def indent(p):
+    ret = []
+    for s in p.split("\n"):
+        ret.append("    " + s)
+    return "\n".join(ret)
 
 def p_error(p):
     print "unknown text at " + p.value
