@@ -132,7 +132,8 @@ def p_statement_list(p):
         p[0] = p[1] + ("\n" if p[1] else "") + p[2]
 
 def p_statement(p):
-    """    
+    """
+    statement : function_declaration
     statement : compound_statement
     """
     p[0] = p[1]
@@ -459,6 +460,38 @@ def p_jump_statement(p):
     else:
         p[0] = "continue"
 
+
+def p_function_declaration(p):
+    """
+    function_declaration : pre_type_modifier type ID LPAREN argument_list RPAREN ASSIGN unary_expression \
+                                compound_statement_list \
+                            K_END
+    function_declaration : pre_type_modifier type ID LPAREN RPAREN ASSIGN unary_expression \
+                                compound_statement_list \
+                            K_END
+    """
+    if len(p) == 11:
+        p[0] = "def " + p[3] + "(" + p[5] + "):\n" + indent(p[8]) + " = None\n" + indent(p[9]) + "\n" + indent("return " + p[8])
+    else:
+        p[0] = "def " + p[3] + "():\n" + indent(p[7]) + " = None\n" + indent(p[8]) + "\n" + indent("return " + p[7])
+
+
+def p_argument_list(p):
+    """
+    argument_list : argument_list COMMA argument
+    argument_list : argument
+    """
+    if len(p) == 4:
+        p[0] = p[1] + ", " + p[3]
+    else:
+        p[0] = p[1]
+
+
+def p_argument(p):
+    """
+    argument : pre_type_modifier type ID
+    """
+    p[0] = p[3]
 
 def indent(p):
     ret = []
