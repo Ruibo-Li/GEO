@@ -192,10 +192,10 @@ def p_variable_declaration(p):
         elif p[1] == "set":
             #@todo Don't know
             p[0] = p[3] + " = @TODO initialize me"
+        elif p[2] == ":=":
+            p[0] = p[1] + " = " + p[3]
     elif len(p) == 6:
         #@todo assign value
-        p[0] = p[3] + " = " + p[5]
-    else:
         p[0] = p[3] + " = " + p[5]
 
 def p_pre_type_modifier(p):
@@ -230,6 +230,7 @@ def p_expression(p):
     """
     expression : string_expression
     expression : unary_expression
+    expression : boolean_expression
     """
     p[0] = p[1]
 
@@ -268,6 +269,59 @@ def p_unary_expression(p):
         p[0] = "False"
     else:
         p[0] = p[1]
+
+def p_boolean_expression(p):
+    """
+    boolean_expression : boolean_expression OR boolean_term
+    boolean_expression : boolean_term
+    """
+    if len(p) == 4:
+        p[0] = p[1] + " or " + p[3]
+    else:
+        p[0] = p[1]
+
+def p_boolean_term(p):
+    """
+    boolean_term : boolean_term AND boolean_factor
+    boolean_term : boolean_factor
+    """
+    if len(p) == 4:
+        p[0] = p[1] + " and " + p[3]
+    else:
+        p[0] = p[1]
+
+def p_boolean_factor(p):
+    """
+    boolean_factor : LPAREN boolean_expression RPAREN
+    boolean_factor : unary_expression comparator unary_expression
+    boolean_factor : unary_expression
+    boolean_factor : NEG boolean_factor
+    """
+    if len(p) == 4:
+        if p[1] == "(":
+            p[0] = "(" + p[2] + ")"
+        else:
+            p[0] = p[1] + " " + p[2] + " " + p[3]
+    elif len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = " not " + p[2]
+
+
+def p_comparator(p):
+    """
+    comparator : GT
+    comparator : LT
+    comparator : GEQ
+    comparator : LEQ
+    comparator : EQ
+    comparator : NEQ
+    """
+    if p[1] == '=':
+        p[0] = "=="
+    else:
+        p[0] = p[1]
+
 
 def p_error(p):
     print "unknown text at " + p.value

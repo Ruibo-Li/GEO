@@ -2,28 +2,19 @@ Created by PLY version 3.4 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
-    NEG
     K_NULL
     K_END
     K_IF
     MINUS
     COMMENT
-    GEQ
-    LT
     K_EL
-    NEQ
     K_EF
-    GT
     DIVIDE
     K_CONTINUE
     K_WHILE
     TIMES
     K_POINT
-    EQ
-    AND
     K_DONE
-    LEQ
-    OR
     MOD
 
 Grammar
@@ -58,31 +49,46 @@ Rule 26    type -> K_CIRCLE
 Rule 27    type -> K_TEXT
 Rule 28    expression -> string_expression
 Rule 29    expression -> unary_expression
-Rule 30    string_expression -> string_expression PLUS string_term
-Rule 31    string_expression -> STRING
-Rule 32    string_term -> function_call_statement
-Rule 33    string_term -> STRING
-Rule 34    unary_expression -> ID
-Rule 35    unary_expression -> STRING
-Rule 36    unary_expression -> INTEGER
-Rule 37    unary_expression -> function_call_statement
-Rule 38    unary_expression -> DOUBLE
-Rule 39    unary_expression -> K_TRUE
-Rule 40    unary_expression -> K_FALSE
+Rule 30    expression -> boolean_expression
+Rule 31    string_expression -> string_expression PLUS string_term
+Rule 32    string_expression -> STRING
+Rule 33    string_term -> function_call_statement
+Rule 34    string_term -> STRING
+Rule 35    unary_expression -> ID
+Rule 36    unary_expression -> STRING
+Rule 37    unary_expression -> INTEGER
+Rule 38    unary_expression -> function_call_statement
+Rule 39    unary_expression -> DOUBLE
+Rule 40    unary_expression -> K_TRUE
+Rule 41    unary_expression -> K_FALSE
+Rule 42    boolean_expression -> boolean_expression OR boolean_term
+Rule 43    boolean_expression -> boolean_term
+Rule 44    boolean_term -> boolean_term AND boolean_factor
+Rule 45    boolean_term -> boolean_factor
+Rule 46    boolean_factor -> LPAREN boolean_expression RPAREN
+Rule 47    boolean_factor -> unary_expression comparator unary_expression
+Rule 48    boolean_factor -> unary_expression
+Rule 49    boolean_factor -> NEG boolean_factor
+Rule 50    comparator -> GT
+Rule 51    comparator -> LT
+Rule 52    comparator -> GEQ
+Rule 53    comparator -> LEQ
+Rule 54    comparator -> EQ
+Rule 55    comparator -> NEQ
 
 Terminals, with rules where they appear
 
-AND                  : 
+AND                  : 44
 ASSIGN               : 12 13
 COMMA                : 9
 COMMENT              : 
 DIVIDE               : 
-DOUBLE               : 38
-EQ                   : 
-GEQ                  : 
-GT                   : 
-ID                   : 7 8 11 12 13 34
-INTEGER              : 36
+DOUBLE               : 39
+EQ                   : 54
+GEQ                  : 52
+GT                   : 50
+ID                   : 7 8 11 12 13 35
+INTEGER              : 37
 K_BOOL               : 21
 K_CIRCLE             : 26
 K_CONTINUE           : 
@@ -92,7 +98,7 @@ K_DOUBLE             : 19
 K_EF                 : 
 K_EL                 : 
 K_END                : 
-K_FALSE              : 40
+K_FALSE              : 41
 K_IF                 : 
 K_INT                : 18
 K_LIST               : 15
@@ -104,37 +110,41 @@ K_SHAPE              : 23
 K_STRING             : 20
 K_TEXT               : 27
 K_TRIANGLE           : 24
-K_TRUE               : 39
+K_TRUE               : 40
 K_WHILE              : 
 K_WINDOW             : 22
-LEQ                  : 
-LPAREN               : 7 8
-LT                   : 
+LEQ                  : 53
+LPAREN               : 7 8 46
+LT                   : 51
 MINUS                : 
 MOD                  : 
-NEG                  : 
-NEQ                  : 
-OR                   : 
-PLUS                 : 30
-RPAREN               : 7 8
-STRING               : 31 33 35
+NEG                  : 49
+NEQ                  : 55
+OR                   : 42
+PLUS                 : 31
+RPAREN               : 7 8 46
+STRING               : 32 34 36
 TIMES                : 
 error                : 
 
 Nonterminals, with rules where they appear
 
+boolean_expression   : 30 42 46
+boolean_factor       : 44 45 49
+boolean_term         : 42 43 44
+comparator           : 47
 compound_statement   : 4
 expression           : 9 10 12 13
-function_call_statement : 5 32 37
+function_call_statement : 5 33 38
 parameter_list       : 7 9
 pre_type_modifier    : 11 12
 program              : 0
 statement            : 3
 statement_list       : 1 3
-string_expression    : 28 30
-string_term          : 30
+string_expression    : 28 31
+string_term          : 31
 type                 : 11 12
-unary_expression     : 29
+unary_expression     : 29 47 47 48
 variable_declaration : 6
 
 Parsing method: LALR
@@ -463,29 +473,43 @@ state 23
     (13) variable_declaration -> ID ASSIGN . expression
     (28) expression -> . string_expression
     (29) expression -> . unary_expression
-    (30) string_expression -> . string_expression PLUS string_term
-    (31) string_expression -> . STRING
-    (34) unary_expression -> . ID
-    (35) unary_expression -> . STRING
-    (36) unary_expression -> . INTEGER
-    (37) unary_expression -> . function_call_statement
-    (38) unary_expression -> . DOUBLE
-    (39) unary_expression -> . K_TRUE
-    (40) unary_expression -> . K_FALSE
+    (30) expression -> . boolean_expression
+    (31) string_expression -> . string_expression PLUS string_term
+    (32) string_expression -> . STRING
+    (35) unary_expression -> . ID
+    (36) unary_expression -> . STRING
+    (37) unary_expression -> . INTEGER
+    (38) unary_expression -> . function_call_statement
+    (39) unary_expression -> . DOUBLE
+    (40) unary_expression -> . K_TRUE
+    (41) unary_expression -> . K_FALSE
+    (42) boolean_expression -> . boolean_expression OR boolean_term
+    (43) boolean_expression -> . boolean_term
     (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
     (8) function_call_statement -> . ID LPAREN RPAREN
+    (44) boolean_term -> . boolean_term AND boolean_factor
+    (45) boolean_term -> . boolean_factor
+    (46) boolean_factor -> . LPAREN boolean_expression RPAREN
+    (47) boolean_factor -> . unary_expression comparator unary_expression
+    (48) boolean_factor -> . unary_expression
+    (49) boolean_factor -> . NEG boolean_factor
 
-    STRING          shift and go to state 27
-    ID              shift and go to state 34
+    STRING          shift and go to state 33
+    ID              shift and go to state 36
     INTEGER         shift and go to state 31
-    DOUBLE          shift and go to state 29
-    K_TRUE          shift and go to state 32
-    K_FALSE         shift and go to state 35
+    DOUBLE          shift and go to state 38
+    K_TRUE          shift and go to state 30
+    K_FALSE         shift and go to state 26
+    LPAREN          shift and go to state 34
+    NEG             shift and go to state 28
 
-    string_expression              shift and go to state 26
-    unary_expression               shift and go to state 28
-    function_call_statement        shift and go to state 30
-    expression                     shift and go to state 33
+    string_expression              shift and go to state 32
+    unary_expression               shift and go to state 27
+    boolean_expression             shift and go to state 37
+    boolean_term                   shift and go to state 29
+    function_call_statement        shift and go to state 39
+    boolean_factor                 shift and go to state 35
+    expression                     shift and go to state 40
 
 state 24
 
@@ -495,31 +519,45 @@ state 24
     (10) parameter_list -> . expression
     (28) expression -> . string_expression
     (29) expression -> . unary_expression
-    (30) string_expression -> . string_expression PLUS string_term
-    (31) string_expression -> . STRING
-    (34) unary_expression -> . ID
-    (35) unary_expression -> . STRING
-    (36) unary_expression -> . INTEGER
-    (37) unary_expression -> . function_call_statement
-    (38) unary_expression -> . DOUBLE
-    (39) unary_expression -> . K_TRUE
-    (40) unary_expression -> . K_FALSE
+    (30) expression -> . boolean_expression
+    (31) string_expression -> . string_expression PLUS string_term
+    (32) string_expression -> . STRING
+    (35) unary_expression -> . ID
+    (36) unary_expression -> . STRING
+    (37) unary_expression -> . INTEGER
+    (38) unary_expression -> . function_call_statement
+    (39) unary_expression -> . DOUBLE
+    (40) unary_expression -> . K_TRUE
+    (41) unary_expression -> . K_FALSE
+    (42) boolean_expression -> . boolean_expression OR boolean_term
+    (43) boolean_expression -> . boolean_term
     (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
     (8) function_call_statement -> . ID LPAREN RPAREN
+    (44) boolean_term -> . boolean_term AND boolean_factor
+    (45) boolean_term -> . boolean_factor
+    (46) boolean_factor -> . LPAREN boolean_expression RPAREN
+    (47) boolean_factor -> . unary_expression comparator unary_expression
+    (48) boolean_factor -> . unary_expression
+    (49) boolean_factor -> . NEG boolean_factor
 
-    RPAREN          shift and go to state 36
-    STRING          shift and go to state 27
-    ID              shift and go to state 34
+    RPAREN          shift and go to state 41
+    STRING          shift and go to state 33
+    ID              shift and go to state 36
     INTEGER         shift and go to state 31
-    DOUBLE          shift and go to state 29
-    K_TRUE          shift and go to state 32
-    K_FALSE         shift and go to state 35
+    DOUBLE          shift and go to state 38
+    K_TRUE          shift and go to state 30
+    K_FALSE         shift and go to state 26
+    LPAREN          shift and go to state 34
+    NEG             shift and go to state 28
 
-    string_expression              shift and go to state 26
-    parameter_list                 shift and go to state 37
-    unary_expression               shift and go to state 28
-    function_call_statement        shift and go to state 30
-    expression                     shift and go to state 38
+    string_expression              shift and go to state 32
+    parameter_list                 shift and go to state 42
+    unary_expression               shift and go to state 27
+    boolean_expression             shift and go to state 37
+    boolean_term                   shift and go to state 29
+    function_call_statement        shift and go to state 39
+    boolean_factor                 shift and go to state 35
+    expression                     shift and go to state 43
 
 state 25
 
@@ -541,100 +579,69 @@ state 25
     K_CIRCLE        reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
     K_TEXT          reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
     $end            reduce using rule 11 (variable_declaration -> pre_type_modifier type ID .)
-    ASSIGN          shift and go to state 39
+    ASSIGN          shift and go to state 44
 
 
 state 26
 
-    (28) expression -> string_expression .
-    (30) string_expression -> string_expression . PLUS string_term
+    (41) unary_expression -> K_FALSE .
 
-    RPAREN          reduce using rule 28 (expression -> string_expression .)
-    COMMA           reduce using rule 28 (expression -> string_expression .)
-    ID              reduce using rule 28 (expression -> string_expression .)
-    K_LIST          reduce using rule 28 (expression -> string_expression .)
-    K_DICT          reduce using rule 28 (expression -> string_expression .)
-    K_SET           reduce using rule 28 (expression -> string_expression .)
-    K_INT           reduce using rule 28 (expression -> string_expression .)
-    K_DOUBLE        reduce using rule 28 (expression -> string_expression .)
-    K_STRING        reduce using rule 28 (expression -> string_expression .)
-    K_BOOL          reduce using rule 28 (expression -> string_expression .)
-    K_WINDOW        reduce using rule 28 (expression -> string_expression .)
-    K_SHAPE         reduce using rule 28 (expression -> string_expression .)
-    K_TRIANGLE      reduce using rule 28 (expression -> string_expression .)
-    K_RECTANGLE     reduce using rule 28 (expression -> string_expression .)
-    K_CIRCLE        reduce using rule 28 (expression -> string_expression .)
-    K_TEXT          reduce using rule 28 (expression -> string_expression .)
-    $end            reduce using rule 28 (expression -> string_expression .)
-    PLUS            shift and go to state 40
+    AND             reduce using rule 41 (unary_expression -> K_FALSE .)
+    OR              reduce using rule 41 (unary_expression -> K_FALSE .)
+    ID              reduce using rule 41 (unary_expression -> K_FALSE .)
+    K_LIST          reduce using rule 41 (unary_expression -> K_FALSE .)
+    K_DICT          reduce using rule 41 (unary_expression -> K_FALSE .)
+    K_SET           reduce using rule 41 (unary_expression -> K_FALSE .)
+    K_INT           reduce using rule 41 (unary_expression -> K_FALSE .)
+    K_DOUBLE        reduce using rule 41 (unary_expression -> K_FALSE .)
+    K_STRING        reduce using rule 41 (unary_expression -> K_FALSE .)
+    K_BOOL          reduce using rule 41 (unary_expression -> K_FALSE .)
+    K_WINDOW        reduce using rule 41 (unary_expression -> K_FALSE .)
+    K_SHAPE         reduce using rule 41 (unary_expression -> K_FALSE .)
+    K_TRIANGLE      reduce using rule 41 (unary_expression -> K_FALSE .)
+    K_RECTANGLE     reduce using rule 41 (unary_expression -> K_FALSE .)
+    K_CIRCLE        reduce using rule 41 (unary_expression -> K_FALSE .)
+    K_TEXT          reduce using rule 41 (unary_expression -> K_FALSE .)
+    $end            reduce using rule 41 (unary_expression -> K_FALSE .)
+    RPAREN          reduce using rule 41 (unary_expression -> K_FALSE .)
+    COMMA           reduce using rule 41 (unary_expression -> K_FALSE .)
+    GT              reduce using rule 41 (unary_expression -> K_FALSE .)
+    LT              reduce using rule 41 (unary_expression -> K_FALSE .)
+    GEQ             reduce using rule 41 (unary_expression -> K_FALSE .)
+    LEQ             reduce using rule 41 (unary_expression -> K_FALSE .)
+    EQ              reduce using rule 41 (unary_expression -> K_FALSE .)
+    NEQ             reduce using rule 41 (unary_expression -> K_FALSE .)
 
 
 state 27
 
-    (31) string_expression -> STRING .
-    (35) unary_expression -> STRING .
-
-  ! reduce/reduce conflict for RPAREN resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for COMMA resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for ID resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for K_LIST resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for K_DICT resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for K_SET resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for K_INT resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for K_DOUBLE resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for K_STRING resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for K_BOOL resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for K_WINDOW resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for K_SHAPE resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for K_TRIANGLE resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for K_RECTANGLE resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for K_CIRCLE resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for K_TEXT resolved using rule 31 (string_expression -> STRING .)
-  ! reduce/reduce conflict for $end resolved using rule 31 (string_expression -> STRING .)
-    PLUS            reduce using rule 31 (string_expression -> STRING .)
-    ID              reduce using rule 31 (string_expression -> STRING .)
-    K_LIST          reduce using rule 31 (string_expression -> STRING .)
-    K_DICT          reduce using rule 31 (string_expression -> STRING .)
-    K_SET           reduce using rule 31 (string_expression -> STRING .)
-    K_INT           reduce using rule 31 (string_expression -> STRING .)
-    K_DOUBLE        reduce using rule 31 (string_expression -> STRING .)
-    K_STRING        reduce using rule 31 (string_expression -> STRING .)
-    K_BOOL          reduce using rule 31 (string_expression -> STRING .)
-    K_WINDOW        reduce using rule 31 (string_expression -> STRING .)
-    K_SHAPE         reduce using rule 31 (string_expression -> STRING .)
-    K_TRIANGLE      reduce using rule 31 (string_expression -> STRING .)
-    K_RECTANGLE     reduce using rule 31 (string_expression -> STRING .)
-    K_CIRCLE        reduce using rule 31 (string_expression -> STRING .)
-    K_TEXT          reduce using rule 31 (string_expression -> STRING .)
-    $end            reduce using rule 31 (string_expression -> STRING .)
-    RPAREN          reduce using rule 31 (string_expression -> STRING .)
-    COMMA           reduce using rule 31 (string_expression -> STRING .)
-
-  ! RPAREN          [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! COMMA           [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! ID              [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! K_LIST          [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! K_DICT          [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! K_SET           [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! K_INT           [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! K_DOUBLE        [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! K_STRING        [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! K_BOOL          [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! K_WINDOW        [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! K_SHAPE         [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! K_TRIANGLE      [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! K_RECTANGLE     [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! K_CIRCLE        [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! K_TEXT          [ reduce using rule 35 (unary_expression -> STRING .) ]
-  ! $end            [ reduce using rule 35 (unary_expression -> STRING .) ]
-
-
-state 28
-
     (29) expression -> unary_expression .
+    (47) boolean_factor -> unary_expression . comparator unary_expression
+    (48) boolean_factor -> unary_expression .
+    (50) comparator -> . GT
+    (51) comparator -> . LT
+    (52) comparator -> . GEQ
+    (53) comparator -> . LEQ
+    (54) comparator -> . EQ
+    (55) comparator -> . NEQ
 
-    RPAREN          reduce using rule 29 (expression -> unary_expression .)
-    COMMA           reduce using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for ID resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for K_LIST resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for K_DICT resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for K_SET resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for K_INT resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for K_DOUBLE resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for K_STRING resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for K_BOOL resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for K_WINDOW resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for K_SHAPE resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for K_TRIANGLE resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for K_RECTANGLE resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for K_CIRCLE resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for K_TEXT resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for $end resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 29 (expression -> unary_expression .)
+  ! reduce/reduce conflict for COMMA resolved using rule 29 (expression -> unary_expression .)
     ID              reduce using rule 29 (expression -> unary_expression .)
     K_LIST          reduce using rule 29 (expression -> unary_expression .)
     K_DICT          reduce using rule 29 (expression -> unary_expression .)
@@ -650,101 +657,431 @@ state 28
     K_CIRCLE        reduce using rule 29 (expression -> unary_expression .)
     K_TEXT          reduce using rule 29 (expression -> unary_expression .)
     $end            reduce using rule 29 (expression -> unary_expression .)
+    RPAREN          reduce using rule 29 (expression -> unary_expression .)
+    COMMA           reduce using rule 29 (expression -> unary_expression .)
+    AND             reduce using rule 48 (boolean_factor -> unary_expression .)
+    OR              reduce using rule 48 (boolean_factor -> unary_expression .)
+    GT              shift and go to state 46
+    LT              shift and go to state 49
+    GEQ             shift and go to state 45
+    LEQ             shift and go to state 48
+    EQ              shift and go to state 50
+    NEQ             shift and go to state 51
 
+  ! ID              [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! K_LIST          [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! K_DICT          [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! K_SET           [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! K_INT           [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! K_DOUBLE        [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! K_STRING        [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! K_BOOL          [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! K_WINDOW        [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! K_SHAPE         [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! K_TRIANGLE      [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! K_RECTANGLE     [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! K_CIRCLE        [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! K_TEXT          [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! $end            [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! RPAREN          [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+  ! COMMA           [ reduce using rule 48 (boolean_factor -> unary_expression .) ]
+
+    comparator                     shift and go to state 47
+
+state 28
+
+    (49) boolean_factor -> NEG . boolean_factor
+    (46) boolean_factor -> . LPAREN boolean_expression RPAREN
+    (47) boolean_factor -> . unary_expression comparator unary_expression
+    (48) boolean_factor -> . unary_expression
+    (49) boolean_factor -> . NEG boolean_factor
+    (35) unary_expression -> . ID
+    (36) unary_expression -> . STRING
+    (37) unary_expression -> . INTEGER
+    (38) unary_expression -> . function_call_statement
+    (39) unary_expression -> . DOUBLE
+    (40) unary_expression -> . K_TRUE
+    (41) unary_expression -> . K_FALSE
+    (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
+    (8) function_call_statement -> . ID LPAREN RPAREN
+
+    LPAREN          shift and go to state 34
+    NEG             shift and go to state 28
+    ID              shift and go to state 36
+    STRING          shift and go to state 54
+    INTEGER         shift and go to state 31
+    DOUBLE          shift and go to state 38
+    K_TRUE          shift and go to state 30
+    K_FALSE         shift and go to state 26
+
+    function_call_statement        shift and go to state 39
+    boolean_factor                 shift and go to state 53
+    unary_expression               shift and go to state 52
 
 state 29
 
-    (38) unary_expression -> DOUBLE .
+    (43) boolean_expression -> boolean_term .
+    (44) boolean_term -> boolean_term . AND boolean_factor
 
-    RPAREN          reduce using rule 38 (unary_expression -> DOUBLE .)
-    COMMA           reduce using rule 38 (unary_expression -> DOUBLE .)
-    ID              reduce using rule 38 (unary_expression -> DOUBLE .)
-    K_LIST          reduce using rule 38 (unary_expression -> DOUBLE .)
-    K_DICT          reduce using rule 38 (unary_expression -> DOUBLE .)
-    K_SET           reduce using rule 38 (unary_expression -> DOUBLE .)
-    K_INT           reduce using rule 38 (unary_expression -> DOUBLE .)
-    K_DOUBLE        reduce using rule 38 (unary_expression -> DOUBLE .)
-    K_STRING        reduce using rule 38 (unary_expression -> DOUBLE .)
-    K_BOOL          reduce using rule 38 (unary_expression -> DOUBLE .)
-    K_WINDOW        reduce using rule 38 (unary_expression -> DOUBLE .)
-    K_SHAPE         reduce using rule 38 (unary_expression -> DOUBLE .)
-    K_TRIANGLE      reduce using rule 38 (unary_expression -> DOUBLE .)
-    K_RECTANGLE     reduce using rule 38 (unary_expression -> DOUBLE .)
-    K_CIRCLE        reduce using rule 38 (unary_expression -> DOUBLE .)
-    K_TEXT          reduce using rule 38 (unary_expression -> DOUBLE .)
-    $end            reduce using rule 38 (unary_expression -> DOUBLE .)
+    OR              reduce using rule 43 (boolean_expression -> boolean_term .)
+    RPAREN          reduce using rule 43 (boolean_expression -> boolean_term .)
+    COMMA           reduce using rule 43 (boolean_expression -> boolean_term .)
+    ID              reduce using rule 43 (boolean_expression -> boolean_term .)
+    K_LIST          reduce using rule 43 (boolean_expression -> boolean_term .)
+    K_DICT          reduce using rule 43 (boolean_expression -> boolean_term .)
+    K_SET           reduce using rule 43 (boolean_expression -> boolean_term .)
+    K_INT           reduce using rule 43 (boolean_expression -> boolean_term .)
+    K_DOUBLE        reduce using rule 43 (boolean_expression -> boolean_term .)
+    K_STRING        reduce using rule 43 (boolean_expression -> boolean_term .)
+    K_BOOL          reduce using rule 43 (boolean_expression -> boolean_term .)
+    K_WINDOW        reduce using rule 43 (boolean_expression -> boolean_term .)
+    K_SHAPE         reduce using rule 43 (boolean_expression -> boolean_term .)
+    K_TRIANGLE      reduce using rule 43 (boolean_expression -> boolean_term .)
+    K_RECTANGLE     reduce using rule 43 (boolean_expression -> boolean_term .)
+    K_CIRCLE        reduce using rule 43 (boolean_expression -> boolean_term .)
+    K_TEXT          reduce using rule 43 (boolean_expression -> boolean_term .)
+    $end            reduce using rule 43 (boolean_expression -> boolean_term .)
+    AND             shift and go to state 55
 
 
 state 30
 
-    (37) unary_expression -> function_call_statement .
+    (40) unary_expression -> K_TRUE .
 
-    RPAREN          reduce using rule 37 (unary_expression -> function_call_statement .)
-    COMMA           reduce using rule 37 (unary_expression -> function_call_statement .)
-    ID              reduce using rule 37 (unary_expression -> function_call_statement .)
-    K_LIST          reduce using rule 37 (unary_expression -> function_call_statement .)
-    K_DICT          reduce using rule 37 (unary_expression -> function_call_statement .)
-    K_SET           reduce using rule 37 (unary_expression -> function_call_statement .)
-    K_INT           reduce using rule 37 (unary_expression -> function_call_statement .)
-    K_DOUBLE        reduce using rule 37 (unary_expression -> function_call_statement .)
-    K_STRING        reduce using rule 37 (unary_expression -> function_call_statement .)
-    K_BOOL          reduce using rule 37 (unary_expression -> function_call_statement .)
-    K_WINDOW        reduce using rule 37 (unary_expression -> function_call_statement .)
-    K_SHAPE         reduce using rule 37 (unary_expression -> function_call_statement .)
-    K_TRIANGLE      reduce using rule 37 (unary_expression -> function_call_statement .)
-    K_RECTANGLE     reduce using rule 37 (unary_expression -> function_call_statement .)
-    K_CIRCLE        reduce using rule 37 (unary_expression -> function_call_statement .)
-    K_TEXT          reduce using rule 37 (unary_expression -> function_call_statement .)
-    $end            reduce using rule 37 (unary_expression -> function_call_statement .)
+    AND             reduce using rule 40 (unary_expression -> K_TRUE .)
+    OR              reduce using rule 40 (unary_expression -> K_TRUE .)
+    ID              reduce using rule 40 (unary_expression -> K_TRUE .)
+    K_LIST          reduce using rule 40 (unary_expression -> K_TRUE .)
+    K_DICT          reduce using rule 40 (unary_expression -> K_TRUE .)
+    K_SET           reduce using rule 40 (unary_expression -> K_TRUE .)
+    K_INT           reduce using rule 40 (unary_expression -> K_TRUE .)
+    K_DOUBLE        reduce using rule 40 (unary_expression -> K_TRUE .)
+    K_STRING        reduce using rule 40 (unary_expression -> K_TRUE .)
+    K_BOOL          reduce using rule 40 (unary_expression -> K_TRUE .)
+    K_WINDOW        reduce using rule 40 (unary_expression -> K_TRUE .)
+    K_SHAPE         reduce using rule 40 (unary_expression -> K_TRUE .)
+    K_TRIANGLE      reduce using rule 40 (unary_expression -> K_TRUE .)
+    K_RECTANGLE     reduce using rule 40 (unary_expression -> K_TRUE .)
+    K_CIRCLE        reduce using rule 40 (unary_expression -> K_TRUE .)
+    K_TEXT          reduce using rule 40 (unary_expression -> K_TRUE .)
+    $end            reduce using rule 40 (unary_expression -> K_TRUE .)
+    RPAREN          reduce using rule 40 (unary_expression -> K_TRUE .)
+    COMMA           reduce using rule 40 (unary_expression -> K_TRUE .)
+    GT              reduce using rule 40 (unary_expression -> K_TRUE .)
+    LT              reduce using rule 40 (unary_expression -> K_TRUE .)
+    GEQ             reduce using rule 40 (unary_expression -> K_TRUE .)
+    LEQ             reduce using rule 40 (unary_expression -> K_TRUE .)
+    EQ              reduce using rule 40 (unary_expression -> K_TRUE .)
+    NEQ             reduce using rule 40 (unary_expression -> K_TRUE .)
 
 
 state 31
 
-    (36) unary_expression -> INTEGER .
+    (37) unary_expression -> INTEGER .
 
-    RPAREN          reduce using rule 36 (unary_expression -> INTEGER .)
-    COMMA           reduce using rule 36 (unary_expression -> INTEGER .)
-    ID              reduce using rule 36 (unary_expression -> INTEGER .)
-    K_LIST          reduce using rule 36 (unary_expression -> INTEGER .)
-    K_DICT          reduce using rule 36 (unary_expression -> INTEGER .)
-    K_SET           reduce using rule 36 (unary_expression -> INTEGER .)
-    K_INT           reduce using rule 36 (unary_expression -> INTEGER .)
-    K_DOUBLE        reduce using rule 36 (unary_expression -> INTEGER .)
-    K_STRING        reduce using rule 36 (unary_expression -> INTEGER .)
-    K_BOOL          reduce using rule 36 (unary_expression -> INTEGER .)
-    K_WINDOW        reduce using rule 36 (unary_expression -> INTEGER .)
-    K_SHAPE         reduce using rule 36 (unary_expression -> INTEGER .)
-    K_TRIANGLE      reduce using rule 36 (unary_expression -> INTEGER .)
-    K_RECTANGLE     reduce using rule 36 (unary_expression -> INTEGER .)
-    K_CIRCLE        reduce using rule 36 (unary_expression -> INTEGER .)
-    K_TEXT          reduce using rule 36 (unary_expression -> INTEGER .)
-    $end            reduce using rule 36 (unary_expression -> INTEGER .)
+    AND             reduce using rule 37 (unary_expression -> INTEGER .)
+    OR              reduce using rule 37 (unary_expression -> INTEGER .)
+    ID              reduce using rule 37 (unary_expression -> INTEGER .)
+    K_LIST          reduce using rule 37 (unary_expression -> INTEGER .)
+    K_DICT          reduce using rule 37 (unary_expression -> INTEGER .)
+    K_SET           reduce using rule 37 (unary_expression -> INTEGER .)
+    K_INT           reduce using rule 37 (unary_expression -> INTEGER .)
+    K_DOUBLE        reduce using rule 37 (unary_expression -> INTEGER .)
+    K_STRING        reduce using rule 37 (unary_expression -> INTEGER .)
+    K_BOOL          reduce using rule 37 (unary_expression -> INTEGER .)
+    K_WINDOW        reduce using rule 37 (unary_expression -> INTEGER .)
+    K_SHAPE         reduce using rule 37 (unary_expression -> INTEGER .)
+    K_TRIANGLE      reduce using rule 37 (unary_expression -> INTEGER .)
+    K_RECTANGLE     reduce using rule 37 (unary_expression -> INTEGER .)
+    K_CIRCLE        reduce using rule 37 (unary_expression -> INTEGER .)
+    K_TEXT          reduce using rule 37 (unary_expression -> INTEGER .)
+    $end            reduce using rule 37 (unary_expression -> INTEGER .)
+    RPAREN          reduce using rule 37 (unary_expression -> INTEGER .)
+    COMMA           reduce using rule 37 (unary_expression -> INTEGER .)
+    GT              reduce using rule 37 (unary_expression -> INTEGER .)
+    LT              reduce using rule 37 (unary_expression -> INTEGER .)
+    GEQ             reduce using rule 37 (unary_expression -> INTEGER .)
+    LEQ             reduce using rule 37 (unary_expression -> INTEGER .)
+    EQ              reduce using rule 37 (unary_expression -> INTEGER .)
+    NEQ             reduce using rule 37 (unary_expression -> INTEGER .)
 
 
 state 32
 
-    (39) unary_expression -> K_TRUE .
+    (28) expression -> string_expression .
+    (31) string_expression -> string_expression . PLUS string_term
 
-    RPAREN          reduce using rule 39 (unary_expression -> K_TRUE .)
-    COMMA           reduce using rule 39 (unary_expression -> K_TRUE .)
-    ID              reduce using rule 39 (unary_expression -> K_TRUE .)
-    K_LIST          reduce using rule 39 (unary_expression -> K_TRUE .)
-    K_DICT          reduce using rule 39 (unary_expression -> K_TRUE .)
-    K_SET           reduce using rule 39 (unary_expression -> K_TRUE .)
-    K_INT           reduce using rule 39 (unary_expression -> K_TRUE .)
-    K_DOUBLE        reduce using rule 39 (unary_expression -> K_TRUE .)
-    K_STRING        reduce using rule 39 (unary_expression -> K_TRUE .)
-    K_BOOL          reduce using rule 39 (unary_expression -> K_TRUE .)
-    K_WINDOW        reduce using rule 39 (unary_expression -> K_TRUE .)
-    K_SHAPE         reduce using rule 39 (unary_expression -> K_TRUE .)
-    K_TRIANGLE      reduce using rule 39 (unary_expression -> K_TRUE .)
-    K_RECTANGLE     reduce using rule 39 (unary_expression -> K_TRUE .)
-    K_CIRCLE        reduce using rule 39 (unary_expression -> K_TRUE .)
-    K_TEXT          reduce using rule 39 (unary_expression -> K_TRUE .)
-    $end            reduce using rule 39 (unary_expression -> K_TRUE .)
+    ID              reduce using rule 28 (expression -> string_expression .)
+    K_LIST          reduce using rule 28 (expression -> string_expression .)
+    K_DICT          reduce using rule 28 (expression -> string_expression .)
+    K_SET           reduce using rule 28 (expression -> string_expression .)
+    K_INT           reduce using rule 28 (expression -> string_expression .)
+    K_DOUBLE        reduce using rule 28 (expression -> string_expression .)
+    K_STRING        reduce using rule 28 (expression -> string_expression .)
+    K_BOOL          reduce using rule 28 (expression -> string_expression .)
+    K_WINDOW        reduce using rule 28 (expression -> string_expression .)
+    K_SHAPE         reduce using rule 28 (expression -> string_expression .)
+    K_TRIANGLE      reduce using rule 28 (expression -> string_expression .)
+    K_RECTANGLE     reduce using rule 28 (expression -> string_expression .)
+    K_CIRCLE        reduce using rule 28 (expression -> string_expression .)
+    K_TEXT          reduce using rule 28 (expression -> string_expression .)
+    $end            reduce using rule 28 (expression -> string_expression .)
+    RPAREN          reduce using rule 28 (expression -> string_expression .)
+    COMMA           reduce using rule 28 (expression -> string_expression .)
+    PLUS            shift and go to state 56
 
 
 state 33
+
+    (32) string_expression -> STRING .
+    (36) unary_expression -> STRING .
+
+  ! reduce/reduce conflict for ID resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_LIST resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_DICT resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_SET resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_INT resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_DOUBLE resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_STRING resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_BOOL resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_WINDOW resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_SHAPE resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_TRIANGLE resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_RECTANGLE resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_CIRCLE resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for K_TEXT resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for $end resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 32 (string_expression -> STRING .)
+  ! reduce/reduce conflict for COMMA resolved using rule 32 (string_expression -> STRING .)
+    PLUS            reduce using rule 32 (string_expression -> STRING .)
+    ID              reduce using rule 32 (string_expression -> STRING .)
+    K_LIST          reduce using rule 32 (string_expression -> STRING .)
+    K_DICT          reduce using rule 32 (string_expression -> STRING .)
+    K_SET           reduce using rule 32 (string_expression -> STRING .)
+    K_INT           reduce using rule 32 (string_expression -> STRING .)
+    K_DOUBLE        reduce using rule 32 (string_expression -> STRING .)
+    K_STRING        reduce using rule 32 (string_expression -> STRING .)
+    K_BOOL          reduce using rule 32 (string_expression -> STRING .)
+    K_WINDOW        reduce using rule 32 (string_expression -> STRING .)
+    K_SHAPE         reduce using rule 32 (string_expression -> STRING .)
+    K_TRIANGLE      reduce using rule 32 (string_expression -> STRING .)
+    K_RECTANGLE     reduce using rule 32 (string_expression -> STRING .)
+    K_CIRCLE        reduce using rule 32 (string_expression -> STRING .)
+    K_TEXT          reduce using rule 32 (string_expression -> STRING .)
+    $end            reduce using rule 32 (string_expression -> STRING .)
+    RPAREN          reduce using rule 32 (string_expression -> STRING .)
+    COMMA           reduce using rule 32 (string_expression -> STRING .)
+    GT              reduce using rule 36 (unary_expression -> STRING .)
+    LT              reduce using rule 36 (unary_expression -> STRING .)
+    GEQ             reduce using rule 36 (unary_expression -> STRING .)
+    LEQ             reduce using rule 36 (unary_expression -> STRING .)
+    EQ              reduce using rule 36 (unary_expression -> STRING .)
+    NEQ             reduce using rule 36 (unary_expression -> STRING .)
+    AND             reduce using rule 36 (unary_expression -> STRING .)
+    OR              reduce using rule 36 (unary_expression -> STRING .)
+
+  ! ID              [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! K_LIST          [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! K_DICT          [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! K_SET           [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! K_INT           [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! K_DOUBLE        [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! K_STRING        [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! K_BOOL          [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! K_WINDOW        [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! K_SHAPE         [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! K_TRIANGLE      [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! K_RECTANGLE     [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! K_CIRCLE        [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! K_TEXT          [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! $end            [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! RPAREN          [ reduce using rule 36 (unary_expression -> STRING .) ]
+  ! COMMA           [ reduce using rule 36 (unary_expression -> STRING .) ]
+
+
+state 34
+
+    (46) boolean_factor -> LPAREN . boolean_expression RPAREN
+    (42) boolean_expression -> . boolean_expression OR boolean_term
+    (43) boolean_expression -> . boolean_term
+    (44) boolean_term -> . boolean_term AND boolean_factor
+    (45) boolean_term -> . boolean_factor
+    (46) boolean_factor -> . LPAREN boolean_expression RPAREN
+    (47) boolean_factor -> . unary_expression comparator unary_expression
+    (48) boolean_factor -> . unary_expression
+    (49) boolean_factor -> . NEG boolean_factor
+    (35) unary_expression -> . ID
+    (36) unary_expression -> . STRING
+    (37) unary_expression -> . INTEGER
+    (38) unary_expression -> . function_call_statement
+    (39) unary_expression -> . DOUBLE
+    (40) unary_expression -> . K_TRUE
+    (41) unary_expression -> . K_FALSE
+    (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
+    (8) function_call_statement -> . ID LPAREN RPAREN
+
+    LPAREN          shift and go to state 34
+    NEG             shift and go to state 28
+    ID              shift and go to state 36
+    STRING          shift and go to state 54
+    INTEGER         shift and go to state 31
+    DOUBLE          shift and go to state 38
+    K_TRUE          shift and go to state 30
+    K_FALSE         shift and go to state 26
+
+    unary_expression               shift and go to state 52
+    boolean_expression             shift and go to state 57
+    boolean_term                   shift and go to state 29
+    function_call_statement        shift and go to state 39
+    boolean_factor                 shift and go to state 35
+
+state 35
+
+    (45) boolean_term -> boolean_factor .
+
+    AND             reduce using rule 45 (boolean_term -> boolean_factor .)
+    OR              reduce using rule 45 (boolean_term -> boolean_factor .)
+    RPAREN          reduce using rule 45 (boolean_term -> boolean_factor .)
+    COMMA           reduce using rule 45 (boolean_term -> boolean_factor .)
+    ID              reduce using rule 45 (boolean_term -> boolean_factor .)
+    K_LIST          reduce using rule 45 (boolean_term -> boolean_factor .)
+    K_DICT          reduce using rule 45 (boolean_term -> boolean_factor .)
+    K_SET           reduce using rule 45 (boolean_term -> boolean_factor .)
+    K_INT           reduce using rule 45 (boolean_term -> boolean_factor .)
+    K_DOUBLE        reduce using rule 45 (boolean_term -> boolean_factor .)
+    K_STRING        reduce using rule 45 (boolean_term -> boolean_factor .)
+    K_BOOL          reduce using rule 45 (boolean_term -> boolean_factor .)
+    K_WINDOW        reduce using rule 45 (boolean_term -> boolean_factor .)
+    K_SHAPE         reduce using rule 45 (boolean_term -> boolean_factor .)
+    K_TRIANGLE      reduce using rule 45 (boolean_term -> boolean_factor .)
+    K_RECTANGLE     reduce using rule 45 (boolean_term -> boolean_factor .)
+    K_CIRCLE        reduce using rule 45 (boolean_term -> boolean_factor .)
+    K_TEXT          reduce using rule 45 (boolean_term -> boolean_factor .)
+    $end            reduce using rule 45 (boolean_term -> boolean_factor .)
+
+
+state 36
+
+    (35) unary_expression -> ID .
+    (7) function_call_statement -> ID . LPAREN parameter_list RPAREN
+    (8) function_call_statement -> ID . LPAREN RPAREN
+
+    AND             reduce using rule 35 (unary_expression -> ID .)
+    OR              reduce using rule 35 (unary_expression -> ID .)
+    ID              reduce using rule 35 (unary_expression -> ID .)
+    K_LIST          reduce using rule 35 (unary_expression -> ID .)
+    K_DICT          reduce using rule 35 (unary_expression -> ID .)
+    K_SET           reduce using rule 35 (unary_expression -> ID .)
+    K_INT           reduce using rule 35 (unary_expression -> ID .)
+    K_DOUBLE        reduce using rule 35 (unary_expression -> ID .)
+    K_STRING        reduce using rule 35 (unary_expression -> ID .)
+    K_BOOL          reduce using rule 35 (unary_expression -> ID .)
+    K_WINDOW        reduce using rule 35 (unary_expression -> ID .)
+    K_SHAPE         reduce using rule 35 (unary_expression -> ID .)
+    K_TRIANGLE      reduce using rule 35 (unary_expression -> ID .)
+    K_RECTANGLE     reduce using rule 35 (unary_expression -> ID .)
+    K_CIRCLE        reduce using rule 35 (unary_expression -> ID .)
+    K_TEXT          reduce using rule 35 (unary_expression -> ID .)
+    $end            reduce using rule 35 (unary_expression -> ID .)
+    RPAREN          reduce using rule 35 (unary_expression -> ID .)
+    COMMA           reduce using rule 35 (unary_expression -> ID .)
+    GT              reduce using rule 35 (unary_expression -> ID .)
+    LT              reduce using rule 35 (unary_expression -> ID .)
+    GEQ             reduce using rule 35 (unary_expression -> ID .)
+    LEQ             reduce using rule 35 (unary_expression -> ID .)
+    EQ              reduce using rule 35 (unary_expression -> ID .)
+    NEQ             reduce using rule 35 (unary_expression -> ID .)
+    LPAREN          shift and go to state 24
+
+
+state 37
+
+    (30) expression -> boolean_expression .
+    (42) boolean_expression -> boolean_expression . OR boolean_term
+
+    ID              reduce using rule 30 (expression -> boolean_expression .)
+    K_LIST          reduce using rule 30 (expression -> boolean_expression .)
+    K_DICT          reduce using rule 30 (expression -> boolean_expression .)
+    K_SET           reduce using rule 30 (expression -> boolean_expression .)
+    K_INT           reduce using rule 30 (expression -> boolean_expression .)
+    K_DOUBLE        reduce using rule 30 (expression -> boolean_expression .)
+    K_STRING        reduce using rule 30 (expression -> boolean_expression .)
+    K_BOOL          reduce using rule 30 (expression -> boolean_expression .)
+    K_WINDOW        reduce using rule 30 (expression -> boolean_expression .)
+    K_SHAPE         reduce using rule 30 (expression -> boolean_expression .)
+    K_TRIANGLE      reduce using rule 30 (expression -> boolean_expression .)
+    K_RECTANGLE     reduce using rule 30 (expression -> boolean_expression .)
+    K_CIRCLE        reduce using rule 30 (expression -> boolean_expression .)
+    K_TEXT          reduce using rule 30 (expression -> boolean_expression .)
+    $end            reduce using rule 30 (expression -> boolean_expression .)
+    RPAREN          reduce using rule 30 (expression -> boolean_expression .)
+    COMMA           reduce using rule 30 (expression -> boolean_expression .)
+    OR              shift and go to state 58
+
+
+state 38
+
+    (39) unary_expression -> DOUBLE .
+
+    AND             reduce using rule 39 (unary_expression -> DOUBLE .)
+    OR              reduce using rule 39 (unary_expression -> DOUBLE .)
+    ID              reduce using rule 39 (unary_expression -> DOUBLE .)
+    K_LIST          reduce using rule 39 (unary_expression -> DOUBLE .)
+    K_DICT          reduce using rule 39 (unary_expression -> DOUBLE .)
+    K_SET           reduce using rule 39 (unary_expression -> DOUBLE .)
+    K_INT           reduce using rule 39 (unary_expression -> DOUBLE .)
+    K_DOUBLE        reduce using rule 39 (unary_expression -> DOUBLE .)
+    K_STRING        reduce using rule 39 (unary_expression -> DOUBLE .)
+    K_BOOL          reduce using rule 39 (unary_expression -> DOUBLE .)
+    K_WINDOW        reduce using rule 39 (unary_expression -> DOUBLE .)
+    K_SHAPE         reduce using rule 39 (unary_expression -> DOUBLE .)
+    K_TRIANGLE      reduce using rule 39 (unary_expression -> DOUBLE .)
+    K_RECTANGLE     reduce using rule 39 (unary_expression -> DOUBLE .)
+    K_CIRCLE        reduce using rule 39 (unary_expression -> DOUBLE .)
+    K_TEXT          reduce using rule 39 (unary_expression -> DOUBLE .)
+    $end            reduce using rule 39 (unary_expression -> DOUBLE .)
+    RPAREN          reduce using rule 39 (unary_expression -> DOUBLE .)
+    COMMA           reduce using rule 39 (unary_expression -> DOUBLE .)
+    GT              reduce using rule 39 (unary_expression -> DOUBLE .)
+    LT              reduce using rule 39 (unary_expression -> DOUBLE .)
+    GEQ             reduce using rule 39 (unary_expression -> DOUBLE .)
+    LEQ             reduce using rule 39 (unary_expression -> DOUBLE .)
+    EQ              reduce using rule 39 (unary_expression -> DOUBLE .)
+    NEQ             reduce using rule 39 (unary_expression -> DOUBLE .)
+
+
+state 39
+
+    (38) unary_expression -> function_call_statement .
+
+    AND             reduce using rule 38 (unary_expression -> function_call_statement .)
+    OR              reduce using rule 38 (unary_expression -> function_call_statement .)
+    ID              reduce using rule 38 (unary_expression -> function_call_statement .)
+    K_LIST          reduce using rule 38 (unary_expression -> function_call_statement .)
+    K_DICT          reduce using rule 38 (unary_expression -> function_call_statement .)
+    K_SET           reduce using rule 38 (unary_expression -> function_call_statement .)
+    K_INT           reduce using rule 38 (unary_expression -> function_call_statement .)
+    K_DOUBLE        reduce using rule 38 (unary_expression -> function_call_statement .)
+    K_STRING        reduce using rule 38 (unary_expression -> function_call_statement .)
+    K_BOOL          reduce using rule 38 (unary_expression -> function_call_statement .)
+    K_WINDOW        reduce using rule 38 (unary_expression -> function_call_statement .)
+    K_SHAPE         reduce using rule 38 (unary_expression -> function_call_statement .)
+    K_TRIANGLE      reduce using rule 38 (unary_expression -> function_call_statement .)
+    K_RECTANGLE     reduce using rule 38 (unary_expression -> function_call_statement .)
+    K_CIRCLE        reduce using rule 38 (unary_expression -> function_call_statement .)
+    K_TEXT          reduce using rule 38 (unary_expression -> function_call_statement .)
+    $end            reduce using rule 38 (unary_expression -> function_call_statement .)
+    RPAREN          reduce using rule 38 (unary_expression -> function_call_statement .)
+    COMMA           reduce using rule 38 (unary_expression -> function_call_statement .)
+    GT              reduce using rule 38 (unary_expression -> function_call_statement .)
+    LT              reduce using rule 38 (unary_expression -> function_call_statement .)
+    GEQ             reduce using rule 38 (unary_expression -> function_call_statement .)
+    LEQ             reduce using rule 38 (unary_expression -> function_call_statement .)
+    EQ              reduce using rule 38 (unary_expression -> function_call_statement .)
+    NEQ             reduce using rule 38 (unary_expression -> function_call_statement .)
+
+
+state 40
 
     (13) variable_declaration -> ID ASSIGN expression .
 
@@ -765,59 +1102,18 @@ state 33
     $end            reduce using rule 13 (variable_declaration -> ID ASSIGN expression .)
 
 
-state 34
-
-    (34) unary_expression -> ID .
-    (7) function_call_statement -> ID . LPAREN parameter_list RPAREN
-    (8) function_call_statement -> ID . LPAREN RPAREN
-
-    RPAREN          reduce using rule 34 (unary_expression -> ID .)
-    COMMA           reduce using rule 34 (unary_expression -> ID .)
-    ID              reduce using rule 34 (unary_expression -> ID .)
-    K_LIST          reduce using rule 34 (unary_expression -> ID .)
-    K_DICT          reduce using rule 34 (unary_expression -> ID .)
-    K_SET           reduce using rule 34 (unary_expression -> ID .)
-    K_INT           reduce using rule 34 (unary_expression -> ID .)
-    K_DOUBLE        reduce using rule 34 (unary_expression -> ID .)
-    K_STRING        reduce using rule 34 (unary_expression -> ID .)
-    K_BOOL          reduce using rule 34 (unary_expression -> ID .)
-    K_WINDOW        reduce using rule 34 (unary_expression -> ID .)
-    K_SHAPE         reduce using rule 34 (unary_expression -> ID .)
-    K_TRIANGLE      reduce using rule 34 (unary_expression -> ID .)
-    K_RECTANGLE     reduce using rule 34 (unary_expression -> ID .)
-    K_CIRCLE        reduce using rule 34 (unary_expression -> ID .)
-    K_TEXT          reduce using rule 34 (unary_expression -> ID .)
-    $end            reduce using rule 34 (unary_expression -> ID .)
-    LPAREN          shift and go to state 24
-
-
-state 35
-
-    (40) unary_expression -> K_FALSE .
-
-    RPAREN          reduce using rule 40 (unary_expression -> K_FALSE .)
-    COMMA           reduce using rule 40 (unary_expression -> K_FALSE .)
-    ID              reduce using rule 40 (unary_expression -> K_FALSE .)
-    K_LIST          reduce using rule 40 (unary_expression -> K_FALSE .)
-    K_DICT          reduce using rule 40 (unary_expression -> K_FALSE .)
-    K_SET           reduce using rule 40 (unary_expression -> K_FALSE .)
-    K_INT           reduce using rule 40 (unary_expression -> K_FALSE .)
-    K_DOUBLE        reduce using rule 40 (unary_expression -> K_FALSE .)
-    K_STRING        reduce using rule 40 (unary_expression -> K_FALSE .)
-    K_BOOL          reduce using rule 40 (unary_expression -> K_FALSE .)
-    K_WINDOW        reduce using rule 40 (unary_expression -> K_FALSE .)
-    K_SHAPE         reduce using rule 40 (unary_expression -> K_FALSE .)
-    K_TRIANGLE      reduce using rule 40 (unary_expression -> K_FALSE .)
-    K_RECTANGLE     reduce using rule 40 (unary_expression -> K_FALSE .)
-    K_CIRCLE        reduce using rule 40 (unary_expression -> K_FALSE .)
-    K_TEXT          reduce using rule 40 (unary_expression -> K_FALSE .)
-    $end            reduce using rule 40 (unary_expression -> K_FALSE .)
-
-
-state 36
+state 41
 
     (8) function_call_statement -> ID LPAREN RPAREN .
 
+    GT              reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    LT              reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    GEQ             reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    LEQ             reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    EQ              reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    NEQ             reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    AND             reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
+    OR              reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
     ID              reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
     K_LIST          reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
     K_DICT          reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
@@ -838,16 +1134,16 @@ state 36
     PLUS            reduce using rule 8 (function_call_statement -> ID LPAREN RPAREN .)
 
 
-state 37
+state 42
 
     (7) function_call_statement -> ID LPAREN parameter_list . RPAREN
     (9) parameter_list -> parameter_list . COMMA expression
 
-    RPAREN          shift and go to state 41
-    COMMA           shift and go to state 42
+    RPAREN          shift and go to state 59
+    COMMA           shift and go to state 60
 
 
-state 38
+state 43
 
     (10) parameter_list -> expression .
 
@@ -855,53 +1151,337 @@ state 38
     COMMA           reduce using rule 10 (parameter_list -> expression .)
 
 
-state 39
+state 44
 
     (12) variable_declaration -> pre_type_modifier type ID ASSIGN . expression
     (28) expression -> . string_expression
     (29) expression -> . unary_expression
-    (30) string_expression -> . string_expression PLUS string_term
-    (31) string_expression -> . STRING
-    (34) unary_expression -> . ID
-    (35) unary_expression -> . STRING
-    (36) unary_expression -> . INTEGER
-    (37) unary_expression -> . function_call_statement
-    (38) unary_expression -> . DOUBLE
-    (39) unary_expression -> . K_TRUE
-    (40) unary_expression -> . K_FALSE
+    (30) expression -> . boolean_expression
+    (31) string_expression -> . string_expression PLUS string_term
+    (32) string_expression -> . STRING
+    (35) unary_expression -> . ID
+    (36) unary_expression -> . STRING
+    (37) unary_expression -> . INTEGER
+    (38) unary_expression -> . function_call_statement
+    (39) unary_expression -> . DOUBLE
+    (40) unary_expression -> . K_TRUE
+    (41) unary_expression -> . K_FALSE
+    (42) boolean_expression -> . boolean_expression OR boolean_term
+    (43) boolean_expression -> . boolean_term
     (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
     (8) function_call_statement -> . ID LPAREN RPAREN
+    (44) boolean_term -> . boolean_term AND boolean_factor
+    (45) boolean_term -> . boolean_factor
+    (46) boolean_factor -> . LPAREN boolean_expression RPAREN
+    (47) boolean_factor -> . unary_expression comparator unary_expression
+    (48) boolean_factor -> . unary_expression
+    (49) boolean_factor -> . NEG boolean_factor
 
-    STRING          shift and go to state 27
-    ID              shift and go to state 34
+    STRING          shift and go to state 33
+    ID              shift and go to state 36
     INTEGER         shift and go to state 31
-    DOUBLE          shift and go to state 29
-    K_TRUE          shift and go to state 32
-    K_FALSE         shift and go to state 35
+    DOUBLE          shift and go to state 38
+    K_TRUE          shift and go to state 30
+    K_FALSE         shift and go to state 26
+    LPAREN          shift and go to state 34
+    NEG             shift and go to state 28
 
-    string_expression              shift and go to state 26
-    unary_expression               shift and go to state 28
-    function_call_statement        shift and go to state 30
-    expression                     shift and go to state 43
+    string_expression              shift and go to state 32
+    unary_expression               shift and go to state 27
+    boolean_expression             shift and go to state 37
+    boolean_term                   shift and go to state 29
+    function_call_statement        shift and go to state 39
+    boolean_factor                 shift and go to state 35
+    expression                     shift and go to state 61
 
-state 40
+state 45
 
-    (30) string_expression -> string_expression PLUS . string_term
-    (32) string_term -> . function_call_statement
-    (33) string_term -> . STRING
+    (52) comparator -> GEQ .
+
+    ID              reduce using rule 52 (comparator -> GEQ .)
+    STRING          reduce using rule 52 (comparator -> GEQ .)
+    INTEGER         reduce using rule 52 (comparator -> GEQ .)
+    DOUBLE          reduce using rule 52 (comparator -> GEQ .)
+    K_TRUE          reduce using rule 52 (comparator -> GEQ .)
+    K_FALSE         reduce using rule 52 (comparator -> GEQ .)
+
+
+state 46
+
+    (50) comparator -> GT .
+
+    ID              reduce using rule 50 (comparator -> GT .)
+    STRING          reduce using rule 50 (comparator -> GT .)
+    INTEGER         reduce using rule 50 (comparator -> GT .)
+    DOUBLE          reduce using rule 50 (comparator -> GT .)
+    K_TRUE          reduce using rule 50 (comparator -> GT .)
+    K_FALSE         reduce using rule 50 (comparator -> GT .)
+
+
+state 47
+
+    (47) boolean_factor -> unary_expression comparator . unary_expression
+    (35) unary_expression -> . ID
+    (36) unary_expression -> . STRING
+    (37) unary_expression -> . INTEGER
+    (38) unary_expression -> . function_call_statement
+    (39) unary_expression -> . DOUBLE
+    (40) unary_expression -> . K_TRUE
+    (41) unary_expression -> . K_FALSE
     (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
     (8) function_call_statement -> . ID LPAREN RPAREN
 
-    STRING          shift and go to state 44
-    ID              shift and go to state 47
+    ID              shift and go to state 36
+    STRING          shift and go to state 54
+    INTEGER         shift and go to state 31
+    DOUBLE          shift and go to state 38
+    K_TRUE          shift and go to state 30
+    K_FALSE         shift and go to state 26
 
-    string_term                    shift and go to state 46
-    function_call_statement        shift and go to state 45
+    function_call_statement        shift and go to state 39
+    unary_expression               shift and go to state 62
 
-state 41
+state 48
+
+    (53) comparator -> LEQ .
+
+    ID              reduce using rule 53 (comparator -> LEQ .)
+    STRING          reduce using rule 53 (comparator -> LEQ .)
+    INTEGER         reduce using rule 53 (comparator -> LEQ .)
+    DOUBLE          reduce using rule 53 (comparator -> LEQ .)
+    K_TRUE          reduce using rule 53 (comparator -> LEQ .)
+    K_FALSE         reduce using rule 53 (comparator -> LEQ .)
+
+
+state 49
+
+    (51) comparator -> LT .
+
+    ID              reduce using rule 51 (comparator -> LT .)
+    STRING          reduce using rule 51 (comparator -> LT .)
+    INTEGER         reduce using rule 51 (comparator -> LT .)
+    DOUBLE          reduce using rule 51 (comparator -> LT .)
+    K_TRUE          reduce using rule 51 (comparator -> LT .)
+    K_FALSE         reduce using rule 51 (comparator -> LT .)
+
+
+state 50
+
+    (54) comparator -> EQ .
+
+    ID              reduce using rule 54 (comparator -> EQ .)
+    STRING          reduce using rule 54 (comparator -> EQ .)
+    INTEGER         reduce using rule 54 (comparator -> EQ .)
+    DOUBLE          reduce using rule 54 (comparator -> EQ .)
+    K_TRUE          reduce using rule 54 (comparator -> EQ .)
+    K_FALSE         reduce using rule 54 (comparator -> EQ .)
+
+
+state 51
+
+    (55) comparator -> NEQ .
+
+    ID              reduce using rule 55 (comparator -> NEQ .)
+    STRING          reduce using rule 55 (comparator -> NEQ .)
+    INTEGER         reduce using rule 55 (comparator -> NEQ .)
+    DOUBLE          reduce using rule 55 (comparator -> NEQ .)
+    K_TRUE          reduce using rule 55 (comparator -> NEQ .)
+    K_FALSE         reduce using rule 55 (comparator -> NEQ .)
+
+
+state 52
+
+    (47) boolean_factor -> unary_expression . comparator unary_expression
+    (48) boolean_factor -> unary_expression .
+    (50) comparator -> . GT
+    (51) comparator -> . LT
+    (52) comparator -> . GEQ
+    (53) comparator -> . LEQ
+    (54) comparator -> . EQ
+    (55) comparator -> . NEQ
+
+    AND             reduce using rule 48 (boolean_factor -> unary_expression .)
+    OR              reduce using rule 48 (boolean_factor -> unary_expression .)
+    ID              reduce using rule 48 (boolean_factor -> unary_expression .)
+    K_LIST          reduce using rule 48 (boolean_factor -> unary_expression .)
+    K_DICT          reduce using rule 48 (boolean_factor -> unary_expression .)
+    K_SET           reduce using rule 48 (boolean_factor -> unary_expression .)
+    K_INT           reduce using rule 48 (boolean_factor -> unary_expression .)
+    K_DOUBLE        reduce using rule 48 (boolean_factor -> unary_expression .)
+    K_STRING        reduce using rule 48 (boolean_factor -> unary_expression .)
+    K_BOOL          reduce using rule 48 (boolean_factor -> unary_expression .)
+    K_WINDOW        reduce using rule 48 (boolean_factor -> unary_expression .)
+    K_SHAPE         reduce using rule 48 (boolean_factor -> unary_expression .)
+    K_TRIANGLE      reduce using rule 48 (boolean_factor -> unary_expression .)
+    K_RECTANGLE     reduce using rule 48 (boolean_factor -> unary_expression .)
+    K_CIRCLE        reduce using rule 48 (boolean_factor -> unary_expression .)
+    K_TEXT          reduce using rule 48 (boolean_factor -> unary_expression .)
+    $end            reduce using rule 48 (boolean_factor -> unary_expression .)
+    RPAREN          reduce using rule 48 (boolean_factor -> unary_expression .)
+    COMMA           reduce using rule 48 (boolean_factor -> unary_expression .)
+    GT              shift and go to state 46
+    LT              shift and go to state 49
+    GEQ             shift and go to state 45
+    LEQ             shift and go to state 48
+    EQ              shift and go to state 50
+    NEQ             shift and go to state 51
+
+    comparator                     shift and go to state 47
+
+state 53
+
+    (49) boolean_factor -> NEG boolean_factor .
+
+    AND             reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    OR              reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    ID              reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    K_LIST          reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    K_DICT          reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    K_SET           reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    K_INT           reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    K_DOUBLE        reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    K_STRING        reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    K_BOOL          reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    K_WINDOW        reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    K_SHAPE         reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    K_TRIANGLE      reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    K_RECTANGLE     reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    K_CIRCLE        reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    K_TEXT          reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    $end            reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    RPAREN          reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+    COMMA           reduce using rule 49 (boolean_factor -> NEG boolean_factor .)
+
+
+state 54
+
+    (36) unary_expression -> STRING .
+
+    AND             reduce using rule 36 (unary_expression -> STRING .)
+    OR              reduce using rule 36 (unary_expression -> STRING .)
+    ID              reduce using rule 36 (unary_expression -> STRING .)
+    K_LIST          reduce using rule 36 (unary_expression -> STRING .)
+    K_DICT          reduce using rule 36 (unary_expression -> STRING .)
+    K_SET           reduce using rule 36 (unary_expression -> STRING .)
+    K_INT           reduce using rule 36 (unary_expression -> STRING .)
+    K_DOUBLE        reduce using rule 36 (unary_expression -> STRING .)
+    K_STRING        reduce using rule 36 (unary_expression -> STRING .)
+    K_BOOL          reduce using rule 36 (unary_expression -> STRING .)
+    K_WINDOW        reduce using rule 36 (unary_expression -> STRING .)
+    K_SHAPE         reduce using rule 36 (unary_expression -> STRING .)
+    K_TRIANGLE      reduce using rule 36 (unary_expression -> STRING .)
+    K_RECTANGLE     reduce using rule 36 (unary_expression -> STRING .)
+    K_CIRCLE        reduce using rule 36 (unary_expression -> STRING .)
+    K_TEXT          reduce using rule 36 (unary_expression -> STRING .)
+    $end            reduce using rule 36 (unary_expression -> STRING .)
+    RPAREN          reduce using rule 36 (unary_expression -> STRING .)
+    COMMA           reduce using rule 36 (unary_expression -> STRING .)
+    GT              reduce using rule 36 (unary_expression -> STRING .)
+    LT              reduce using rule 36 (unary_expression -> STRING .)
+    GEQ             reduce using rule 36 (unary_expression -> STRING .)
+    LEQ             reduce using rule 36 (unary_expression -> STRING .)
+    EQ              reduce using rule 36 (unary_expression -> STRING .)
+    NEQ             reduce using rule 36 (unary_expression -> STRING .)
+
+
+state 55
+
+    (44) boolean_term -> boolean_term AND . boolean_factor
+    (46) boolean_factor -> . LPAREN boolean_expression RPAREN
+    (47) boolean_factor -> . unary_expression comparator unary_expression
+    (48) boolean_factor -> . unary_expression
+    (49) boolean_factor -> . NEG boolean_factor
+    (35) unary_expression -> . ID
+    (36) unary_expression -> . STRING
+    (37) unary_expression -> . INTEGER
+    (38) unary_expression -> . function_call_statement
+    (39) unary_expression -> . DOUBLE
+    (40) unary_expression -> . K_TRUE
+    (41) unary_expression -> . K_FALSE
+    (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
+    (8) function_call_statement -> . ID LPAREN RPAREN
+
+    LPAREN          shift and go to state 34
+    NEG             shift and go to state 28
+    ID              shift and go to state 36
+    STRING          shift and go to state 54
+    INTEGER         shift and go to state 31
+    DOUBLE          shift and go to state 38
+    K_TRUE          shift and go to state 30
+    K_FALSE         shift and go to state 26
+
+    unary_expression               shift and go to state 52
+    function_call_statement        shift and go to state 39
+    boolean_factor                 shift and go to state 63
+
+state 56
+
+    (31) string_expression -> string_expression PLUS . string_term
+    (33) string_term -> . function_call_statement
+    (34) string_term -> . STRING
+    (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
+    (8) function_call_statement -> . ID LPAREN RPAREN
+
+    STRING          shift and go to state 64
+    ID              shift and go to state 67
+
+    string_term                    shift and go to state 66
+    function_call_statement        shift and go to state 65
+
+state 57
+
+    (46) boolean_factor -> LPAREN boolean_expression . RPAREN
+    (42) boolean_expression -> boolean_expression . OR boolean_term
+
+    RPAREN          shift and go to state 68
+    OR              shift and go to state 58
+
+
+state 58
+
+    (42) boolean_expression -> boolean_expression OR . boolean_term
+    (44) boolean_term -> . boolean_term AND boolean_factor
+    (45) boolean_term -> . boolean_factor
+    (46) boolean_factor -> . LPAREN boolean_expression RPAREN
+    (47) boolean_factor -> . unary_expression comparator unary_expression
+    (48) boolean_factor -> . unary_expression
+    (49) boolean_factor -> . NEG boolean_factor
+    (35) unary_expression -> . ID
+    (36) unary_expression -> . STRING
+    (37) unary_expression -> . INTEGER
+    (38) unary_expression -> . function_call_statement
+    (39) unary_expression -> . DOUBLE
+    (40) unary_expression -> . K_TRUE
+    (41) unary_expression -> . K_FALSE
+    (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
+    (8) function_call_statement -> . ID LPAREN RPAREN
+
+    LPAREN          shift and go to state 34
+    NEG             shift and go to state 28
+    ID              shift and go to state 36
+    STRING          shift and go to state 54
+    INTEGER         shift and go to state 31
+    DOUBLE          shift and go to state 38
+    K_TRUE          shift and go to state 30
+    K_FALSE         shift and go to state 26
+
+    unary_expression               shift and go to state 52
+    boolean_term                   shift and go to state 69
+    function_call_statement        shift and go to state 39
+    boolean_factor                 shift and go to state 35
+
+state 59
 
     (7) function_call_statement -> ID LPAREN parameter_list RPAREN .
 
+    GT              reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    LT              reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    GEQ             reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    LEQ             reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    EQ              reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    NEQ             reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    AND             reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
+    OR              reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
     ID              reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
     K_LIST          reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
     K_DICT          reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
@@ -922,36 +1502,50 @@ state 41
     PLUS            reduce using rule 7 (function_call_statement -> ID LPAREN parameter_list RPAREN .)
 
 
-state 42
+state 60
 
     (9) parameter_list -> parameter_list COMMA . expression
     (28) expression -> . string_expression
     (29) expression -> . unary_expression
-    (30) string_expression -> . string_expression PLUS string_term
-    (31) string_expression -> . STRING
-    (34) unary_expression -> . ID
-    (35) unary_expression -> . STRING
-    (36) unary_expression -> . INTEGER
-    (37) unary_expression -> . function_call_statement
-    (38) unary_expression -> . DOUBLE
-    (39) unary_expression -> . K_TRUE
-    (40) unary_expression -> . K_FALSE
+    (30) expression -> . boolean_expression
+    (31) string_expression -> . string_expression PLUS string_term
+    (32) string_expression -> . STRING
+    (35) unary_expression -> . ID
+    (36) unary_expression -> . STRING
+    (37) unary_expression -> . INTEGER
+    (38) unary_expression -> . function_call_statement
+    (39) unary_expression -> . DOUBLE
+    (40) unary_expression -> . K_TRUE
+    (41) unary_expression -> . K_FALSE
+    (42) boolean_expression -> . boolean_expression OR boolean_term
+    (43) boolean_expression -> . boolean_term
     (7) function_call_statement -> . ID LPAREN parameter_list RPAREN
     (8) function_call_statement -> . ID LPAREN RPAREN
+    (44) boolean_term -> . boolean_term AND boolean_factor
+    (45) boolean_term -> . boolean_factor
+    (46) boolean_factor -> . LPAREN boolean_expression RPAREN
+    (47) boolean_factor -> . unary_expression comparator unary_expression
+    (48) boolean_factor -> . unary_expression
+    (49) boolean_factor -> . NEG boolean_factor
 
-    STRING          shift and go to state 27
-    ID              shift and go to state 34
+    STRING          shift and go to state 33
+    ID              shift and go to state 36
     INTEGER         shift and go to state 31
-    DOUBLE          shift and go to state 29
-    K_TRUE          shift and go to state 32
-    K_FALSE         shift and go to state 35
+    DOUBLE          shift and go to state 38
+    K_TRUE          shift and go to state 30
+    K_FALSE         shift and go to state 26
+    LPAREN          shift and go to state 34
+    NEG             shift and go to state 28
 
-    string_expression              shift and go to state 26
-    unary_expression               shift and go to state 28
-    function_call_statement        shift and go to state 30
-    expression                     shift and go to state 48
+    string_expression              shift and go to state 32
+    unary_expression               shift and go to state 27
+    boolean_expression             shift and go to state 37
+    boolean_term                   shift and go to state 29
+    function_call_statement        shift and go to state 39
+    boolean_factor                 shift and go to state 35
+    expression                     shift and go to state 70
 
-state 43
+state 61
 
     (12) variable_declaration -> pre_type_modifier type ID ASSIGN expression .
 
@@ -972,79 +1566,129 @@ state 43
     $end            reduce using rule 12 (variable_declaration -> pre_type_modifier type ID ASSIGN expression .)
 
 
-state 44
+state 62
 
-    (33) string_term -> STRING .
+    (47) boolean_factor -> unary_expression comparator unary_expression .
 
-    PLUS            reduce using rule 33 (string_term -> STRING .)
-    ID              reduce using rule 33 (string_term -> STRING .)
-    K_LIST          reduce using rule 33 (string_term -> STRING .)
-    K_DICT          reduce using rule 33 (string_term -> STRING .)
-    K_SET           reduce using rule 33 (string_term -> STRING .)
-    K_INT           reduce using rule 33 (string_term -> STRING .)
-    K_DOUBLE        reduce using rule 33 (string_term -> STRING .)
-    K_STRING        reduce using rule 33 (string_term -> STRING .)
-    K_BOOL          reduce using rule 33 (string_term -> STRING .)
-    K_WINDOW        reduce using rule 33 (string_term -> STRING .)
-    K_SHAPE         reduce using rule 33 (string_term -> STRING .)
-    K_TRIANGLE      reduce using rule 33 (string_term -> STRING .)
-    K_RECTANGLE     reduce using rule 33 (string_term -> STRING .)
-    K_CIRCLE        reduce using rule 33 (string_term -> STRING .)
-    K_TEXT          reduce using rule 33 (string_term -> STRING .)
-    $end            reduce using rule 33 (string_term -> STRING .)
-    RPAREN          reduce using rule 33 (string_term -> STRING .)
-    COMMA           reduce using rule 33 (string_term -> STRING .)
-
-
-state 45
-
-    (32) string_term -> function_call_statement .
-
-    PLUS            reduce using rule 32 (string_term -> function_call_statement .)
-    ID              reduce using rule 32 (string_term -> function_call_statement .)
-    K_LIST          reduce using rule 32 (string_term -> function_call_statement .)
-    K_DICT          reduce using rule 32 (string_term -> function_call_statement .)
-    K_SET           reduce using rule 32 (string_term -> function_call_statement .)
-    K_INT           reduce using rule 32 (string_term -> function_call_statement .)
-    K_DOUBLE        reduce using rule 32 (string_term -> function_call_statement .)
-    K_STRING        reduce using rule 32 (string_term -> function_call_statement .)
-    K_BOOL          reduce using rule 32 (string_term -> function_call_statement .)
-    K_WINDOW        reduce using rule 32 (string_term -> function_call_statement .)
-    K_SHAPE         reduce using rule 32 (string_term -> function_call_statement .)
-    K_TRIANGLE      reduce using rule 32 (string_term -> function_call_statement .)
-    K_RECTANGLE     reduce using rule 32 (string_term -> function_call_statement .)
-    K_CIRCLE        reduce using rule 32 (string_term -> function_call_statement .)
-    K_TEXT          reduce using rule 32 (string_term -> function_call_statement .)
-    $end            reduce using rule 32 (string_term -> function_call_statement .)
-    RPAREN          reduce using rule 32 (string_term -> function_call_statement .)
-    COMMA           reduce using rule 32 (string_term -> function_call_statement .)
+    AND             reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    OR              reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    ID              reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    K_LIST          reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    K_DICT          reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    K_SET           reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    K_INT           reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    K_DOUBLE        reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    K_STRING        reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    K_BOOL          reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    K_WINDOW        reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    K_SHAPE         reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    K_TRIANGLE      reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    K_RECTANGLE     reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    K_CIRCLE        reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    K_TEXT          reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    $end            reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    RPAREN          reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
+    COMMA           reduce using rule 47 (boolean_factor -> unary_expression comparator unary_expression .)
 
 
-state 46
+state 63
 
-    (30) string_expression -> string_expression PLUS string_term .
+    (44) boolean_term -> boolean_term AND boolean_factor .
 
-    PLUS            reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    ID              reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    K_LIST          reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    K_DICT          reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    K_SET           reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    K_INT           reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    K_DOUBLE        reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    K_STRING        reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    K_BOOL          reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    K_WINDOW        reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    K_SHAPE         reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    K_TRIANGLE      reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    K_RECTANGLE     reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    K_CIRCLE        reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    K_TEXT          reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    $end            reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    RPAREN          reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
-    COMMA           reduce using rule 30 (string_expression -> string_expression PLUS string_term .)
+    AND             reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    OR              reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    RPAREN          reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    COMMA           reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    ID              reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    K_LIST          reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    K_DICT          reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    K_SET           reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    K_INT           reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    K_DOUBLE        reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    K_STRING        reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    K_BOOL          reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    K_WINDOW        reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    K_SHAPE         reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    K_TRIANGLE      reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    K_RECTANGLE     reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    K_CIRCLE        reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    K_TEXT          reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
+    $end            reduce using rule 44 (boolean_term -> boolean_term AND boolean_factor .)
 
 
-state 47
+state 64
+
+    (34) string_term -> STRING .
+
+    PLUS            reduce using rule 34 (string_term -> STRING .)
+    ID              reduce using rule 34 (string_term -> STRING .)
+    K_LIST          reduce using rule 34 (string_term -> STRING .)
+    K_DICT          reduce using rule 34 (string_term -> STRING .)
+    K_SET           reduce using rule 34 (string_term -> STRING .)
+    K_INT           reduce using rule 34 (string_term -> STRING .)
+    K_DOUBLE        reduce using rule 34 (string_term -> STRING .)
+    K_STRING        reduce using rule 34 (string_term -> STRING .)
+    K_BOOL          reduce using rule 34 (string_term -> STRING .)
+    K_WINDOW        reduce using rule 34 (string_term -> STRING .)
+    K_SHAPE         reduce using rule 34 (string_term -> STRING .)
+    K_TRIANGLE      reduce using rule 34 (string_term -> STRING .)
+    K_RECTANGLE     reduce using rule 34 (string_term -> STRING .)
+    K_CIRCLE        reduce using rule 34 (string_term -> STRING .)
+    K_TEXT          reduce using rule 34 (string_term -> STRING .)
+    $end            reduce using rule 34 (string_term -> STRING .)
+    RPAREN          reduce using rule 34 (string_term -> STRING .)
+    COMMA           reduce using rule 34 (string_term -> STRING .)
+
+
+state 65
+
+    (33) string_term -> function_call_statement .
+
+    PLUS            reduce using rule 33 (string_term -> function_call_statement .)
+    ID              reduce using rule 33 (string_term -> function_call_statement .)
+    K_LIST          reduce using rule 33 (string_term -> function_call_statement .)
+    K_DICT          reduce using rule 33 (string_term -> function_call_statement .)
+    K_SET           reduce using rule 33 (string_term -> function_call_statement .)
+    K_INT           reduce using rule 33 (string_term -> function_call_statement .)
+    K_DOUBLE        reduce using rule 33 (string_term -> function_call_statement .)
+    K_STRING        reduce using rule 33 (string_term -> function_call_statement .)
+    K_BOOL          reduce using rule 33 (string_term -> function_call_statement .)
+    K_WINDOW        reduce using rule 33 (string_term -> function_call_statement .)
+    K_SHAPE         reduce using rule 33 (string_term -> function_call_statement .)
+    K_TRIANGLE      reduce using rule 33 (string_term -> function_call_statement .)
+    K_RECTANGLE     reduce using rule 33 (string_term -> function_call_statement .)
+    K_CIRCLE        reduce using rule 33 (string_term -> function_call_statement .)
+    K_TEXT          reduce using rule 33 (string_term -> function_call_statement .)
+    $end            reduce using rule 33 (string_term -> function_call_statement .)
+    RPAREN          reduce using rule 33 (string_term -> function_call_statement .)
+    COMMA           reduce using rule 33 (string_term -> function_call_statement .)
+
+
+state 66
+
+    (31) string_expression -> string_expression PLUS string_term .
+
+    PLUS            reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    ID              reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    K_LIST          reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    K_DICT          reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    K_SET           reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    K_INT           reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    K_DOUBLE        reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    K_STRING        reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    K_BOOL          reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    K_WINDOW        reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    K_SHAPE         reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    K_TRIANGLE      reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    K_RECTANGLE     reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    K_CIRCLE        reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    K_TEXT          reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    $end            reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    RPAREN          reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+    COMMA           reduce using rule 31 (string_expression -> string_expression PLUS string_term .)
+
+
+state 67
 
     (7) function_call_statement -> ID . LPAREN parameter_list RPAREN
     (8) function_call_statement -> ID . LPAREN RPAREN
@@ -1052,7 +1696,58 @@ state 47
     LPAREN          shift and go to state 24
 
 
-state 48
+state 68
+
+    (46) boolean_factor -> LPAREN boolean_expression RPAREN .
+
+    AND             reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    OR              reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    ID              reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    K_LIST          reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    K_DICT          reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    K_SET           reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    K_INT           reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    K_DOUBLE        reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    K_STRING        reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    K_BOOL          reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    K_WINDOW        reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    K_SHAPE         reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    K_TRIANGLE      reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    K_RECTANGLE     reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    K_CIRCLE        reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    K_TEXT          reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    $end            reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    RPAREN          reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+    COMMA           reduce using rule 46 (boolean_factor -> LPAREN boolean_expression RPAREN .)
+
+
+state 69
+
+    (42) boolean_expression -> boolean_expression OR boolean_term .
+    (44) boolean_term -> boolean_term . AND boolean_factor
+
+    OR              reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    RPAREN          reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    COMMA           reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    ID              reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    K_LIST          reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    K_DICT          reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    K_SET           reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    K_INT           reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    K_DOUBLE        reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    K_STRING        reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    K_BOOL          reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    K_WINDOW        reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    K_SHAPE         reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    K_TRIANGLE      reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    K_RECTANGLE     reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    K_CIRCLE        reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    K_TEXT          reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    $end            reduce using rule 42 (boolean_expression -> boolean_expression OR boolean_term .)
+    AND             shift and go to state 55
+
+
+state 70
 
     (9) parameter_list -> parameter_list COMMA expression .
 
@@ -1062,6 +1757,7 @@ state 48
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: reduce/reduce conflict in state 27 resolved using rule (string_expression -> STRING)
-WARNING: rejected rule (unary_expression -> STRING) in state 27
-WARNING: Rule (unary_expression -> STRING) is never reduced
+WARNING: reduce/reduce conflict in state 27 resolved using rule (expression -> unary_expression)
+WARNING: rejected rule (boolean_factor -> unary_expression) in state 27
+WARNING: reduce/reduce conflict in state 33 resolved using rule (string_expression -> STRING)
+WARNING: rejected rule (unary_expression -> STRING) in state 33
