@@ -78,20 +78,10 @@ t_ASSIGN = r':='
 t_LPAREN = r'\('
 t_RPAREN = r'\)'  
 t_STRING = r'\"([^\"]|\\")*\"'
-
+t_INTEGER = r'[0-9]+'
+t_DOUBLE = r'[0-9]+\.?[0-9]*|[0-9]*\.?[0-9]+'
 t_COMMA = r','
 
-
-# A regular expression rule with some action code
-def t_INTEGER(t):
-    r'(\+|-)?[0-9]+'
-    #t.value = int(t.value) Not sure if this is needed. We are making a string as output
-    return t
-
-def t_DOUBLE(t):
-    r'(\+|-)?([0-9]\+\.?)'
-    #t.value = float(t.value)
-    return t
 
 def t_ID(t):
   r'[_a-zA-Z][_a-zA-Z0-9]*'
@@ -231,6 +221,7 @@ def p_expression(p):
     expression : string_expression
     expression : unary_expression
     expression : boolean_expression
+    expression : arithmetic_expression
     """
     p[0] = p[1]
 
@@ -294,6 +285,8 @@ def p_boolean_factor(p):
     """
     boolean_factor : LPAREN boolean_expression RPAREN
     boolean_factor : unary_expression comparator unary_expression
+    boolean_factor : arithmetic_expression comparator arithmetic_expression
+    boolean_factor : string_expression comparator string_expression
     boolean_factor : unary_expression
     boolean_factor : NEG boolean_factor
     """
@@ -322,6 +315,62 @@ def p_comparator(p):
     else:
         p[0] = p[1]
 
+
+def p_arithmetic_expression(p):
+    """
+    arithmetic_expression : arithmetic_expression PLUS arithmetic_term
+    arithmetic_expression : arithmetic_expression MINUS arithmetic_term
+    arithmetic_expression : arithmetic_term
+    """
+    if len(p) == 4:
+        if p[2] == "+":
+            p[0] = p[1] + " + " + p[3]
+        else:
+            p[0] = p[1] + " - " + p[3]
+    else:
+        p[0] = p[1]
+
+
+
+def p_arithmetic_term(p):
+    """
+    arithmetic_term : arithmetic_term TIMES arithmetic_factor
+    arithmetic_term : arithmetic_term DIVIDE arithmetic_factor
+    arithmetic_term : arithmetic_term MOD arithmetic_factor
+    arithmetic_term : arithmetic_factor
+    """
+    if len(p) == 4:
+        if p[2] == "*":
+            p[0] = p[1] + " * " + p[3]
+        elif p[2] == "/":
+            p[0] = p[1] + " / " + p[3]
+        else:
+            p[0] = p[1] + " % " + p[3]
+    else:
+        p[0] = p[1]
+
+
+def p_arithmetic_factor(p):
+    """
+    arithmetic_factor : LPAREN arithmetic_expression RPAREN
+    arithmetic_factor : number
+    arithmetic_factor : function_call_statement
+    arithmetic_factor : MINUS arithmetic_factor
+    """
+    if len(p) == 4:
+        p[0] = "(" + p[2] + ")"
+    elif len(p) == 3:
+        p[0] = "-" + p[2]
+    else:
+        p[0] = p[1]
+
+
+def p_number(p):
+    """
+    number : INTEGER
+    number : DOUBLE
+    """
+    p[0] = p[1]
 
 def p_error(p):
     print "unknown text at " + p.value
