@@ -224,88 +224,83 @@ def p_type(p):
 
 def p_expression(p):
     """
-    expression : string_expression
-    expression : unary_expression
-    expression : boolean_expression
-    expression : arithmetic_expression
+    expression : expression op expression_term
+    expression : expression_term
     """
     p[0] = p[1]
 
-def p_string_expression(p):
+
+def p_expression_term(p):
     """
-    string_expression : string_expression PLUS string_term
-    string_expression : string_term
+    expression_term : expression_term op primary_expression
+    expression_term : primary_expression
     """
     if len(p) == 4:
-        p[0] = p[1] + " + " + p[3]
+        p[0] = p[1] + " " + p[2] + " " + p[3]
     else:
         p[0] = p[1]
 
 
-def p_string_term(p):
+def p_op(p):
     """
-    string_term : function_call_statement
-    string_term : STRING
-    string_term : ID
+    op : PLUS
+    op : MINUS
+    op : TIMES
+    op : DIVIDE
+    op : MOD
+    op : comparator
+    op : boolean_operator
     """
     p[0] = p[1]
+
+def p_boolean_operator(p):
+    """
+    boolean_operator : AND
+    boolean_operator : OR
+    """
+    if p[1] == "&&":
+        p[0] = "and"
+    else:
+        p[0] = "or"
+
+def p_primary_expression(p):
+    """
+    primary_expression : constant
+    primary_expression : ID
+    primary_expression : function_call_statement
+    primary_expression : LPAREN expression RPAREN
+    """
+    if len(p) == 4:
+        p[0] = "(" + p[2] + ")"
+    else:
+        p[0] = p[1]
+
+def p_constant(p):
+    """
+    constant : boolean_constant
+    constant : number
+    constant : STRING
+    """
+    p[0] = p[1]
+
+
+def p_boolean_constant(p):
+    """
+    boolean_constant : K_TRUE
+    boolean_constant : K_FALSE
+    """
+    if p[1] == "true":
+        p[0] = "True"
+    else:
+        p[0] = "False"
 
 
 def p_unary_expression(p):
     """
-    unary_expression : ID
-    unary_expression : STRING
-    unary_expression : INTEGER
-    unary_expression : function_call_statement
-    unary_expression : DOUBLE
-    unary_expression : K_TRUE
-    unary_expression : K_FALSE
+    unary_expression : primary_expression
     """
-    if p[1] == "true":
-        p[0] = "True"
-    elif p[1] == "false":
-        p[0] = "False"
-    else:
-        p[0] = p[1]
+    p[0] = p[1]
 
-def p_boolean_expression(p):
-    """
-    boolean_expression : boolean_expression OR boolean_term
-    boolean_expression : boolean_term
-    """
-    if len(p) == 4:
-        p[0] = p[1] + " or " + p[3]
-    else:
-        p[0] = p[1]
-
-def p_boolean_term(p):
-    """
-    boolean_term : boolean_term AND boolean_factor
-    boolean_term : boolean_factor
-    """
-    if len(p) == 4:
-        p[0] = p[1] + " and " + p[3]
-    else:
-        p[0] = p[1]
-
-def p_boolean_factor(p):
-    """
-    boolean_factor : LPAREN boolean_expression RPAREN
-    boolean_factor : unary_expression comparator unary_expression
-    boolean_factor : arithmetic_expression comparator arithmetic_expression
-    boolean_factor : string_expression comparator string_expression
-    boolean_factor : unary_expression
-    boolean_factor : NEG boolean_factor
-    """
-    if len(p) == 4:
-        if p[1] == "(":
-            p[0] = "(" + p[2] + ")"
-        else:
-            p[0] = p[1] + " " + p[2] + " " + p[3]
-    elif len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = " not " + p[2]
 
 
 def p_comparator(p):
@@ -323,56 +318,6 @@ def p_comparator(p):
         p[0] = p[1]
 
 
-def p_arithmetic_expression(p):
-    """
-    arithmetic_expression : arithmetic_expression PLUS arithmetic_term
-    arithmetic_expression : arithmetic_expression MINUS arithmetic_term
-    arithmetic_expression : arithmetic_term
-    """
-    if len(p) == 4:
-        if p[2] == "+":
-            p[0] = p[1] + " + " + p[3]
-        else:
-            p[0] = p[1] + " - " + p[3]
-    else:
-        p[0] = p[1]
-
-
-
-def p_arithmetic_term(p):
-    """
-    arithmetic_term : arithmetic_term TIMES arithmetic_factor
-    arithmetic_term : arithmetic_term DIVIDE arithmetic_factor
-    arithmetic_term : arithmetic_term MOD arithmetic_factor
-    arithmetic_term : arithmetic_factor
-    """
-    if len(p) == 4:
-        if p[2] == "*":
-            p[0] = p[1] + " * " + p[3]
-        elif p[2] == "/":
-            p[0] = p[1] + " / " + p[3]
-        else:
-            p[0] = p[1] + " % " + p[3]
-    else:
-        p[0] = p[1]
-
-
-def p_arithmetic_factor(p):
-    """
-    arithmetic_factor : LPAREN arithmetic_expression RPAREN
-    arithmetic_factor : number
-    arithmetic_factor : ID
-    arithmetic_factor : function_call_statement
-    arithmetic_factor : MINUS arithmetic_factor
-    """
-    if len(p) == 4:
-        p[0] = "(" + p[2] + ")"
-    elif len(p) == 3:
-        p[0] = "-" + p[2]
-    else:
-        p[0] = p[1]
-
-
 def p_number(p):
     """
     number : INTEGER
@@ -384,7 +329,7 @@ def p_number(p):
 
 def p_selection_statement(p):
     """
-    selection_statement : K_IF LPAREN boolean_expression RPAREN \
+    selection_statement : K_IF LPAREN expression RPAREN \
                                 compound_statement_list \
                             else_if_statement_list \
                             else_statement \
@@ -409,7 +354,7 @@ def p_else_if_statement_list(p):
 
 def p_else_if_statement(p):
     """
-    else_if_statement : K_EF LPAREN boolean_expression RPAREN \
+    else_if_statement : K_EF LPAREN expression RPAREN \
                                 compound_statement_list
     """
     p[0] = "elif " + p[3] + ":\n" + indent(p[5])
@@ -442,7 +387,7 @@ def p_compound_statement_list(p):
 
 def p_iteration_statement(p):
     """
-    iteration_statement : K_WHILE LPAREN boolean_expression RPAREN \
+    iteration_statement : K_WHILE LPAREN expression RPAREN \
                             compound_statement_list \
                         K_END
     """
@@ -502,10 +447,14 @@ def indent(p):
     return "\n".join(ret)
 
 def p_error(p):
-    print "unknown text at " + p.value
+    print_err("unknown text at " + p.value)
 
+def print_err(error):
+    print >>sys.stderr, error
 
 parser = yacc.yacc()
+
+
 
 
 if len(sys.argv) == 2:
@@ -514,13 +463,14 @@ if len(sys.argv) == 2:
         data = f.read()
         parser.parse(data)
     except:
-       print sys.exc_info()[0]
+        print_err(sys.exc_info()[0])
 else:
     while True:
         try:
             expressions = raw_input("> ")
-        except EOFError:
-            break
+        except :
+            print sys.exc_info()[0]
+            continue
         if expressions:
             parser.parse(expressions)
 

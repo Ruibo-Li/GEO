@@ -1,15 +1,19 @@
-/* Apply equation y = m*x + b
-        for values of x ranging from 0 to 9 */
-double x
-double y
 
-// Slope
-double m := 3
+int sum(int a, int b) := c
+	c := a + b
+end
 
-// y-intercept
-double b := 10
+int sub(int a, int b) := c
+	c := a - b
+end
 
 
+int main() := 1
+	int a := 10
+	int b := 20
+	print(str(a) + " + " + str(b) + " = " + str(sum(a, b)))
+	print(str(a) + " - " + str(b) + " = " + str(sub(a, b)))
+end
 
-x := 0
-print("x\ty")
+
+main()
