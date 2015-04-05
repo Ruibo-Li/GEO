@@ -455,8 +455,6 @@ def print_err(error):
 parser = yacc.yacc()
 
 
-
-
 if len(sys.argv) == 2:
     try:
         f = open(sys.argv[1])

@@ -8,7 +8,7 @@ int sub(int a, int b) := c
 end
 
 
-int main() := 1
+int main() := k
 	int a := 10
 	int b := 20
 	print(str(a) + " + " + str(b) + " = " + str(sum(a, b)))
