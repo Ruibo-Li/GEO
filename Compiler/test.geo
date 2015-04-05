@@ -1,5 +1,5 @@
 
-int sum(int a, int b) := c
+int sum(int a, int b) := 10
 	c := a + b
 end
 

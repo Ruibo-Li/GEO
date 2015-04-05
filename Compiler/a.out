@@ -2,16 +2,25 @@
 
 
 def sum(a, b):
-    c = None
-    c = a + b
-    return c
+    try:
+        xxxxx_res = 10
+    catch NameError:
+        10 = None
+        c = a + b
+    return 10
 def sub(a, b):
-    c = None
-    c = a - b
+    try:
+        xxxxx_res = c
+    catch NameError:
+        c = None
+        c = a - b
     return c
 def main():
-    k = None
-    a = 10
+    try:
+        xxxxx_res = k
+    catch NameError:
+        k = None
+        a = 10
     b = 20
     print(str(a) + " + " + str(b) + " = " + str(sum(a, b)))
     print(str(a) + " - " + str(b) + " = " + str(sub(a, b)))

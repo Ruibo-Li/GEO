@@ -109,7 +109,12 @@ def t_error(t):
 # Build the lexer
 lexer = lex.lex()
 
-indent = 0
+
+class Production:
+    def __init__(self, type=None, text=None, pretype=None):
+        self.type = type
+        self.text = text
+        self.pretype = pretype
 
 
 def p_program(p):
@@ -279,9 +284,16 @@ def p_constant(p):
     """
     constant : boolean_constant
     constant : number
-    constant : STRING
+    constant : string_constant
     """
     p[0] = p[1]
+
+
+def p_string_constant(p):
+    """
+    string_constant : STRING
+    """
+    p[0] = Production("string", p[1])
 
 
 def p_boolean_constant(p):
@@ -289,10 +301,13 @@ def p_boolean_constant(p):
     boolean_constant : K_TRUE
     boolean_constant : K_FALSE
     """
+    text = ""
     if p[1] == "true":
-        p[0] = "True"
+        text = "True"
     else:
-        p[0] = "False"
+        text = "False"
+
+    p[0] = Production("bool", text)
 
 
 def p_unary_expression(p):
@@ -323,7 +338,7 @@ def p_number(p):
     number : INTEGER
     number : DOUBLE
     """
-    p[0] = p[1]
+    p[0] = Production("number", p[1])
 
 
 
@@ -417,10 +432,13 @@ def p_function_declaration(p):
                                 compound_statement_list \
                             K_END
     """
+    temp_name = "xxxxx_res"
     if len(p) == 11:
-        p[0] = "def " + p[3] + "(" + p[5] + "):\n" + indent(p[8]) + " = None\n" + indent(p[9]) + "\n" + indent("return " + p[8])
+        try_block = "try:\n    " + temp_name + " = " + p[8] + "\ncatch NameError:\n    " + p[8] + " = None\n"
+        p[0] = "def " + p[3] + "(" + p[5] + "):\n" + indent(try_block) + indent(p[9]) + "\n" + indent("return " + p[8])
     else:
-        p[0] = "def " + p[3] + "():\n" + indent(p[7]) + " = None\n" + indent(p[8]) + "\n" + indent("return " + p[7])
+        try_block = "try:\n    " + temp_name + " = " + p[7] + "\ncatch NameError:\n    " + p[7] + " = None\n"
+        p[0] = "def " + p[3] + "():\n" + indent(try_block) + indent(p[8]) + "\n" + indent("return " + p[7])
 
 
 def p_argument_list(p):
