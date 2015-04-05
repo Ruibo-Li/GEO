@@ -96,7 +96,7 @@ def t_newline(t):
 
 def t_COMMENT(t):
     r'/\*(/|(\*)*[^\*])*(\*)+/|//.*'
-    return t  
+#    return t
 
 # A string containing ignored characters (spaces and tabs)
 t_ignore  = ' \t'
@@ -216,6 +216,7 @@ def p_type(p):
     type : K_TRIANGLE
     type : K_RECTANGLE
     type : K_CIRCLE
+    type : K_POINT
     type : K_TEXT
     """
     p[0] = p[1]
@@ -233,7 +234,7 @@ def p_expression(p):
 def p_string_expression(p):
     """
     string_expression : string_expression PLUS string_term
-    string_expression : STRING
+    string_expression : string_term
     """
     if len(p) == 4:
         p[0] = p[1] + " + " + p[3]
@@ -245,6 +246,7 @@ def p_string_term(p):
     """
     string_term : function_call_statement
     string_term : STRING
+    string_term : ID
     """
     p[0] = p[1]
 
@@ -505,13 +507,22 @@ def p_error(p):
 
 parser = yacc.yacc()
 
-while True:
+
+if len(sys.argv) == 2:
     try:
-        expressions = raw_input("> ")
-    except EOFError:
-        break
-    if expressions:
-        parser.parse(expressions)
+        f = open(sys.argv[1])
+        data = f.read()
+        parser.parse(data)
+    except:
+       print sys.exc_info()[0]
+else:
+    while True:
+        try:
+            expressions = raw_input("> ")
+        except EOFError:
+            break
+        if expressions:
+            parser.parse(expressions)
 
 
 

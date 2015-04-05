@@ -7,7 +7,7 @@ int y_center := width / 2
 Point center := Point(x_center, y_center)
 
 int max_tries := 20
-int tries = 0
+int tries := 0
 int points := 0
 
 board := Window(width, height)
@@ -33,11 +33,12 @@ while(tries < max_tries)
 		points := points+ 5
 	ef (in(big_circle, click))
 		points := points + 1
+	end
 		
 	tries := tries + 1	
 end
 
-float avg := points / tries
+double avg := points / tries
 
 print ("Statistics:")
 print ("Points: " + points)
