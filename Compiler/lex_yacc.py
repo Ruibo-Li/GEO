@@ -110,11 +110,33 @@ def t_error(t):
 lexer = lex.lex()
 
 
+class Function:
+    def __init__(self, type=None, args=[]):
+        self.type = type
+        self.args = args
+
 class Production:
     def __init__(self, type=None, text=None, pretype=None):
         self.type = type
         self.text = text
         self.pretype = pretype
+
+
+
+#@todo add builtin functions
+functions = {}
+called_functions = []
+
+
+ensure_type = {
+    "bool" : [],
+    "number" : [],
+    "string" : [],
+    "Circle" : [],
+    "Shape" : [],
+    "rectangle" : [],
+    "triangle" : []
+}
 
 
 def p_program(p):
@@ -293,7 +315,7 @@ def p_string_constant(p):
     """
     string_constant : STRING
     """
-    p[0] = Production("string", p[1])
+    p[0] = p[1]
 
 
 def p_boolean_constant(p):
@@ -307,7 +329,7 @@ def p_boolean_constant(p):
     else:
         text = "False"
 
-    p[0] = Production("bool", text)
+    p[0] = text
 
 
 def p_unary_expression(p):
@@ -338,7 +360,7 @@ def p_number(p):
     number : INTEGER
     number : DOUBLE
     """
-    p[0] = Production("number", p[1])
+    p[0] = p[1]
 
 
 
@@ -351,6 +373,7 @@ def p_selection_statement(p):
                         K_END
     """
     p[0] = "if " + p[3] + ":\n" +indent(p[5])+ ("\n" if p[6] else "") + p[6] + ("\n" if p[7] else "") + p[7]
+
 
 def p_else_if_statement_list(p):
     """
@@ -384,6 +407,7 @@ def p_else_statement(p):
         p[0] = ""
     else:
         p[0] = "else:\n" + indent(p[2])
+
 
 def p_compound_statement_list(p):
     """
@@ -432,13 +456,10 @@ def p_function_declaration(p):
                                 compound_statement_list \
                             K_END
     """
-    temp_name = "xxxxx_res"
     if len(p) == 11:
-        try_block = "try:\n    " + temp_name + " = " + p[8] + "\ncatch NameError:\n    " + p[8] + " = None\n"
-        p[0] = "def " + p[3] + "(" + p[5] + "):\n" + indent(try_block) + indent(p[9]) + "\n" + indent("return " + p[8])
+        p[0] = "def " + p[3] + "(" + p[5] + "):\n" + indent(p[8]  + " = None\n" + p[9]) + "\n" + indent("return " + p[8])
     else:
-        try_block = "try:\n    " + temp_name + " = " + p[7] + "\ncatch NameError:\n    " + p[7] + " = None\n"
-        p[0] = "def " + p[3] + "():\n" + indent(try_block) + indent(p[8]) + "\n" + indent("return " + p[7])
+        p[0] = "def " + p[3] + "():\n" + indent(p[7]  + " = None\n" + p[8]) + "\n" + indent("return " + p[7])
 
 
 def p_argument_list(p):
