@@ -1,5 +1,11 @@
 import graphics
 
+class G_triangle:
+	def __init__(self, Point1, Point2, Point3):
+		vertices = [Point1, Point2, Point3]
+		self.geo = Polygon(vertices)
+		self.vertices = vertices
+
 def getMouse(board):
 	board.getMouse()
 
@@ -15,9 +21,9 @@ def Window(width, height):
 def Rectangle(Point1, Point2):
 	return Rectangle(Point1, Point2)
 
-def Triangle(Point1, Point2, Point3):
-	vertices = [Point1, Point2, Point3]
-	return Polygon(vertices)
+def G_triangle(Point1, Point2, Point3):
+	triangle = G_triangle(Point1, Point2, Point3)
+	return triangle
 
 def Circle(Center, Radius):
 	return Circle(Center, Radius)
