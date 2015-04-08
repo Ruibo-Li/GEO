@@ -7,6 +7,9 @@ int sub(int a, int b) := c
 	c := a - b
 end
 
+int hello(int b) := hello(a)
+	int a := 10
+end
 
 int main() := k
 	int a := 10
