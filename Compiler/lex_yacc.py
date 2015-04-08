@@ -127,7 +127,7 @@ class ScopeStack:
         return self.scopes[len(self.scopes) - 1]
 
     def pop_scope(self):
-        assert (self.scopes) > 1
+        assert self.scopes > 1
         return self.scopes.pop()
 
     def get_var(self, id):
@@ -147,13 +147,17 @@ class Scope:
         assert id not in self.vars
         self.vars[id] = {
             'type' : type,
-            'pre_type' : pre_type
+            'pre_type' : pre_type,
+            'given_name' : id + '_' + str(len(scope_stack.scopes))
         }
+
+        return self.vars[id]['given_name']
 
     def get_var(self, id):
         if id in self.vars:
             return self.vars[id]
         return None
+
 
 class Function:
     def __init__(self, type=None, args=[]):
@@ -269,26 +273,30 @@ def p_variable_declaration(p):
 
     if len(p) == 4:
         if p[1] == "":
-            add_variable_declaration(p[3], p[2], p[1])
-            p[0] = p[3] + " = None"
+            var_name = add_variable_declaration(p[3], p[2], p[1])
+            p[0] = var_name + " = None"
         elif p[1] == "list":
-            add_variable_declaration(p[3], p[2], p[1])
-            p[0] = p[3] + " = []"
+            var_name = add_variable_declaration(p[3], p[2], p[1])
+            p[0] = var_name + " = []"
         elif p[1] == "dict":
-            add_variable_declaration(p[3], p[2], p[1])
-            p[0] = p[3] + " = {}"
+            var_name = add_variable_declaration(p[3], p[2], p[1])
+            p[0] = var_name + " = {}"
         elif p[1] == "set":
-            add_variable_declaration(p[3], p[2], p[1])
+            var_name = add_variable_declaration(p[3], p[2], p[1])
             #@todo Don't know
-            p[0] = p[3] + " = {}"
+            p[0] = var_name + " = {}"
         elif p[2] == ":=":
-            check_var_in_scope(p[1], p)
+            var_name = p[1]
 
-            p[0] = p[1] + " = " + p[3]
+            if check_var_in_scope(p[1], p):
+                var = scope_stack.get_var(p[1])
+                var_name = var['given_name']
+
+            p[0] = var_name + " = " + p[3]
+
     elif len(p) == 6:
-        #@todo assign value
-        add_variable_declaration(p[3], p[2], p[1])
-        p[0] = p[3] + " = " + p[5]
+        var_name = add_variable_declaration(p[3], p[2], p[1])
+        p[0] = var_name + " = " + p[5]
 
 
 def p_pre_type_modifier(p):
@@ -383,6 +391,8 @@ def p_id_expression(p):
     if check_var_in_scope(p[1], p):
         var = scope_stack.get_var(p[1])
 
+        prod.text = var['given_name']
+
         prod.type = var["type"]
         prod.pre_typ = var["pre_type"]
 
@@ -459,15 +469,22 @@ def p_number(p):
 
 def p_selection_statement(p):
     """
-    selection_statement : K_IF LPAREN expression RPAREN \
-                                push_scope \
-                                compound_statement_list \
+    selection_statement :   if_statement \
                             else_if_statement_list \
                             else_statement \
                         K_END
     """
-    p[0] = "if " + p[3] + ":\n" +indent(p[6])+ ("\n" if p[7] else "") + p[7] + ("\n" if p[8] else "") + p[8]
+    p[0] = p[1] + ("\n" if p[2] else "") + p[2] + ("\n" if p[3] else "") + p[3]
 
+
+def p_if_statement(p):
+    """
+    if_statement : K_IF LPAREN expression RPAREN \
+                                push_scope \
+                                compound_statement_list \
+    """
+    p[0] = "if " + p[3] + ":\n" + indent(p[6])
+    pop_scope(p)
 
 def p_else_if_statement_list(p):
     """
@@ -524,10 +541,12 @@ def p_compound_statement_list(p):
 def p_iteration_statement(p):
     """
     iteration_statement : K_WHILE LPAREN expression RPAREN \
+                            push_scope \
                             compound_statement_list \
                         K_END
     """
-    p[0] = "while " + p[3] + ":\n" + indent(p[5])
+    p[0] = "while " + p[3] + ":\n" + indent(p[6])
+    pop_scope(p)
 
 
 def p_jump_statement(p):
@@ -575,25 +594,29 @@ def p_function_header(p):
 
     if len(p) == 12:
         init_ret = None
+
+        #if not an ID
+        ret_expression = p[10].text
         if p[10].production_type == 'id':
-            init_ret = p[10].text + " = None"
-            return_id = p[10].text
+            var_name = add_variable_declaration(p[10].text, p[2], p[1])
+            init_ret = var_name + " = None"
+            ret_expression = var_name
 
         text = "def " + p[3] + "(" + p[6] + "):" + ("\n" if init_ret else "") + indent(init_ret)
         f.args = p[6]
-        ret_expression = p[10].text
     else:
         init_ret = None
+
+        #if not an ID
+        ret_expression = p[9].text
         if p[9].production_type == 'id':
-            init_ret = p[9].text + " = None"
-            return_id = p[9].text
+            var_name = add_variable_declaration(p[9].text, p[2], p[1])
+            init_ret = var_name + " = None"
+            ret_expression = var_name
 
         text = "def " + p[3] + "():" + ("\n" if init_ret else "") + indent(init_ret)
         f.args = None
-        ret_expression = p[9].text
 
-    if return_id:
-        add_variable_declaration(ret_expression, p[2], p[1])
 
     p[0] = (text, ret_expression)
 
@@ -619,8 +642,8 @@ def p_argument(p):
     if p[1] != "":
         pre_type = p[1]
 
-    add_variable_declaration(p[3], p[2], pre_type)
-    p[0] = p[3]
+    var_name = add_variable_declaration(p[3], p[2], pre_type)
+    p[0] = var_name
 
 
 def p_push_scope(p):
@@ -637,7 +660,7 @@ def pop_scope(p):
 
 def add_variable_declaration(id, type, pre_type=None):
     scope = scope_stack.get_current_scope()
-    scope.add_declaration(id, type, pre_type)
+    return scope.add_declaration(id, type, pre_type)
 
 
 def p_set_ignore_flag(p):
@@ -679,7 +702,7 @@ def indent(p):
 
 
 def p_error(p):
-    print_err("unknown text at " + p.value)
+    print_err("unknown text at " + p.value + ": line no " + str(p.lineno))
 
 
 def print_err(error, p=None):
