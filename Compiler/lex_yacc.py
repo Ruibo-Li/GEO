@@ -3,8 +3,6 @@ import ply.yacc as yacc
 import sys
 import traceback
 
-
-
 reserved = {
     'if' : 'K_IF',
     'ef' : 'K_EF',
@@ -87,9 +85,9 @@ t_COMMA = r','
 
 
 def t_ID(t):
-  r'[_a-zA-Z][_a-zA-Z0-9]*'
-  t.type = reserved.get(t.value, 'ID')
-  return t
+    r'[_a-zA-Z][_a-zA-Z0-9]*'
+    t.type = reserved.get(t.value, 'ID')
+    return t
 
 # Define a rule so we can track line numbers
 def t_newline(t):
@@ -97,11 +95,11 @@ def t_newline(t):
     t.lexer.lineno += len(t.value)
 
 def t_COMMENT(t):
-    r'/\*(/|(\*)*[^\*])*(\*)+/|//.*'
+     r'/\*(/|(\*)*[^\*])*(\*)+/|//.*'
 #    return t
 
 # A string containing ignored characters (spaces and tabs)
-t_ignore  = ' \t'
+t_ignore = ' \t'
 
 # Error handling rule
 def t_error(t):
@@ -139,6 +137,7 @@ class ScopeStack:
 
         return None
 
+
 class Scope:
     def __init__(self):
         self.vars = {}
@@ -164,6 +163,7 @@ class Function:
         self.type = type
         self.args = args
 
+
 class Production:
     def __init__(self, type=None, text=None, pre_type=None, children=None, production_type=None):
         self.type = type
@@ -184,7 +184,7 @@ class Production:
 functions = {}
 scope_stack = ScopeStack()
 
-#Flag set to true to ignore variable delcaration checking
+# Flag set to true to ignore variable declaration checking
 flags = {
     "ignore" : False
 }
@@ -203,11 +203,11 @@ def p_statement_list(p):
     statement_list :
     statement_list : statement_list statement
     """
-    #Somehow keep track of indentation
     if len(p) == 1:
         p[0] = ""
     else:
         p[0] = p[1] + ("\n" if p[1] else "") + p[2]
+
 
 def p_statement(p):
     """
@@ -251,8 +251,6 @@ def p_function_call_statement(p):
         p[0] = Production(type=type, text=text, production_type="function_call")
 
 
-
-
 def p_parameter_list(p):
     """
     parameter_list : parameter_list COMMA expression
@@ -262,6 +260,7 @@ def p_parameter_list(p):
         p[0] = p[1] + ", " + p[3]
     else:
         p[0] = p[1]
+
 
 def p_variable_declaration(p):
     """
@@ -377,7 +376,6 @@ def p_primary_expression(p):
     primary_expression : id_expression
     primary_expression : function_call_statement
     """
-
     p[0] = p[1]
 
 
@@ -406,7 +404,6 @@ def p_constant(p):
     constant : string_constant
     """
     p[1].production_type = "constant"
-
     p[0] = p[1]
 
 
@@ -466,7 +463,6 @@ def p_number(p):
     p[0] = Production(type="number", text=p[1], children=[p[1]])
 
 
-
 def p_selection_statement(p):
     """
     selection_statement :   if_statement \
@@ -486,6 +482,7 @@ def p_if_statement(p):
     p[0] = "if " + p[3] + ":\n" + indent(p[6])
     pop_scope(p)
 
+
 def p_else_if_statement_list(p):
     """
     else_if_statement_list :
@@ -498,7 +495,6 @@ def p_else_if_statement_list(p):
             p[0] = p[2]
         else:
             p[0] = p[1] + "\n" + p[2]
-
 
 
 def p_else_if_statement(p):
@@ -711,6 +707,7 @@ def print_err(error, p=None):
 
     print >>sys.stderr, error
 
+
 parser = yacc.yacc()
 
 
@@ -719,7 +716,6 @@ if len(sys.argv) == 2:
         f = open(sys.argv[1])
         data = f.read()
         parser.parse(data)
-        #parser.parse(data)
     except:
         traceback.print_exc()
 else:

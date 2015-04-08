@@ -1,5 +1,5 @@
 
-int main() := k
+int main() := 10
 	int a := 10
 	int b := 20
 
