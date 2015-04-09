@@ -1,15 +1,26 @@
-/* Apply equation y = m*x + b
-        for values of x ranging from 0 to 9 */
-double x
-double y
 
-// Slope
-double m := 3
+int main() := 10
+	int a := 10
+	int b := 20
 
-// y-intercept
-double b := 10
+	while (b > 0)
+		int a := 20
+
+		print("a = " + str(a))
+
+		b := b - 1
+		a := a + 1
+
+		if (b % 2)
+			int b := 100
+			int a := 5000
+			print("b = " + str(b))
+			print ("a = " + str(a))
+		end
+	end
+
+	print("a = " + str(a))
+end
 
 
-
-x := 0
-print("x\ty")
+main()

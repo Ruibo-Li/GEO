@@ -6,9 +6,12 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+*.out
 .Python
 *.DS_Store
 .idea/
+*_actual.py
+*.pyc
 env/
 build/
 develop-eggs/
