@@ -362,10 +362,15 @@ def p_expression(p):
     expression : expression_term
     """
     if len(p) == 4:
+        expr = Production()
         if p[1].type == "bool" and p[3].type == "bool":
-            p[0] = p[1].text + " " + p[2] + " " + p[3].text
+            expr.type = "boolean"
         else:
             print_err("\"" + p[2] + "\" symbol is not compatible with " + p[1].type + " " + p[3].type, p)
+
+        expr.text = p[1].text + " " + p[2] + " " + p[3].text
+        expr.children = [p[1], p[2], p[3]]
+        p[0] = expr
     else:
         p[0] = p[1]
 
@@ -377,7 +382,6 @@ def p_expression_term(p):
     """
     if len(p) == 4:
         expr_term = Production()
-        #Production(type="string", text=p[1], children=[p[1]])
 
         op = p[2]
 
@@ -412,7 +416,6 @@ def p_expression_factor(p):
 
         if p[3].type == "int" or p[3].type == "double":
             p[3].type = "number"
-
 
         #@todo no number type. Change to double or int
         if op == "+":
