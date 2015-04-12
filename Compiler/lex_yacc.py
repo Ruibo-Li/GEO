@@ -365,19 +365,45 @@ def p_expression(p):
         if p[1].type == "bool" and p[3].type == "bool":
             p[0] = p[1].text + " " + p[2] + " " + p[3].text
         else:
-            print_err("\"" + p[2] + "\" symbol is not compatible with " + p[1].type + " " + p[3].type)
+            print_err("\"" + p[2] + "\" symbol is not compatible with " + p[1].type + " " + p[3].type, p)
     else:
         p[0] = p[1]
 
 
 def p_expression_term(p):
     """
-    expression_term : expression_term op unary_expression
-    expression_term : unary_expression
+    expression_term : expression_term comparator expression_factor
+    expression_term : expression_factor
     """
     if len(p) == 4:
         expr_term = Production()
         #Production(type="string", text=p[1], children=[p[1]])
+
+        op = p[2]
+
+        if op == "<" or op == "<=" or op == ">" or op == ">=" or op == "==" or op == "!=":
+            if p[1].type == "number" and p[3].type == "number":
+                expr_term.type = "bool"
+            elif p[1].type == "string" and p[3].type == "string":
+                expr_term.type = "bool"
+            else:
+                print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type, p)
+
+        expr_term.text = p[1].text + " " + p[2] + " " + p[3].text
+        expr_term.children = [p[1], p[2], p[3]]
+
+        p[0] = expr_term
+    else:
+        p[0] = p[1]
+
+
+def p_expression_factor(p):
+    """
+    expression_factor : expression_factor op unary_expression
+    expression_factor : unary_expression
+    """
+    if len(p) == 4:
+        expr_factor = Production()
 
         op = p[2]
 
@@ -388,33 +414,25 @@ def p_expression_term(p):
             p[3].type = "number"
 
 
-
+        #@todo no number type. Change to double or int
         if op == "+":
             if p[1].type == "number" and p[3].type == "number":
-                expr_term.type = "number"
+                expr_factor.type = "number"
             elif p[1].type == "string" and p[3].type == "string":
-                expr_term.type = "string"
+                expr_factor.type = "string"
             else:
-                print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type)
+                print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type, p)
 
         elif op == "-" or op == "/" or op == "*" or op == "%":
              if p[1].type == "number" and p[3].type == "number":
-                expr_term.type = "number"
+                expr_factor.type = "number"
              else:
-                 print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type)
+                 print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type, p)
 
-        elif op == "<" or op == "<=" or op == ">" or op == ">=" or op == "==" or op == "!=":
-            if p[1].type == "number" and p[3].type == "number":
-                expr_term.type = "bool"
-            elif p[1].type == "string" and p[3].type == "string":
-                expr_term.type = "bool"
-            else:
-                print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type)
+        expr_factor.text = p[1].text + " " + p[2] + " " + p[3].text
+        expr_factor.children = [p[1], p[2], p[3]]
 
-        expr_term.text = p[1].text + " " + p[2] + " " + p[3].text
-        expr_term.children = [p[1], p[2], p[3]]
-
-        p[0] = expr_term
+        p[0] = expr_factor
     else:
         p[0] = p[1]
 
@@ -426,7 +444,6 @@ def p_op(p):
     op : TIMES
     op : DIVIDE
     op : MOD
-    op : comparator
     """
     p[0] = p[1]
 
@@ -702,7 +719,7 @@ def p_function_header(p):
 
     if in_function_parsing_phase():
         if p[3] in functions:
-            print_err("Redeclaration of function \"" + p[3] + "\"", p)
+            print_err("Redeclaration of function \"" + p[3] + "\"", p, True)
 
     if len(p) == 12:
         init_ret = None
@@ -847,7 +864,10 @@ def p_error(p):
     print_err("unknown text at " + p.value + ": line no " + str(p.lineno))
 
 
-def print_err(error, p=None):
+def print_err(error, p=None, force=False):
+    if in_function_parsing_phase() and not force:
+        return
+
     if p:
         error = error + ": " + str(p.lineno(1))
 
