@@ -142,12 +142,13 @@ class Scope:
     def __init__(self):
         self.vars = {}
 
-    def add_declaration(self, id, type, pre_type=None):
+    def add_declaration(self, id, type, pre_type=None, global_var=False):
         assert id not in self.vars
         self.vars[id] = {
             'type' : type,
             'pre_type' : pre_type,
-            'given_name' : id + '_' + str(len(scope_stack.scopes))
+            'given_name' : id + '_' + str(len(scope_stack.scopes)),
+            'global_var' : global_var
         }
 
         return self.vars[id]['given_name']
@@ -290,11 +291,16 @@ def p_variable_declaration(p):
         elif p[2] == ":=":
             var_name = p[1]
 
+            pre_global_definition = ""
+
             if check_var_in_scope(p[1], p):
                 var = scope_stack.get_var(p[1])
-                var_name = var['given_name']
+                var_name = var["given_name"]
 
-            p[0] = var_name + " = " + p[3]
+                if var["global_var"] and flags["in_function"]:
+                    pre_global_definition = "global " + var_name + "\n"
+
+            p[0] = pre_global_definition + var_name + " = " + p[3]
 
     elif len(p) == 6:
         var_name = add_variable_declaration(p[3], p[2], p[1])
@@ -378,8 +384,15 @@ def p_primary_expression(p):
     primary_expression : constant
     primary_expression : id_expression
     primary_expression : function_call_statement
+    primary_expression : MINUS primary_expression
     """
-    p[0] = p[1]
+    #@todo type checking
+    if len(p) == 3:
+        if p[2].type == "number":
+            p[2].text = "-" + p[2].text
+            p[0] = p[2]
+    else:
+        p[0] = p[1]
 
 
 def p_id_expression(p):
@@ -662,7 +675,6 @@ def p_argument(p):
     """
     argument : pre_type_modifier type ID
     """
-    scope = scope_stack.get_current_scope()
 
     pre_type = None
     if p[1] != "":
@@ -690,7 +702,13 @@ def pop_scope(p):
 
 def add_variable_declaration(id, type, pre_type=None):
     scope = scope_stack.get_current_scope()
-    return scope.add_declaration(id, type, pre_type)
+
+    global_var = False
+
+    if not pre_type and scope_stack.scopes.index(scope) == 0:
+        global_var = True
+
+    return scope.add_declaration(id, type, pre_type, global_var)
 
 
 def p_set_ignore_flag(p):
