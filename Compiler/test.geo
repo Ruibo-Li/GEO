@@ -1,10 +1,15 @@
-bool a := 2 < 3 + 8 && 4 < 13 + 9 * 8
-bool b := 3 + 8 > 2
-
-int a() := b
-	int k := 3
+int factorial(int n) := x
+        if(n = 0 || n = 1)
+                x := 1
+        el
+                x := n * factorial(n - 1)
+        end
 end
 
-int a() := c
-	int m := 9
+int main() := y
+        int n := 5
+
+        print("Factorial of " + str(n) + ": " + str(factorial(n)))
 end
+
+main()

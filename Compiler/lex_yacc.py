@@ -288,6 +288,7 @@ def p_variable_declaration(p):
     variable_declaration : pre_type_modifier type ID ASSIGN expression
     variable_declaration : ID ASSIGN expression
     """
+
     #@todo add all information about var. Process type modifier
 
     if len(p) == 4:
@@ -324,6 +325,8 @@ def p_variable_declaration(p):
 
     elif len(p) == 6:
         var_name = add_variable_declaration(p[3], p[2], p[1])
+
+        #@todo type check
         p[0] = var_name + " = " + p[5].text
 
 
@@ -361,16 +364,27 @@ def p_expression(p):
     expression : expression boolean_operator expression_term
     expression : expression_term
     """
+
+
     if len(p) == 4:
+
+        if p[1].type == "int" or p[1].type == "double":
+                p[1].type = "number"
+
+        if p[3].type == "int" or p[3].type == "double":
+            p[3].type = "number"
+
         expr = Production()
+
         if p[1].type == "bool" and p[3].type == "bool":
-            expr.type = "boolean"
+            expr.type = "bool"
         else:
             print_err("\"" + p[2] + "\" symbol is not compatible with " + p[1].type + " " + p[3].type, p)
 
         expr.text = p[1].text + " " + p[2] + " " + p[3].text
         expr.children = [p[1], p[2], p[3]]
         p[0] = expr
+
     else:
         p[0] = p[1]
 
@@ -385,6 +399,14 @@ def p_expression_term(p):
 
         op = p[2]
 
+
+
+        if p[1].type == "int" or p[1].type == "double":
+            p[1].type = "number"
+
+        if p[3].type == "int" or p[3].type == "double":
+            p[3].type = "number"
+
         if op == "<" or op == "<=" or op == ">" or op == ">=" or op == "==" or op == "!=":
             if p[1].type == "number" and p[3].type == "number":
                 expr_term.type = "bool"
@@ -396,6 +418,7 @@ def p_expression_term(p):
         expr_term.text = p[1].text + " " + p[2] + " " + p[3].text
         expr_term.children = [p[1], p[2], p[3]]
 
+        print expr_term
         p[0] = expr_term
     else:
         p[0] = p[1]
@@ -488,13 +511,19 @@ def p_id_expression(p):
 
     prod = Production(text=p[1],children=[p[1]], production_type="id")
 
-    if check_var_in_scope(p[1], p):
-        var = scope_stack.get_var(p[1])
+    check_result = check_var_in_scope(p[1], p)
 
+    if check_result == 1:
+        var = scope_stack.get_var(p[1])
         prod.text = var['given_name']
 
         prod.type = var["type"]
         prod.pre_typ = var["pre_type"]
+    elif check_result == 2: #Variable is assigned as return value of function. Ignoreflag is true
+        pass
+    else:
+        print_err("Variable \"" + p[1] + "\" used before declared", p, True)
+        exit();
 
     p[0] = prod
 
@@ -536,10 +565,10 @@ def p_unary_expression(p):
     unary_expression : primary_expression
     """
     if len(p) == 4:
+        #@todo convert to production (p[2] shoule already be production. Maybe modify text to include parentheses)
         p[0] = "(" + p[2] + ")"
     else:
         p[0] = p[1]
-
 
 
 def p_comparator(p):
@@ -581,7 +610,8 @@ def p_if_statement(p):
                                 push_scope \
                                 compound_statement_list \
     """
-    p[0] = "if " + p[3] + ":\n" + indent(p[6])
+    #@todo make sure it's bool
+    p[0] = "if " + p[3].text + ":\n" + indent(p[6])
     pop_scope(p)
 
 
@@ -806,6 +836,7 @@ def p_push_scope(p):
 def push_scope(p):
     scope_stack.add_scope()
 
+
 def pop_scope(p):
     scope_stack.pop_scope()
 
@@ -840,13 +871,14 @@ def p_unset_ignore_flag(p):
 
 def check_var_in_scope(var, p):
     if flags['ignore']:
-        return False
+        return 2
 
     if not scope_stack.get_var(p[1]):
         print_err("Variable \"" + p[1] + "\" hasn't been declared", p)
-        return False
+        #exit?
+        return 0
     
-    return True
+    return 1
 
 
 def indent(p):
