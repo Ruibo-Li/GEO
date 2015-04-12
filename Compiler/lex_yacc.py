@@ -186,7 +186,10 @@ scope_stack = ScopeStack()
 
 # Flag set to true to ignore variable declaration checking
 flags = {
-    "ignore" : False
+    "ignore" : False,
+    "in_function" : False,
+    "in_while" : 0, #nested whiles
+    "return_expression" : None
 }
 
 
@@ -536,14 +539,22 @@ def p_compound_statement_list(p):
 
 def p_iteration_statement(p):
     """
-    iteration_statement : K_WHILE LPAREN expression RPAREN \
-                            push_scope \
+    iteration_statement : iteration_statement_header \
                             compound_statement_list \
                         K_END
     """
-    p[0] = "while " + p[3] + ":\n" + indent(p[6])
+    p[0] = p[1] + ":\n" + indent(p[2])
     pop_scope(p)
+    flags["in_while"] -= 1
 
+
+def p_iteration_statement_header(p):
+    """
+    iteration_statement_header : K_WHILE LPAREN expression RPAREN
+    """
+    p[0] = "while " + p[3]
+    flags["in_while"] += 1
+    push_scope(p)
 
 def p_jump_statement(p):
     """
@@ -552,11 +563,25 @@ def p_jump_statement(p):
     jump_statement : K_DONE
     """
     if p[1] == "done":
-        p[0] = "return"
+        if flags["in_function"]:
+            p[0] = "return " + flags["return_expression"]
+        else:
+            #@todo Don't know if this should go here or not
+            p[0] = ""
+            print_err("\"" + p[1] + "\"" + " can only be used inside a function", p)
+
     elif p[1] == "break":
-        p[0] = "break"
+        if flags["in_while"] > 0:
+            p[0] = "break"
+        else:
+            p[0] = ""
+            print_err("\"" + p[1] + "\"" + " can only be used inside a while loop", p)
     else:
-        p[0] = "continue"
+        if flags["in_while"] > 0:
+            p[0] = "continue"
+        else:
+            p[0] = ""
+            print_err("\"" + p[1] + "\"" + " can only be used inside a while loop", p)
 
 
 def p_function_declaration(p):
@@ -569,6 +594,9 @@ def p_function_declaration(p):
 
     p[0] = header[0] + "\n" + indent(p[2]) + "\n" + indent("return " + header[1])
     pop_scope(p)
+
+    flags["in_function"] = False
+    flags["return_expression"] = None
 
 
 def p_function_header(p):
@@ -613,6 +641,8 @@ def p_function_header(p):
         text = "def " + p[3] + "():" + ("\n" if init_ret else "") + indent(init_ret)
         f.args = None
 
+    flags["in_function"] = True
+    flags["return_expression"] = ret_expression
 
     p[0] = (text, ret_expression)
 
@@ -642,13 +672,17 @@ def p_argument(p):
     p[0] = var_name
 
 
+#Should only be called by the grammar. Call push_scope if needed instead
 def p_push_scope(p):
     """
     push_scope :
     """
     p[0] = ""
-    scope_stack.add_scope()
+    push_scope(p)
 
+
+def push_scope(p):
+    scope_stack.add_scope()
 
 def pop_scope(p):
     scope_stack.pop_scope()
