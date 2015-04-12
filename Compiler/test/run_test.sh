@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+rm -fr *_actual.py
 
 for i in {1..3}
     do
@@ -13,5 +14,10 @@ for i in {1..3}
 	        rm -rf actual
         else
 	        echo "test$i fails"
+	        echo "-----------------------------------------------------------------"
+	        echo "Reason:"
+	        diff $benchmark $actual
+            echo "-----------------------------------------------------------------"
         fi
+        echo ""
     done
