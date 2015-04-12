@@ -94,6 +94,7 @@ def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
+
 def t_COMMENT(t):
      r'/\*(/|(\*)*[^\*])*(\*)+/|//.*'
 #    return t
@@ -160,9 +161,16 @@ class Scope:
 
 
 class Function:
-    def __init__(self, type=None, args=[]):
+    def __init__(self, type=None, name=None, args=[]):
         self.type = type
         self.args = args
+        self.name = name
+
+    def __str__(self):
+        return "(type=" + self.type +", args=" + str(self.args) + ", name=" + self.name + ")"
+
+    def __repr__(self):
+        return str(self)
 
 
 class Production:
@@ -174,7 +182,7 @@ class Production:
         self.production_type = production_type
 
     def __str__(self):
-        return self.text
+        return "(text=" + self.text + ", type=" + str(self.type) + ", pre_type=" + str(self.pre_type) + ")"
 
     def __repr__(self):
         return str(self)
@@ -182,12 +190,16 @@ class Production:
 
 
 #@todo add builtin functions
-functions = {}
+functions = {
+    "print" : Function(type="unsassignable", args=[{"type" : "string", "pre_type": None}], name="print"),
+    "str" : Function(type="string", args=[{"type" : "any", "pre_type": None}], name="str")
+}
 scope_stack = ScopeStack()
 
 # Flag set to true to ignore variable declaration checking
 flags = {
     "ignore" : False,
+    "function_parsing" : True,
     "in_function" : False,
     "in_while" : 0, #nested whiles
     "return_expression" : None
@@ -199,7 +211,6 @@ def p_program(p):
     program : statement_list
     """
     p[0] = p[1]
-    print p[0]
 
 
 def p_statement_list(p):
@@ -229,6 +240,10 @@ def p_compound_statement(p):
     compound_statement : iteration_statement
     compound_statement : jump_statement
     """
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
+
     if type(p[1]) is str:
         p[0] = p[1]
     else:
@@ -248,11 +263,12 @@ def p_function_call_statement(p):
         type = functions[p[1]].type
 
     if len(p) == 5:
-        text = p[1] + "(" + p[3] + ")"
+        text = p[1] + "(" + p[3].text + ")"
         p[0] = Production(type=type, text=text, production_type="function_call") #fix me
     else:
         text = p[1] + "()"
         p[0] = Production(type=type, text=text, production_type="function_call")
+
 
 
 def p_parameter_list(p):
@@ -300,11 +316,15 @@ def p_variable_declaration(p):
                 if var["global_var"] and flags["in_function"]:
                     pre_global_definition = "global " + var_name + "\n"
 
-            p[0] = pre_global_definition + var_name + " = " + p[3]
+                #@todo pre_type checking
+                if var["type"] != p[3].type:
+                    print_err("Invalid assignment: Trying to assign \"" + p[3].type + "\" to variable of type " + var["type"], p)
+
+            p[0] = pre_global_definition + var_name + " = " + p[3].text
 
     elif len(p) == 6:
         var_name = add_variable_declaration(p[3], p[2], p[1])
-        p[0] = var_name + " = " + p[5]
+        p[0] = var_name + " = " + p[5].text
 
 
 def p_pre_type_modifier(p):
@@ -338,10 +358,16 @@ def p_type(p):
 
 def p_expression(p):
     """
-    expression : expression op expression_term
+    expression : expression boolean_operator expression_term
     expression : expression_term
     """
-    p[0] = p[1]
+    if len(p) == 4:
+        if p[1].type == "bool" and p[3].type == "bool":
+            p[0] = p[1].text + " " + p[2] + " " + p[3].text
+        else:
+            print_err("\"" + p[2] + "\" symbol is not compatible with " + p[1].type + " " + p[3].type)
+    else:
+        p[0] = p[1]
 
 
 def p_expression_term(p):
@@ -350,7 +376,45 @@ def p_expression_term(p):
     expression_term : unary_expression
     """
     if len(p) == 4:
-        p[0] = p[1] + " " + p[2] + " " + p[3]
+        expr_term = Production()
+        #Production(type="string", text=p[1], children=[p[1]])
+
+        op = p[2]
+
+        if p[1].type == "int" or p[1].type == "double":
+            p[1].type = "number"
+
+        if p[3].type == "int" or p[3].type == "double":
+            p[3].type = "number"
+
+
+
+        if op == "+":
+            if p[1].type == "number" and p[3].type == "number":
+                expr_term.type = "number"
+            elif p[1].type == "string" and p[3].type == "string":
+                expr_term.type = "string"
+            else:
+                print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type)
+
+        elif op == "-" or op == "/" or op == "*" or op == "%":
+             if p[1].type == "number" and p[3].type == "number":
+                expr_term.type = "number"
+             else:
+                 print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type)
+
+        elif op == "<" or op == "<=" or op == ">" or op == ">=" or op == "==" or op == "!=":
+            if p[1].type == "number" and p[3].type == "number":
+                expr_term.type = "bool"
+            elif p[1].type == "string" and p[3].type == "string":
+                expr_term.type = "bool"
+            else:
+                print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type)
+
+        expr_term.text = p[1].text + " " + p[2] + " " + p[3].text
+        expr_term.children = [p[1], p[2], p[3]]
+
+        p[0] = expr_term
     else:
         p[0] = p[1]
 
@@ -363,7 +427,6 @@ def p_op(p):
     op : DIVIDE
     op : MOD
     op : comparator
-    op : boolean_operator
     """
     p[0] = p[1]
 
@@ -390,6 +453,9 @@ def p_primary_expression(p):
     if len(p) == 3:
         if p[2].type == "number":
             p[2].text = "-" + p[2].text
+            p[0] = p[2]
+        else:
+            print_err("Unary \"-\" can only be used to denote negative integers", p)
             p[0] = p[2]
     else:
         p[0] = p[1]
@@ -452,7 +518,7 @@ def p_unary_expression(p):
     if len(p) == 4:
         p[0] = "(" + p[2] + ")"
     else:
-        p[0] = p[1].text
+        p[0] = p[1]
 
 
 
@@ -569,6 +635,7 @@ def p_iteration_statement_header(p):
     flags["in_while"] += 1
     push_scope(p)
 
+
 def p_jump_statement(p):
     """
     jump_statement : K_CONTINUE
@@ -611,6 +678,9 @@ def p_function_declaration(p):
     flags["in_function"] = False
     flags["return_expression"] = None
 
+    if in_function_parsing_phase():
+        p[0] = ""
+
 
 def p_function_header(p):
     """
@@ -620,14 +690,19 @@ def p_function_header(p):
                         primary_expression unset_ignore_flag
     """
 
-    if p[3] in functions:
+    if in_function_parsing_phase() and p[3] in functions:
         print_err("Error: redeclaration of function " + p[3], p)
 
-    f = Function(type=p[2])
+    f = Function(type=p[2], name=p[3])
+
 
     text = None
     ret_expression = None
     return_id = None
+
+    if in_function_parsing_phase():
+        if p[3] in functions:
+            print_err("Redeclaration of function \"" + p[3] + "\"", p)
 
     if len(p) == 12:
         init_ret = None
@@ -639,8 +714,21 @@ def p_function_header(p):
             init_ret = var_name + " = None"
             ret_expression = var_name
 
-        text = "def " + p[3] + "(" + p[6] + "):" + ("\n" if init_ret else "") + indent(init_ret)
-        f.args = p[6]
+
+        arg_list = [arg[0] for arg in p[6]]
+        args_text = ", ".join(arg_list)
+
+
+        if in_function_parsing_phase():
+            args = []
+            for arg in p[6]:
+                args.append({
+                    "type" : arg[1],
+                    "pre_type" : arg[2]
+                })
+            f.args = args
+
+        text = "def " + p[3] + "(" + args_text + "):" + ("\n" if init_ret else "") + indent(init_ret)
     else:
         init_ret = None
 
@@ -652,12 +740,14 @@ def p_function_header(p):
             ret_expression = var_name
 
         text = "def " + p[3] + "():" + ("\n" if init_ret else "") + indent(init_ret)
-        f.args = None
 
     flags["in_function"] = True
     flags["return_expression"] = ret_expression
 
     p[0] = (text, ret_expression)
+
+    if in_function_parsing_phase():
+        functions[p[3]] = f
 
 
 def p_argument_list(p):
@@ -666,9 +756,9 @@ def p_argument_list(p):
     argument_list : argument
     """
     if len(p) == 4:
-        p[0] = p[1] + ", " + p[3]
+        p[0] = p[1] + [p[3]]
     else:
-        p[0] = p[1]
+        p[0] = [p[1]]
 
 
 def p_argument(p):
@@ -681,7 +771,7 @@ def p_argument(p):
         pre_type = p[1]
 
     var_name = add_variable_declaration(p[3], p[2], pre_type)
-    p[0] = var_name
+    p[0] = (var_name, p[2], pre_type)
 
 
 #Should only be called by the grammar. Call push_scope if needed instead
@@ -733,7 +823,7 @@ def check_var_in_scope(var, p):
         return False
 
     if not scope_stack.get_var(p[1]):
-        print_err("Variable '" + p[1] + "' hasn't been declared", p)
+        print_err("Variable \"" + p[1] + "\" hasn't been declared", p)
         return False
     
     return True
@@ -747,6 +837,10 @@ def indent(p):
     for s in p.split("\n"):
         ret.append("    " + s)
     return "\n".join(ret)
+
+
+def in_function_parsing_phase():
+    return flags['function_parsing']
 
 
 def p_error(p):
@@ -767,7 +861,15 @@ if len(sys.argv) == 2:
     try:
         f = open(sys.argv[1])
         data = f.read()
-        parser.parse(data)
+        print parser.parse(data)
+        flags["function_parsing"] = False
+        scope_stack = ScopeStack()
+
+        #Had to call lex.lex() to restart line counting
+        lex.lex()
+        print parser.parse(data)
+
+
     except:
         traceback.print_exc()
 else:
@@ -775,7 +877,7 @@ else:
         try:
             expressions = raw_input("geo> ")
         except :
-            print sys.exc_info()[0]
+            traceback.print_exc()
             continue
         if expressions:
             parser.parse(expressions)

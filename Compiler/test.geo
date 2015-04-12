@@ -1,31 +1,20 @@
-
-
-int a := 10
-
-a := a + 1
-
-
-int increment_a(int by) := 0
-	a := a + by
+// Factorial
+int factorial(int n, int b, int c) := x
+        if(n <= 0 || n = 1)
+                x := 1
+        el
+                x := n * factorial(n - 1)
+        end
 end
 
+int main() := y
+        int n := -5
 
-int print_a() := 0
-	print("a = " + str(a))
+	string test := "10"
+
+	test := 20
+
+        print("Factorial of " + str(n) + ": " + str(factorial(n)))
 end
 
-print_a()
-
-a := a - 1
-
-print_a()
-
-
-increment_a(10)
-
-print_a()
-
-increment_a(-2)
-
-print_a()
-
+main()
