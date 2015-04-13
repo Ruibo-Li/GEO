@@ -80,7 +80,7 @@ t_LPAREN = r'\('
 t_RPAREN = r'\)'  
 t_STRING = r'\"([^\"]|\\")*\"'
 t_INTEGER = r'[0-9]+'
-t_DOUBLE = r'[0-9]+\.?[0-9]*|[0-9]*\.?[0-9]+'
+t_DOUBLE = r'[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'
 t_COMMA = r','
 
 
@@ -205,6 +205,11 @@ flags = {
     "return_expression" : None
 }
 
+numbers_list = [
+    "int",
+    "double"
+]
+
 
 def p_program(p):
     """
@@ -263,7 +268,11 @@ def p_function_call_statement(p):
         type = functions[p[1]].type
 
     if len(p) == 5:
-        text = p[1] + "(" + p[3].text + ")"
+        #@todo check param types
+        param_list = [arg[0] for arg in p[3]]
+        args_text = ", ".join(param_list)
+
+        text = p[1] + "(" + args_text + ")"
         p[0] = Production(type=type, text=text, production_type="function_call") #fix me
     else:
         text = p[1] + "()"
@@ -277,9 +286,10 @@ def p_parameter_list(p):
     parameter_list : expression
     """
     if len(p) == 4:
-        p[0] = p[1] + ", " + p[3]
+        p[0] = p[1] + [(p[3].text, p[3].type, p[3].pre_type)]
     else:
-        p[0] = p[1]
+        p[0] = [(p[1].text, p[1].type, p[1].pre_type)]
+
 
 
 def p_variable_declaration(p):
@@ -310,6 +320,8 @@ def p_variable_declaration(p):
 
             pre_global_definition = ""
 
+            assign_expr = p[3].text
+
             if check_var_in_scope(p[1], p):
                 var = scope_stack.get_var(p[1])
                 var_name = var["given_name"]
@@ -317,17 +329,33 @@ def p_variable_declaration(p):
                 if var["global_var"] and flags["in_function"]:
                     pre_global_definition = "global " + var_name + "\n"
 
+                if var["type"] != p[3].type and var["type"] in numbers_list and p[3].type in numbers_list:
+                    if var["type"] == "double":
+                        assign_expr = "float(" + assign_expr + ")"
+                    else:
+                        assign_expr = "int(" + assign_expr + ")"
+
                 #@todo pre_type checking
-                if var["type"] != p[3].type:
+                elif var["type"] != p[3].type:
                     print_err("Invalid assignment: Trying to assign \"" + p[3].type + "\" to variable of type " + var["type"], p)
 
-            p[0] = pre_global_definition + var_name + " = " + p[3].text
+            p[0] = pre_global_definition + var_name + " = " + assign_expr
 
     elif len(p) == 6:
         var_name = add_variable_declaration(p[3], p[2], p[1])
+        assign_expr = p[5].text
 
-        #@todo type check
-        p[0] = var_name + " = " + p[5].text
+        if p[2] != p[5].type and p[2] in numbers_list and p[5].type in numbers_list:
+            if p[2] == "double":
+                assign_expr = "float(" + assign_expr + ")"
+            else:
+                assign_expr = "int(" + assign_expr + ")"
+
+        #@todo pre_type checking
+        elif p[2] != p[5].type:
+            print_err("Invalid assignment: Trying to assign \"" + p[3].type + "\" to variable of type " + var["type"], p)
+
+        p[0] = var_name + " = " + assign_expr
 
 
 def p_pre_type_modifier(p):
@@ -367,13 +395,6 @@ def p_expression(p):
 
 
     if len(p) == 4:
-
-        if p[1].type == "int" or p[1].type == "double":
-                p[1].type = "number"
-
-        if p[3].type == "int" or p[3].type == "double":
-            p[3].type = "number"
-
         expr = Production()
 
         if p[1].type == "bool" and p[3].type == "bool":
@@ -399,26 +420,22 @@ def p_expression_term(p):
 
         op = p[2]
 
-
-
-        if p[1].type == "int" or p[1].type == "double":
-            p[1].type = "number"
-
-        if p[3].type == "int" or p[3].type == "double":
-            p[3].type = "number"
-
-        if op == "<" or op == "<=" or op == ">" or op == ">=" or op == "==" or op == "!=":
-            if p[1].type == "number" and p[3].type == "number":
+        if op == "<" or op == "<=" or op == ">" or op == ">=" or op == "=" or op == "!=":
+            if p[1].type in numbers_list and p[3].type in numbers_list:
                 expr_term.type = "bool"
             elif p[1].type == "string" and p[3].type == "string":
+                expr_term.type = "bool"
+            elif p[1].type == "bool" and p[3].type == "bool":
                 expr_term.type = "bool"
             else:
                 print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type, p)
 
-        expr_term.text = p[1].text + " " + p[2] + " " + p[3].text
+        if op == "=":
+            op = "=="
+
+        expr_term.text = p[1].text + " " + op + " " + p[3].text
         expr_term.children = [p[1], p[2], p[3]]
 
-        print expr_term
         p[0] = expr_term
     else:
         p[0] = p[1]
@@ -434,24 +451,24 @@ def p_expression_factor(p):
 
         op = p[2]
 
-        if p[1].type == "int" or p[1].type == "double":
-            p[1].type = "number"
-
-        if p[3].type == "int" or p[3].type == "double":
-            p[3].type = "number"
-
         #@todo no number type. Change to double or int
         if op == "+":
-            if p[1].type == "number" and p[3].type == "number":
-                expr_factor.type = "number"
+            if p[1].type in numbers_list and p[3].type in numbers_list:
+                if p[1].type == p[3].type:
+                    expr_factor.type = p[3].type
+                else:
+                    expr_factor.type = "double"
             elif p[1].type == "string" and p[3].type == "string":
                 expr_factor.type = "string"
             else:
                 print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type, p)
 
         elif op == "-" or op == "/" or op == "*" or op == "%":
-             if p[1].type == "number" and p[3].type == "number":
-                expr_factor.type = "number"
+             if p[1].type in numbers_list and p[3].type in numbers_list:
+                if p[1].type == p[3].type:
+                    expr_factor.type = p[3].type
+                else:
+                    expr_factor.type = "double"
              else:
                  print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type, p)
 
@@ -494,7 +511,7 @@ def p_primary_expression(p):
     """
     #@todo type checking
     if len(p) == 3:
-        if p[2].type == "number":
+        if p[2].type in numbers_list:
             p[2].text = "-" + p[2].text
             p[0] = p[2]
         else:
@@ -580,19 +597,29 @@ def p_comparator(p):
     comparator : EQ
     comparator : NEQ
     """
-    if p[1] == '=':
-        p[0] = "=="
-    else:
-        p[0] = p[1]
+    p[0] = p[1]
 
 
 def p_number(p):
     """
-    number : INTEGER
-    number : DOUBLE
+    number : integer_number
+    number : double_number
     """
-    p[0] = Production(type="number", text=p[1], children=[p[1]])
+    p[0] = p[1]
 
+
+def p_integer_number(p):
+    """
+    integer_number : INTEGER
+    """
+    p[0] = Production(type="int", text=p[1], children=[p[1]])
+
+
+def p_double_number(p):
+    """
+    double_number : DOUBLE
+    """
+    p[0] = Production(type="double", text=p[1], children=[p[1]])
 
 def p_selection_statement(p):
     """
@@ -635,7 +662,8 @@ def p_else_if_statement(p):
                                 push_scope \
                                 compound_statement_list
     """
-    p[0] = "elif " + p[3] + ":\n" + indent(p[6])
+    #@todo ensure boolean
+    p[0] = "elif " + p[3].text + ":\n" + indent(p[6])
     pop_scope(p)
 
 
@@ -681,7 +709,8 @@ def p_iteration_statement_header(p):
     """
     iteration_statement_header : K_WHILE LPAREN expression RPAREN
     """
-    p[0] = "while " + p[3]
+    #@todo check is boolean expression
+    p[0] = "while " + p[3].text
     flags["in_while"] += 1
     push_scope(p)
 
