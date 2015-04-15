@@ -1,3 +1,5 @@
+// This test is for function
+
 // Invoke built-in readTriangle() function to read points from command line
 Triangle t1 := readTriangle()
 Triangle t2 := readTriangle()

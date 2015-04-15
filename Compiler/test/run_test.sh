@@ -2,6 +2,7 @@
 
 rm -fr *_actual.py
 
+echo "-----------------------------------------"
 for i in {1..10}
     do
         program="program$i.geo"
