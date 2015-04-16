@@ -78,6 +78,9 @@ def is_vertical(line):
 		return True
 	return False
 
+#compute the cross point of two lines
+#returns None if parallel
+#point might not be on the line segments
 def cross(line1, line2):
 	if is_vertical(line1) and is_vertical(line2):
 		return None
@@ -111,6 +114,7 @@ def cross(line1, line2):
 	return G_point(cross_x, cross_y)
 	
 
+#compute shortest distance from a point to a line segment
 def point_to_line(point, line):
 	p1 = line.vertices[0]
 	p2 = line.vertices[1]
@@ -127,6 +131,7 @@ def point_to_line(point, line):
 	else:
 		return min(get_distance(point, p1), get_distance(point, p2))
 
+#compute whether two shapes have intersection
 def intersect(shape1, shape2):
 	
 	if isinstance(shape1, G_circle):
@@ -151,10 +156,11 @@ def intersect(shape1, shape2):
 		if isinstance(shape2, G_triangle):
 			return triangle_in(shape1, shape2)
 
-
+#whether two circles intersect
 def circle_in(circle1, circle2):
 	return get_distance(circle1.center, circle2.center) < (circle1.radius + circle2.radius)
 
+#whether two rectangles intersect
 def rectangle_in(rec1, rec2):
 	vertices1 = rec1.vertices
 	vertices2 = rec2.vertices
@@ -198,6 +204,7 @@ def triangle_in(shape1, shape2):
 		return True
 	return False
 
+#c is a circle, shape could be a triangle or rectangle
 def circle_oth_in(c, shape):
 	ver = shape.vertices
 	lines = []
