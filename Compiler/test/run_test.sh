@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+rm -fr *_actual.py
 
-for i in {1..3}
+echo "-----------------------------------------"
+for i in {1..10}
     do
         program="program$i.geo"
         benchmark="program$i.py"
@@ -13,5 +15,9 @@ for i in {1..3}
 	        rm -rf actual
         else
 	        echo "test$i fails"
+
+	        echo "Reason:"
+	        diff $benchmark $actual
         fi
+        echo "-----------------------------------------"
     done

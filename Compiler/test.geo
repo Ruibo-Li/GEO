@@ -1,26 +1,18 @@
 
-int main() := 10
-	int a := 10
-	int b := 20
+int a := 10
 
-	while (b > 0)
-		int a := 20
+while(a < 500)
 
-		print("a = " + str(a))
+if(a < 100)
+	print("Less than 100")
+ef(a < 200)
+	print("less than 200")
+ef(a < 300)
+	print("less than 300")
+el
+	print("more than 300")
+end	
 
-		b := b - 1
-		a := a + 1
+a := a + 1
 
-		if (b % 2)
-			int b := 100
-			int a := 5000
-			print("b = " + str(b))
-			print ("a = " + str(a))
-		end
-	end
-
-	print("a = " + str(a))
 end
-
-
-main()
