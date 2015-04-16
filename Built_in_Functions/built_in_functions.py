@@ -1,27 +1,26 @@
 import graphics
 import math
 
-class G_shape(shape_type):
+class G_shape(object):
 	def __init__(self):
-		self.t = shape_type
-	def get_type(self):
-		return self.t
 
 class G_triangle (G_shape):
 	def __init__(self, Point1, Point2, Point3):
-		super(G_triangle, self).__init__(triangle)
+		super(G_triangle, self).__init__()
 		vertices = [Point1.geo, Point2.geo, Point3.geo]
 		self.geo = Polygon(vertices)
 		self.vertices = [Point1, Point2, Point3]
 
-class G_rectangle:
+class G_rectangle(G_shape):
 	def __init__(self, Point1, Point2):
+		super(G_rectangle, self).__init__()
 		vertices = [Point1.geo, Point2.geo]
 		self.geo = Rectangle(Point1, Point2)
 		self.vertices = [Point1, Point2]
 
-class G_circle:
+class G_circle(G_shape):
 	def __init__(self, Center, Radius):
+		super(G_circle, self).__init__()
 		self.geo = Circle(Center.geo, Radius)
 		self.center = Center
 		self.radius = Radius
@@ -128,7 +127,7 @@ def point_to_line(point, line):
 	else:
 		return min(get_distance(point, p1), get_distance(point, p2))
 
-def in(shape1, shape2):
+def intersect(shape1, shape2):
 	
 	if isinstance(shape1, G_circle):
 		if isinstance(shape2, G_circle):
