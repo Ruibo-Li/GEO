@@ -945,7 +945,7 @@ if len(sys.argv) == 2:
     try:
         f = open(sys.argv[1])
         data = f.read()
-        print parser.parse(data)
+        parser.parse(data)
         flags["function_parsing"] = False
         scope_stack = ScopeStack()
 
