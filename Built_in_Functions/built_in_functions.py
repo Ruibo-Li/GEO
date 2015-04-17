@@ -3,7 +3,6 @@ import math
 
 class G_shape(object):
 	def __init__(self):
-	def draw:
 
 class G_triangle (G_shape):
 	def __init__(self, Point1, Point2, Point3):
@@ -11,8 +10,8 @@ class G_triangle (G_shape):
 		vertices = [Point1.geo, Point2.geo, Point3.geo]
 		self.geo = Polygon(vertices)
 		self.vertices = [Point1, Point2, Point3]
-	def draw(self):
-		self.geo.draw()
+	def draw(self, board):
+		self.geo.draw(board)
 	def get_triangle(self):
 		return self.geo
 
@@ -22,8 +21,8 @@ class G_rectangle(G_shape):
 		vertices = [Point1.geo, Point2.geo]
 		self.geo = Rectangle(Point1, Point2)
 		self.vertices = [Point1, Point2]
-	def draw(self):
-		self.geo.draw()
+	def draw(self, board):
+		self.geo.draw(board)
 	def get_rectangle(self):
 		return self.geo
 
@@ -33,8 +32,8 @@ class G_circle(G_shape):
 		self.geo = Circle(Center.geo, Radius)
 		self.center = Center
 		self.radius = Radius
-	def draw(self):
-		self.geo.draw()
+	def draw(self, board):
+		self.geo.draw(board)
 	def get_circle(self):
 		return self.geo
 
@@ -44,8 +43,8 @@ class G_point:
 		self.geo = Point(x, y)
 		self.x = x
 		self.y = y
-	def draw(self):
-		self.geo.draw()
+	def draw(self, board):
+		self.geo.draw(board)
 	def get_point(self):
 		return self.geo
 
@@ -54,8 +53,8 @@ class G_line:
 		vertices = [Point1.geo, Point2.geo]
 		self.geo = Line(Point1.geo, Point2.geo)
 		self.vertices = [Point1, Point2]
-	def draw(self):
-		self.geo.draw()
+	def draw(self, board):
+		self.geo.draw(board)
 	def get_line(self):
 		return self.geo
 
