@@ -188,6 +188,11 @@ class Production:
         return str(self)
 
 
+class Parse_Error(Exception):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
 
 #@todo add builtin functions
 functions = {
@@ -261,6 +266,10 @@ def p_function_call_statement(p):
     function_call_statement : ID LPAREN RPAREN
     """
 
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
+
     type = "unknown"
     text = None
 
@@ -285,6 +294,10 @@ def p_parameter_list(p):
     parameter_list : parameter_list COMMA expression
     parameter_list : expression
     """
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
+
     if len(p) == 4:
         p[0] = p[1] + [(p[3].text, p[3].type, p[3].pre_type)]
     else:
@@ -298,6 +311,9 @@ def p_variable_declaration(p):
     variable_declaration : pre_type_modifier type ID ASSIGN expression
     variable_declaration : ID ASSIGN expression
     """
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
 
     #@todo add all information about var. Process type modifier
 
@@ -392,7 +408,9 @@ def p_expression(p):
     expression : expression boolean_operator expression_term
     expression : expression_term
     """
-
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
 
     if len(p) == 4:
         expr = Production()
@@ -415,6 +433,11 @@ def p_expression_term(p):
     expression_term : expression_term comparator expression_factor
     expression_term : expression_factor
     """
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
+
+
     if len(p) == 4:
         expr_term = Production()
 
@@ -446,6 +469,10 @@ def p_expression_factor(p):
     expression_factor : expression_factor op unary_expression
     expression_factor : unary_expression
     """
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
+
     if len(p) == 4:
         expr_factor = Production()
 
@@ -539,8 +566,7 @@ def p_id_expression(p):
     elif check_result == 2: #Variable is assigned as return value of function. Ignoreflag is true
         pass
     else:
-        print_err("Variable \"" + p[1] + "\" used before declared", p, True)
-        exit();
+        print_err("Variable \"" + p[1] + "\" used before declared", p)
 
     p[0] = prod
 
@@ -580,12 +606,31 @@ def p_unary_expression(p):
     """
     unary_expression : LPAREN expression RPAREN
     unary_expression : primary_expression
+    unary_expression : NEG primary_expression
+    unary_expression : NEG LPAREN expression RPAREN
     """
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
+
     if len(p) == 4:
-        #@todo convert to production (p[2] shoule already be production. Maybe modify text to include parentheses)
-        p[0] = "(" + p[2] + ")"
+        p[2].text = "(" + p[2].text + ")"
+        p[0] = p[2]
+    elif len(p) == 3:
+        if p[2].type == "bool":
+            p[2].text = " not " + p[2].text
+            p[0] = p[2]
+        else:
+            print_err("\"!\" operator can only be used with boolean expressions", p)
+    elif len(p) == 5:
+        if p[3].type == "bool":
+            p[3].text = " not (" + p[3].text + ")"
+            p[0] = p[3]
+        else:
+            print_err("\"!\" operator can only be used with boolean expressions", p)
     else:
         p[0] = p[1]
+
 
 
 def p_comparator(p):
@@ -637,6 +682,11 @@ def p_if_statement(p):
                                 push_scope \
                                 compound_statement_list \
     """
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
+
+
     #@todo make sure it's bool
     p[0] = "if " + p[3].text + ":\n" + indent(p[6])
     pop_scope(p)
@@ -647,6 +697,10 @@ def p_else_if_statement_list(p):
     else_if_statement_list :
     else_if_statement_list : else_if_statement_list else_if_statement
     """
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
+
     if len(p) == 1:
         p[0] = ""
     else:
@@ -662,6 +716,11 @@ def p_else_if_statement(p):
                                 push_scope \
                                 compound_statement_list
     """
+
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
+
     #@todo ensure boolean
     p[0] = "elif " + p[3].text + ":\n" + indent(p[6])
     pop_scope(p)
@@ -672,6 +731,10 @@ def p_else_statement(p):
     else_statement :
     else_statement : K_EL push_scope compound_statement_list
     """
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
+
     if len(p) == 1:
         p[0] = ""
     else:
@@ -700,6 +763,10 @@ def p_iteration_statement(p):
                             compound_statement_list \
                         K_END
     """
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
+
     p[0] = p[1] + ":\n" + indent(p[2])
     pop_scope(p)
     flags["in_while"] -= 1
@@ -709,6 +776,10 @@ def p_iteration_statement_header(p):
     """
     iteration_statement_header : K_WHILE LPAREN expression RPAREN
     """
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
+
     #@todo check is boolean expression
     p[0] = "while " + p[3].text
     flags["in_while"] += 1
@@ -721,6 +792,10 @@ def p_jump_statement(p):
     jump_statement : K_BREAK
     jump_statement : K_DONE
     """
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
+
     if p[1] == "done":
         if flags["in_function"]:
             p[0] = "return " + flags["return_expression"]
@@ -937,6 +1012,8 @@ def print_err(error, p=None, force=False):
 
     print >>sys.stderr, error
 
+    raise Parse_Error(error)
+
 
 parser = yacc.yacc()
 
@@ -953,8 +1030,9 @@ if len(sys.argv) == 2:
         lex.lex()
         print parser.parse(data)
 
-
-    except:
+    except Parse_Error:
+        exit(1)
+    except :
         traceback.print_exc()
 else:
     while True:
