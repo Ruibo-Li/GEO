@@ -12,7 +12,9 @@ class G_triangle (G_shape):
 		self.geo = Polygon(vertices)
 		self.vertices = [Point1, Point2, Point3]
 	def draw(self):
-		geo.draw()
+		self.geo.draw()
+	def get_triangle(self):
+		return self.geo
 
 class G_rectangle(G_shape):
 	def __init__(self, Point1, Point2):
@@ -21,7 +23,9 @@ class G_rectangle(G_shape):
 		self.geo = Rectangle(Point1, Point2)
 		self.vertices = [Point1, Point2]
 	def draw(self):
-		geo.draw()
+		self.geo.draw()
+	def get_rectangle(self):
+		return self.geo
 
 class G_circle(G_shape):
 	def __init__(self, Center, Radius):
@@ -30,19 +34,30 @@ class G_circle(G_shape):
 		self.center = Center
 		self.radius = Radius
 	def draw(self):
-		geo.draw()
+		self.geo.draw()
+	def get_circle(self):
+		return self.geo
+
 
 class G_point:
 	def __init__(self, x, y):
 		self.geo = Point(x, y)
 		self.x = x
 		self.y = y
+	def draw(self):
+		self.geo.draw()
+	def get_point(self):
+		return self.geo
 
 class G_line:
 	def __init__(self, Point1, Point2):
 		vertices = [Point1.geo, Point2.geo]
 		self.geo = Line(Point1.geo, Point2.geo)
 		self.vertices = [Point1, Point2]
+	def draw(self):
+		self.geo.draw()
+	def get_line(self):
+		return self.geo
 
 def getMouse(board):
 	board.getMouse()
