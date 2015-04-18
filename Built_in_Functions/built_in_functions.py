@@ -81,12 +81,12 @@ def cross(line1, line2):
         k2 = (q1.x - q2.x) * 1.0 / (q1.y - q2.y)
         b = q1.y - k2 * q1.x
         c_y = k2 * p1.x + b
-        return G_point(p1.x, c_y)
+        return GPoint(p1.x, c_y)
     if isVertical(line2):
         k1 = (p1.x - p2.x) * 1.0 / (p1.y - p2.y)
         b = p1.y - k1 * p1.x
         c_y = k1 * q1.x + b
-        return G_point(q1.x, c_y)
+        return GPoint(q1.x, c_y)
 
     k1 = (p1.x - p2.x) * 1.0 / (p1.y - p2.y)
     k2 = (q1.x - q2.x) * 1.0 / (q1.y - q2.y)
@@ -96,7 +96,7 @@ def cross(line1, line2):
     b2 = q1.y - k2 * q1.x
     cross_x = (b2 - b1) * 1.0 / (k1 - k2)
     cross_y = k1 * cross_x + b1
-    return G_point(cross_x, cross_y)
+    return GPoint(cross_x, cross_y)
 
 
 # compute shortest distance from a point to a line segment
@@ -110,7 +110,7 @@ def pointToLine(point, line):
         return abs(point.y - p1.y)
     k2 = -1.0 / k1
     b = point.y - k2 * point.x
-    cross_point = cross(G_line(point, G_point(0, b)), line)
+    cross_point = cross(GLine(point, GPoint(0, b)), line)
     if (cross_point.x < max(p1.x, p2.x)) and cross_point.x > min(p1.x, p2.x):
         return getDistance(point, cross_point)
     else:
@@ -119,26 +119,26 @@ def pointToLine(point, line):
 
 # compute whether two shapes have intersection
 def intersect(shape1, shape2):
-    if isinstance(shape1, G_circle):
-        if isinstance(shape2, G_circle):
+    if isinstance(shape1, GCircle):
+        if isinstance(shape2, GCircle):
             return circleIn(shape1, shape2)
-        if isinstance(shape2, G_rectangle):
+        if isinstance(shape2, GRectangle):
             return circleOthIn(shape1, shape2)
-        if isinstance(shape2, G_triangle):
+        if isinstance(shape2, GTriangle):
             return circleOthIn(shape1, shape2)
-    if isinstance(shape1, G_rectangle):
-        if isinstance(shape2, G_circle):
+    if isinstance(shape1, GRectangle):
+        if isinstance(shape2, GCircle):
             return circleOthIn(shape2, shape1)
-        if isinstance(shape2, G_rectangle):
+        if isinstance(shape2, GRectangle):
             return rectangleIn(shape1, shape2)
-        if isinstance(shape2, G_triangle):
+        if isinstance(shape2, GTriangle):
             return triangleIn(shape2, shape1)
-    if isinstance(shape1, G_triangle):
-        if isinstance(shape2, G_circle):
+    if isinstance(shape1, GTriangle):
+        if isinstance(shape2, GCircle):
             return circleOthIn(shape2, shape1)
-        if isinstance(shape2, G_rectangle):
+        if isinstance(shape2, GRectangle):
             return triangleIn(shape1, shape2)
-        if isinstance(shape2, G_triangle):
+        if isinstance(shape2, GTriangle):
             return triangleIn(shape1, shape2)
 
 
@@ -166,18 +166,18 @@ def rectangleIn(rec1, rec2):
 def triangleIn(tri1, tri2):
     ver1 = tri1.vertices
     ver2 = tri2.vertices
-    if isinstance(tri2, G_rectangle):
-        ver2.append(G_point(ver2[0].x, ver2[1].y))
-        ver2.append(G_point(ver2[1].x, ver2[0].y))
+    if isinstance(tri2, GRectangle):
+        ver2.append(GPoint(ver2[0].x, ver2[1].y))
+        ver2.append(GPoint(ver2[1].x, ver2[0].y))
     lines1 = []
     for i in range(len(ver1)):
         for j in range(i + 1, len(ver1)):
-            l = G_line(ver1[i], ver1[j])
+            l = GLine(ver1[i], ver1[j])
             lines1.append(l)
     lines2 = []
     for i in range(len(ver2)):
         for j in range(i + 1, len(ver2)):
-            l = G_line(ver2[i], ver2[j])
+            l = GLine(ver2[i], ver2[j])
             lines2.append(l)
     for l1 in lines1:
         for l2 in lines2:
@@ -199,7 +199,7 @@ def circleOthIn(c, shape):
     lines = []
     for i in range(len(ver)):
         for j in range(i + 1, len(ver)):
-            lines.append(G_line(ver[i], ver[j]))
+            lines.append(GLine(ver[i], ver[j]))
     for l in lines:
         if pointToLine(c.center, l) < c.radius:
             return True
@@ -209,12 +209,12 @@ def circleOthIn(c, shape):
 # determine whether a point p is inside a shape (either triangle or rectangle)
 def inside(p, shape):
     vers = shape.vertices
-    if isinstance(shape, G_triangle):
+    if isinstance(shape, GTriangle):
         b1 = sign(p, vers[0], vers[1]) < 0
         b2 = sign(p, vers[1], vers[2]) < 0
         b3 = sign(p, vers[2], vers[0]) < 0
         return (b1 == b2) and (b2 == b3)
-    if isinstance(shape, G_rectangle):
+    if isinstance(shape, GRectangle):
         return p.x > min(vers[0].x, vers[1].x) and (p.x < max(vers[0].x, vers[1].x)) and (p.y > min(vers[0].y, vers[
             1].y)) and p.y < max(vers[0].y, vers[1].y)
 
