@@ -6,8 +6,7 @@ from Built_in_Functions.built_in_functions import *
 
 def main():
     # test Window
-    board = createWindow(100, 100)
-    board.getMouse()
+    board = GraphWin(1000, 1000)
 
     # test Point
     point = createPoint(5, 5)
@@ -31,3 +30,18 @@ def main():
     line = createLine(p41, p42)
     render(board, line)
 
+    # test render
+    p51 = createPoint(50, 50)
+    render(board, p51)
+
+    # test remove
+    remove(p51)
+
+    # areSimilar
+    tr2 = createTriangle(p21, p22, p23)
+    areSimilar(tr1, tr2)
+
+    board.getMouse()
+
+
+main()

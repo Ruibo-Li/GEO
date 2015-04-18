@@ -21,12 +21,12 @@ def createLine(point1, point2):
     return GLine(point1, point2)
 
 
-def render(board, shape):
-    shape.geo.draw(board)
+def render(window, shape):
+    shape.geo.draw(window)
 
 
-def remove(shape, window):
-    shape.geo.undraw(window)
+def remove(shape):
+    shape.geo.undraw()
 
 
 def areSimilar(triangle1, triangle2):
