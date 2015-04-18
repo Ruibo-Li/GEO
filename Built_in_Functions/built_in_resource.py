@@ -28,18 +28,18 @@ def compute_cross(line1, line2):
     q2 = vertices2[1]
 
     if is_vertical(line1):
-        k2 = (q1.x - q2.x) * 1.0 / (q1.y - q2.y)
+        k2 = (q1.y - q2.y) * 1.0 / (q1.x - q2.x)
         b = q1.y - k2 * q1.x
         c_y = k2 * p1.x + b
         return GPoint(p1.x, c_y)
     if is_vertical(line2):
-        k1 = (p1.x - p2.x) * 1.0 / (p1.y - p2.y)
+        k1 = (p1.y - p2.y) * 1.0 / (p1.x - p2.x)
         b = p1.y - k1 * p1.x
         c_y = k1 * q1.x + b
         return GPoint(q1.x, c_y)
 
-    k1 = (p1.x - p2.x) * 1.0 / (p1.y - p2.y)
-    k2 = (q1.x - q2.x) * 1.0 / (q1.y - q2.y)
+    k1 = (p1.y - p2.y) * 1.0 / (p1.x - p2.x)
+    k2 = (q1.y - q2.y) * 1.0 / (q1.x - q2.x)
     if abs(k1 - k2) < 1e-6:
         return None
     b1 = p1.y - k1 * p1.x
