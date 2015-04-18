@@ -31,18 +31,18 @@ def createLine(width, height):
     return GraphWin(width, height)
 
 
-def are_similar(triangle1, triangle2):
+def areAimilar(triangle1, triangle2):
     vertices1 = triangle1.vertices
-    edges1 = []
-    edges1.append(get_distance(vertices1[0], vertices1[1]))
-    edges1.append(get_distance(vertices1[1], vertices1[2]))
-    edges1.append(get_distance(vertices1[0], vertices1[2]))
+    edges1 = list()
+    edges1.append(getDistance(vertices1[0], vertices1[1]))
+    edges1.append(getDistance(vertices1[1], vertices1[2]))
+    edges1.append(getDistance(vertices1[0], vertices1[2]))
     edges1.sort()
     vertices2 = triangle2.vertices
-    edges2 = []
-    edges2.append(get_distance(vertices2[0], vertices2[1]))
-    edges2.append(get_distance(vertices2[1], vertices2[2]))
-    edges2.append(get_distance(vertices2[0], vertices2[2]))
+    edges2 = list()
+    edges2.append(getDistance(vertices2[0], vertices2[1]))
+    edges2.append(getDistance(vertices2[1], vertices2[2]))
+    edges2.append(getDistance(vertices2[0], vertices2[2]))
     edges2.sort()
     k0 = float(edges1[0]) / edges2[0]
     k1 = float(edges1[1]) / edges2[1]
@@ -52,11 +52,11 @@ def are_similar(triangle1, triangle2):
     return False
 
 
-def get_distance(point1, point2):
+def getDistance(point1, point2):
     return math.sqrt((point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2)
 
 
-def is_vertical(line):
+def isVertical(line):
     vertices = line.vertices
     if vertices[0].x == vertices[1].x:
         return True
@@ -67,7 +67,7 @@ def is_vertical(line):
 # returns None if parallel
 # point might not be on the line segments
 def cross(line1, line2):
-    if is_vertical(line1) and is_vertical(line2):
+    if isVertical(line1) and isVertical(line2):
         return None
 
     vertices1 = line1.vertices
@@ -77,12 +77,12 @@ def cross(line1, line2):
     q1 = vertices2[0]
     q2 = vertices2[1]
 
-    if is_vertical(line1):
+    if isVertical(line1):
         k2 = (q1.x - q2.x) * 1.0 / (q1.y - q2.y)
         b = q1.y - k2 * q1.x
         c_y = k2 * p1.x + b
         return G_point(p1.x, c_y)
-    if is_vertical(line2):
+    if isVertical(line2):
         k1 = (p1.x - p2.x) * 1.0 / (p1.y - p2.y)
         b = p1.y - k1 * p1.x
         c_y = k1 * q1.x + b
@@ -100,7 +100,7 @@ def cross(line1, line2):
 
 
 # compute shortest distance from a point to a line segment
-def point_to_line(point, line):
+def pointToLine(point, line):
     p1 = line.vertices[0]
     p2 = line.vertices[1]
     if p1.x == p2.x:
@@ -112,43 +112,43 @@ def point_to_line(point, line):
     b = point.y - k2 * point.x
     cross_point = cross(G_line(point, G_point(0, b)), line)
     if (cross_point.x < max(p1.x, p2.x)) and cross_point.x > min(p1.x, p2.x):
-        return get_distance(point, cross_point)
+        return getDistance(point, cross_point)
     else:
-        return min(get_distance(point, p1), get_distance(point, p2))
+        return min(getDistance(point, p1), getDistance(point, p2))
 
 
 # compute whether two shapes have intersection
 def intersect(shape1, shape2):
     if isinstance(shape1, G_circle):
         if isinstance(shape2, G_circle):
-            return circle_in(shape1, shape2)
+            return circleIn(shape1, shape2)
         if isinstance(shape2, G_rectangle):
-            return circle_oth_in(shape1, shape2)
+            return circleOthIn(shape1, shape2)
         if isinstance(shape2, G_triangle):
-            return circle_oth_in(shape1, shape2)
+            return circleOthIn(shape1, shape2)
     if isinstance(shape1, G_rectangle):
         if isinstance(shape2, G_circle):
-            return circle_oth_in(shape2, shape1)
+            return circleOthIn(shape2, shape1)
         if isinstance(shape2, G_rectangle):
-            return rectangle_in(shape1, shape2)
+            return rectangleIn(shape1, shape2)
         if isinstance(shape2, G_triangle):
-            return triangle_in(shape2, shape1)
+            return triangleIn(shape2, shape1)
     if isinstance(shape1, G_triangle):
         if isinstance(shape2, G_circle):
-            return circle_oth_in(shape2, shape1)
+            return circleOthIn(shape2, shape1)
         if isinstance(shape2, G_rectangle):
-            return triangle_in(shape1, shape2)
+            return triangleIn(shape1, shape2)
         if isinstance(shape2, G_triangle):
-            return triangle_in(shape1, shape2)
+            return triangleIn(shape1, shape2)
 
 
 # whether two circles intersect
-def circle_in(circle1, circle2):
-    return get_distance(circle1.center, circle2.center) < (circle1.radius + circle2.radius)
+def circleIn(circle1, circle2):
+    return getDistance(circle1.center, circle2.center) < (circle1.radius + circle2.radius)
 
 
 # whether two rectangles intersect
-def rectangle_in(rec1, rec2):
+def rectangleIn(rec1, rec2):
     vertices1 = rec1.vertices
     vertices2 = rec2.vertices
     p1 = vertices1[0]
@@ -163,7 +163,7 @@ def rectangle_in(rec1, rec2):
 
 
 # shape1 must be a triangle, shape2 could be a triangle or a rectangle
-def triangle_in(tri1, tri2):
+def triangleIn(tri1, tri2):
     ver1 = tri1.vertices
     ver2 = tri2.vertices
     if isinstance(tri2, G_rectangle):
@@ -194,14 +194,14 @@ def triangle_in(tri1, tri2):
 
 
 # c is a circle, shape could be a triangle or rectangle
-def circle_oth_in(c, shape):
+def circleOthIn(c, shape):
     ver = shape.vertices
     lines = []
     for i in range(len(ver)):
         for j in range(i + 1, len(ver)):
             lines.append(G_line(ver[i], ver[j]))
     for l in lines:
-        if point_to_line(c.center, l) < c.radius:
+        if pointToLine(c.center, l) < c.radius:
             return True
     return False
 
