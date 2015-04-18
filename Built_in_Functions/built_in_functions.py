@@ -7,7 +7,27 @@ def render(board, shape):
     shape.draw(board)
 
 
-def window(width, height):
+def createWindow(width, height):
+    return GraphWin(width, height)
+
+
+def createShape(width, height):
+    return GraphWin(width, height)
+
+
+def createTriangle(width, height):
+    return GraphWin(width, height)
+
+
+def createCircle(width, height):
+    return GraphWin(width, height)
+
+
+def createPoint(width, height):
+    return GraphWin(width, height)
+
+
+def createLine(width, height):
     return GraphWin(width, height)
 
 
