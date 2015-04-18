@@ -31,7 +31,7 @@ def remove(shape, window):
     shape.geo.undraw(window)
 
 
-def areAimilar(triangle1, triangle2):
+def areSimilar(triangle1, triangle2):
     vertices1 = triangle1.vertices
     edges1 = list()
     edges1.append(getDistance(vertices1[0], vertices1[1]))
