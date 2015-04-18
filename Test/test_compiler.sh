@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-rm -fr *_actual.py
+rm -fr test_cases/*_actual.py
 
 echo "-----------------------------------------"
 for i in {1..10}
     do
-        program="program$i.geo"
-        benchmark="program$i.py"
-        actual="program""$i""_actual.py"
-        python ../lex_yacc.py $program > $actual
+        program="test_cases/program$i.geo"
+        benchmark="test_cases/program$i.py"
+        actual="test_cases/program""$i""_actual.py"
+        python ../Compiler/lex_yacc.py $program > $actual
         if cmp -s $benchmark $actual
         then
 	        echo "test$i passes"

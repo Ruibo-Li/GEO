@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-rm -fr *_actual.py
-rm -fr *.out
+rm -fr test_cases/*_actual.py
+rm -fr test_cases/*.out
