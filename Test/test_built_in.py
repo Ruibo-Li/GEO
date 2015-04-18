@@ -39,7 +39,10 @@ def main():
 
     # areSimilar
     tr2 = createTriangle(p21, p22, p23)
-    areSimilar(tr1, tr2)
+    assert(areSimilar(tr1, tr2))
+
+    # areSimilar
+    assert(intersect(tr1, tr2))
 
     board.getMouse()
 
