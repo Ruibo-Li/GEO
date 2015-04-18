@@ -1,88 +1,17 @@
 from graphics import *
 import math
-
-
-class G_shape(object):
-    def __init__(self):
-
-
-class G_triangle(G_shape):
-    def __init__(self, point1, point2, point3):
-        super(G_triangle, self).__init__()
-        vertices = [point1.geo, point2.geo, point3.geo]
-        self.geo = Polygon(vertices)
-	self.vertices = [point1, point2, point3]
-
-    def draw(self, board):
-        self.geo.draw(board)
-
-    def get_triangle(self):
-        return self.geo
-
-
-class G_rectangle(G_shape):
-    def __init__(self, point1, point2)
-        super(G_rectangle, self).__init__()
-        vertices = [point1.geo, point2.geo]
-        self.geo = Rectangle(point1, point2)
-	self.vertices = [point1, point2]
-
-    def draw(self, board):
-        self.geo.draw(board)
-
-    def get_rectangle(self):
-        return self.geo
-
-
-class G_circle(G_shape):
-    def __init__(self, center, radius):
-        super(G_circle, self).__init__()
-        self.geo = Circle(center.geo, radius)
-	self.center = center
-	self.radius = radius
-
-    def draw(self, board):
-        self.geo.draw(board)
-
-    def get_circle(self):
-        return self.geo
-
-
-class G_point:
-    def __init__(self, x, y):
-        self.geo = Point(x, y)
-        self.x = x
-        self.y = y
-
-    def draw(self, board):
-        self.geo.draw(board)
-
-    def get_point(self):
-        return self.geo
-
-
-class G_line:
-    def __init__(self, Point1, Point2):
-        vertices = [Point1.geo, Point2.geo]
-        self.geo = Line(Point1.geo, Point2.geo)
-        self.vertices = [Point1, Point2]
-
-    def draw(self, board):
-        self.geo.draw(board)
-
-    def get_line(self):
-        return self.geo
+from built_in_classes import *
 
 
 def render(board, shape):
     shape.draw(board)
 
 
-def Window(width, height):
+def window(width, height):
     return GraphWin(width, height)
 
 
-def AreSimilar(triangle1, triangle2):
+def are_similar(triangle1, triangle2):
     vertices1 = triangle1.vertices
     edges1 = []
     edges1.append(get_distance(vertices1[0], vertices1[1]))
@@ -116,7 +45,7 @@ def is_vertical(line):
 
 # compute the cross point of two lines
 # returns None if parallel
-#point might not be on the line segments
+# point might not be on the line segments
 def cross(line1, line2):
     if is_vertical(line1) and is_vertical(line2):
         return None
@@ -150,7 +79,7 @@ def cross(line1, line2):
     return G_point(cross_x, cross_y)
 
 
-#compute shortest distance from a point to a line segment
+# compute shortest distance from a point to a line segment
 def point_to_line(point, line):
     p1 = line.vertices[0]
     p2 = line.vertices[1]
@@ -162,13 +91,13 @@ def point_to_line(point, line):
     k2 = -1.0 / k1
     b = point.y - k2 * point.x
     cross_point = cross(G_line(point, G_point(0, b)), line)
-    if cross_point.x < max(p1.x, p2.x) and cross_point.x > min(p1.x, p2.x):
+    if (cross_point.x < max(p1.x, p2.x)) and cross_point.x > min(p1.x, p2.x):
         return get_distance(point, cross_point)
     else:
         return min(get_distance(point, p1), get_distance(point, p2))
 
 
-#compute whether two shapes have intersection
+# compute whether two shapes have intersection
 def intersect(shape1, shape2):
     if isinstance(shape1, G_circle):
         if isinstance(shape2, G_circle):
@@ -193,12 +122,12 @@ def intersect(shape1, shape2):
             return triangle_in(shape1, shape2)
 
 
-#whether two circles intersect
+# whether two circles intersect
 def circle_in(circle1, circle2):
     return get_distance(circle1.center, circle2.center) < (circle1.radius + circle2.radius)
 
 
-#whether two rectangles intersect
+# whether two rectangles intersect
 def rectangle_in(rec1, rec2):
     vertices1 = rec1.vertices
     vertices2 = rec2.vertices
@@ -213,7 +142,7 @@ def rectangle_in(rec1, rec2):
     return True
 
 
-#shape1 must be a triangle, shape2 could be a triangle or a rectangle
+# shape1 must be a triangle, shape2 could be a triangle or a rectangle
 def triangle_in(tri1, tri2):
     ver1 = tri1.vertices
     ver2 = tri2.vertices
@@ -234,7 +163,7 @@ def triangle_in(tri1, tri2):
         for l2 in lines2:
             p = cross(l1, l2)
             vers = l1.vertices
-            if p is not None and p.x < max(vers[0].x, vers[1].x) and p.x > min(vers[0].x, vers[1].x):
+            if p is not None and (p.x < max(vers[0].x, vers[1].x)) and p.x > min(vers[0].x, vers[1].x):
                 return True
 
     if inside(ver1[0], tri2):
@@ -244,7 +173,7 @@ def triangle_in(tri1, tri2):
     return False
 
 
-#c is a circle, shape could be a triangle or rectangle
+# c is a circle, shape could be a triangle or rectangle
 def circle_oth_in(c, shape):
     ver = shape.vertices
     lines = []
@@ -257,19 +186,19 @@ def circle_oth_in(c, shape):
     return False
 
 
-#determine whether a point p is inside a shape (either triangle or rectangle)
+# determine whether a point p is inside a shape (either triangle or rectangle)
 def inside(p, shape):
     vers = shape.vertices
     if isinstance(shape, G_triangle):
         b1 = sign(p, vers[0], vers[1]) < 0
         b2 = sign(p, vers[1], vers[2]) < 0
         b3 = sign(p, vers[2], vers[0]) < 0
-        return ((b1 == b2) and (b2 == b3))
+        return (b1 == b2) and (b2 == b3)
     if isinstance(shape, G_rectangle):
-        return p.x > min(vers[0].x, vers[1].x) and p.x < max(vers[0].x, vers[1].x) and p.y > min(vers[0].y, vers[
-            1].y) and p.y < max(vers[0].y, vers[1].y)
+        return p.x > min(vers[0].x, vers[1].x) and (p.x < max(vers[0].x, vers[1].x)) and (p.y > min(vers[0].y, vers[
+            1].y)) and p.y < max(vers[0].y, vers[1].y)
 
 
-#determine on which side of the line(p1,p2) is the point p
+# determine on which side of the line(p1,p2) is the point p
 def sign(p, p1, p2):
     return (p.x - p2.x) * (p1.y - p2.y) - (p1.x - p2.x) * (p.y - p2.y)
