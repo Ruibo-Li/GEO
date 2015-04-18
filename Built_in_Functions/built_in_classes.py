@@ -5,12 +5,6 @@ class GShape(object):
     def __init__(self):
         self.geo = None
 
-    def draw(self, window):
-        self.geo.draw(window)
-
-    def remove(self, window):
-        self.geo.undraw(window)
-
 
 class GTriangle(GShape):
     def __init__(self, point1, point2, point3):

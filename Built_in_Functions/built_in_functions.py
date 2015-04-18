@@ -3,32 +3,32 @@ import math
 from built_in_classes import *
 
 
-def render(board, shape):
-    shape.draw(board)
-
-
 def createWindow(width, height):
     return GraphWin(width, height)
 
 
-def createShape(width, height):
-    return GraphWin(width, height)
+def createTriangle(point1, point2, point3):
+    return GTriangle(point1, point2, point3)
 
 
-def createTriangle(width, height):
-    return GraphWin(width, height)
+def createCircle(center, radius):
+    return GCircle(center, radius)
 
 
-def createCircle(width, height):
-    return GraphWin(width, height)
+def createPoint(x, y):
+    return GPoint(x, y)
 
 
-def createPoint(width, height):
-    return GraphWin(width, height)
+def createLine(point1, point2):
+    return GLine(point1, point2)
 
 
-def createLine(width, height):
-    return GraphWin(width, height)
+def render(board, shape):
+    shape.geo.draw(board)
+
+
+def remove(shape, window):
+    shape.geo.undraw(window)
 
 
 def areAimilar(triangle1, triangle2):
