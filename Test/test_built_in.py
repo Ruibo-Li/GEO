@@ -6,7 +6,7 @@ from Built_in_Functions.built_in_functions import *
 
 def main():
     # test Window
-    board = GraphWin(1000, 1000)
+    board = GraphWin("test", 1000, 1000)
 
     # test Point
     point = createPoint(5, 5)

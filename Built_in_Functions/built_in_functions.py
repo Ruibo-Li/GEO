@@ -1,8 +1,8 @@
 from built_in_resource import *
 
 
-def createWindow(width, height):
-    return GraphWin(width, height)
+def createWindow(title, width, height):
+    return GraphWin(title, width, height)
 
 
 def createTriangle(point1, point2, point3):
