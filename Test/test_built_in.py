@@ -5,5 +5,5 @@ def main():
     Window(100, 100)
 
 
-def test(name, function_name, input, output):
-    
+def test(name, module, function_name, input, output):
+    methodToCall = getattr(module, function_name)
