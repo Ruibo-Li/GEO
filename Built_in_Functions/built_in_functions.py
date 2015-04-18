@@ -7,11 +7,11 @@ class G_shape(object):
 
 
 class G_triangle(G_shape):
-    def __init__(self, Point1, Point2, Point3):
+    def __init__(self, point1, point2, point3):
         super(G_triangle, self).__init__()
-        vertices = [Point1.geo, Point2.geo, Point3.geo]
+        vertices = [point1.geo, point2.geo, point3.geo]
         self.geo = Polygon(vertices)
-        self.vertices = [Point1, Point2, Point3]
+	self.vertices = [point1, point2, point3]
 
     def draw(self, board):
         self.geo.draw(board)
@@ -21,11 +21,11 @@ class G_triangle(G_shape):
 
 
 class G_rectangle(G_shape):
-    def __init__(self, Point1, Point2):
+    def __init__(self, point1, point2)
         super(G_rectangle, self).__init__()
-        vertices = [Point1.geo, Point2.geo]
-        self.geo = Rectangle(Point1, Point2)
-        self.vertices = [Point1, Point2]
+        vertices = [point1.geo, point2.geo]
+        self.geo = Rectangle(point1, point2)
+	self.vertices = [point1, point2]
 
     def draw(self, board):
         self.geo.draw(board)
@@ -35,11 +35,11 @@ class G_rectangle(G_shape):
 
 
 class G_circle(G_shape):
-    def __init__(self, Center, Radius):
+    def __init__(self, center, radius):
         super(G_circle, self).__init__()
-        self.geo = Circle(Center.geo, Radius)
-        self.center = Center
-        self.radius = Radius
+        self.geo = Circle(center.geo, radius)
+	self.center = center
+	self.radius = radius
 
     def draw(self, board):
         self.geo.draw(board)
@@ -103,8 +103,8 @@ def AreSimilar(triangle1, triangle2):
     return False
 
 
-def get_distance(Point1, Point2):
-    return math.sqrt((Point1.x - Point2.x) ** 2 + (Point1.y - Point2.y) ** 2)
+def get_distance(point1, point2):
+    return math.sqrt((point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2)
 
 
 def is_vertical(line):
@@ -132,12 +132,12 @@ def cross(line1, line2):
         k2 = (q1.x - q2.x) * 1.0 / (q1.y - q2.y)
         b = q1.y - k2 * q1.x
         c_y = k2 * p1.x + b
-        return Point(p1.x, c_y)
+        return G_point(p1.x, c_y)
     if is_vertical(line2):
         k1 = (p1.x - p2.x) * 1.0 / (p1.y - p2.y)
         b = p1.y - k1 * p1.x
         c_y = k1 * q1.x + b
-        return Point(q1.x, c_y)
+        return G_point(q1.x, c_y)
 
     k1 = (p1.x - p2.x) * 1.0 / (p1.y - p2.y)
     k2 = (q1.x - q2.x) * 1.0 / (q1.y - q2.y)
@@ -162,7 +162,7 @@ def point_to_line(point, line):
     k2 = -1.0 / k1
     b = point.y - k2 * point.x
     cross_point = cross(G_line(point, G_point(0, b)), line)
-    if on(cross_point, line):
+    if cross_point.x < max(p1.x, p2.x) and cross_point.x > min(p1.x, p2.x):
         return get_distance(point, cross_point)
     else:
         return min(get_distance(point, p1), get_distance(point, p2))
