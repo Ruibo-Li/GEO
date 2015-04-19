@@ -1,0 +1,2 @@
+import graphics
+coords = getMouse()
