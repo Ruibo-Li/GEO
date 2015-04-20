@@ -20,7 +20,7 @@ def main():
     render(board, tr1)
 
     # test Circle
-    p31 = createPoint(5, 10)
+    p31 = createPoint(50, 10)
     circle = createCircle(p31, 20)
     render(board, circle)
 
