@@ -136,13 +136,13 @@ def point_to_line(point, line):
     p2 = line.vertices[1]
     if p1.x == p2.x:
         return abs(point.x - p1.x)
-    k1 = (p1.x - p2.x) * 1.0 / (p1.y - p2.y)
+    k1 = (p1.y - p2.y) * 1.0 / (p1.x - p2.x)
     if k1 == 0:
         return abs(point.y - p1.y)
     k2 = -1.0 / k1
     b = point.y - k2 * point.x
     cross_point = compute_cross(GLine(point, GPoint(0, b)), line)
-    if (cross_point.x < max(p1.x, p2.x)) and cross_point.x > min(p1.x, p2.x):
+    if cross_point.x < max(p1.x, p2.x) and cross_point.x > min(p1.x, p2.x):
         return get_distance(point, cross_point)
     else:
         return min(get_distance(point, p1), get_distance(point, p2))
