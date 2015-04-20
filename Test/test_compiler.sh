@@ -12,7 +12,7 @@ for i in {1..10}
         if cmp -s $benchmark $actual
         then
 	        echo "test$i passes"
-	        rm -rf actual
+	        rm -fr $actual
         else
 	        echo "test$i fails"
 

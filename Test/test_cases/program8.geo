@@ -1,7 +1,7 @@
 //This test is for shapes
 
-Triangle t := Triangle(Point1, Point2, Point3)
+Triangle t := createTriangle(Point1, Point2, Point3)
 
-Circle c := Circle(center, radius)
+Circle c := createCircle(20, 10)
 
-Rectangle r := Rectangle(Point1, Point2)
+Rectangle r := createRectangle(Point1, Point2)
