@@ -1028,7 +1028,7 @@ if len(sys.argv) == 2:
 
         #Had to call lex.lex() to restart line counting
         lex.lex()
-        print parser.parse(data)
+        sys.stdout.write(parser.parse(data))
 
     except Parse_Error:
         exit(1)
