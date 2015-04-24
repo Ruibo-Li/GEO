@@ -368,7 +368,7 @@ def p_variable_declaration(p):
 
         #@todo pre_type checking
         elif p[2] != p[5].type:
-            print_err("Invalid assignment: Trying to assign \"" + p[3].type + "\" to variable of type " + var["type"], p)
+            print_err("Invalid assignment: Trying to assign \"" + p[5].type + "\" to variable of type " + p[2], p)
 
         p[0] = var_name + " = " + assign_expr
 
