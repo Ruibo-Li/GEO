@@ -1,11 +1,4 @@
-int sum(int a, int b) := c
-        c := a + b
-end
 
-int sub(int a, int b) := c
-        c := a - b
-end
+bool a := 10 < 20 = 10 < 30
+bool b := 10 < 20 = 10 < 30 = "sdkfjasd" <= "sdfasd"
 
-int hello(int b) := a
-        a := 10 
-end

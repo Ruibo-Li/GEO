@@ -288,7 +288,6 @@ def p_function_call_statement(p):
         p[0] = Production(type=type, text=text, production_type="function_call")
 
 
-
 def p_parameter_list(p):
     """
     parameter_list : parameter_list COMMA expression
@@ -405,8 +404,8 @@ def p_type(p):
 
 def p_expression(p):
     """
-    expression : expression boolean_operator expression_term
-    expression : expression_term
+    expression : expression boolean_operator expression_pre_term
+    expression : expression_pre_term
     """
     if in_function_parsing_phase():
         p[0] = ""
@@ -428,22 +427,21 @@ def p_expression(p):
         p[0] = p[1]
 
 
-def p_expression_term(p):
+def p_expression_pre_term(p):
     """
-    expression_term : expression_term comparator expression_factor
-    expression_term : expression_factor
+    expression_pre_term : expression_pre_term eq_comparator expression_term
+    expression_pre_term : expression_term
     """
     if in_function_parsing_phase():
         p[0] = ""
         return
-
 
     if len(p) == 4:
         expr_term = Production()
 
         op = p[2]
 
-        if op == "<" or op == "<=" or op == ">" or op == ">=" or op == "=" or op == "!=":
+        if op == "=" or op == "!=":
             if p[1].type in numbers_list and p[3].type in numbers_list:
                 expr_term.type = "bool"
             elif p[1].type == "string" and p[3].type == "string":
@@ -453,10 +451,39 @@ def p_expression_term(p):
             else:
                 print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type, p)
 
-        if op == "=":
-            op = "=="
-
         expr_term.text = p[1].text + " " + op + " " + p[3].text
+        expr_term.children = [p[1], p[2], p[3]]
+
+        p[0] = expr_term
+    else:
+        p[0] = p[1]
+
+
+def p_expression_term(p):
+    """
+    expression_term : expression_term comparator expression_factor
+    expression_term : expression_factor
+    """
+    if in_function_parsing_phase():
+        p[0] = ""
+        return
+
+    if len(p) == 4:
+        expr_term = Production()
+
+        op = p[2]
+
+        if op == "<" or op == "<=" or op == ">" or op == ">=":
+            if p[1].type in numbers_list and p[3].type in numbers_list:
+                expr_term.type = "bool"
+            elif p[1].type == "string" and p[3].type == "string":
+                expr_term.type = "bool"
+            elif p[1].type == "bool" and p[3].type == "bool":
+                expr_term.type = "bool"
+            else:
+                print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type, p)
+
+        expr_term.text = "(" + p[1].text + " " + op + " " + p[3].text + ")"
         expr_term.children = [p[1], p[2], p[3]]
 
         p[0] = expr_term
@@ -632,18 +659,22 @@ def p_unary_expression(p):
         p[0] = p[1]
 
 
-
 def p_comparator(p):
     """
     comparator : GT
     comparator : LT
     comparator : GEQ
     comparator : LEQ
-    comparator : EQ
-    comparator : NEQ
     """
     p[0] = p[1]
 
+
+def p_eq_comparator(p):
+    """
+    eq_comparator : EQ
+    eq_comparator : NEQ
+    """
+    p[0] = p[1]
 
 def p_number(p):
     """
