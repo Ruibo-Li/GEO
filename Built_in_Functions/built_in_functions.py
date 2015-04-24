@@ -113,3 +113,31 @@ def cast_shape(shape):
     if isinstance(shape, GLine):
         return GLine(shape)
     return None
+
+# list operation functions
+def listAppend(ls, x):
+    ls.append(x)
+
+def listExtend(ls1, ls2):
+    ls1.extend(ls2)
+
+def listInsert(ls, i, x):
+    ls.insert(i, x)
+
+def listRemove(ls, x):
+    ls.remove(x)
+
+def listPop(ls, i=0):
+    return ls.pop(i)
+
+def listIndex(ls, x):
+    return ls.index(x)
+
+def listCount(ls, x):
+    return ls.count(x)
+
+def listSort(ls):
+    ls.sort()
+
+def listReverse(ls):
+    ls.reverse()
