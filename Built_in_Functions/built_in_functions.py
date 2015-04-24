@@ -101,6 +101,15 @@ def inside(p, shape):
 
 
 # cast shape to triangle
-def shape_to_triangle(shape):
-    if isinstance(shape, GCircle):
+def cast_shape(shape):
+    if isinstance(shape, GTriangle):
         return GTriangle(shape)
+    if isinstance(shape, GRectangle):
+        return GRectangle(shape)
+    if isinstance(shape, GCircle):
+        return GCircle(shape)
+    if isinstance(shape, GPoint):
+        return GPoint(shape)
+    if isinstance(shape, GLine):
+        return GLine(shape)
+    return None
