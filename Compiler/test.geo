@@ -1,32 +1,12 @@
 
-bool i() := z
 
+
+int max(int a, int b) := c
+	c := b
+	if(a > b)
+		c := a
+	end	
 end
 
-string j() := y
+max(3, "sdf")
 
-end
-
-int k() := x
-
-end
-
-double l() := w
-
-end
-
-Triangle m() := v
-
-end
-
-Circle n() := u
-
-end
-
-Shape o() := t
-
-end
-
-Rectangle p() := s
-
-end

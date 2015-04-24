@@ -61,17 +61,23 @@ class Parser:
         type = "unknown"
         text = None
 
-        if p[1] in functions:
-            type = functions[p[1]].type
+        if p[1] not in functions:
+            print_err("Call to undefined function '" + p[1] + "'", p)
+
+        function = functions[p[1]]
+        type = function.type
 
         if len(p) == 5:
-            #@todo check param types
+            function.check_parameters(p[3], p)
+
             param_list = [arg[0] for arg in p[3]]
             args_text = ", ".join(param_list)
 
             text = p[1] + "(" + args_text + ")"
             p[0] = Production(type=type, text=text, production_type="function_call") #fix me
         else:
+            function.check_parameters([], p)
+
             text = p[1] + "()"
             p[0] = Production(type=type, text=text, production_type="function_call")
 
@@ -89,7 +95,6 @@ class Parser:
             p[0] = p[1] + [(p[3].text, p[3].type, p[3].pre_type)]
         else:
             p[0] = [(p[1].text, p[1].type, p[1].pre_type)]
-
 
 
     def p_variable_declaration(self, p):

@@ -1,5 +1,17 @@
 import sys
 
+numbers_list = [
+    "int",
+    "double"
+]
+
+shapes_list = [
+    "Shape",
+    "Rectangle",
+    "Circle",
+    "Triangle"
+]
+
 class ScopeStack:
     def __init__(self):
         self.scopes = []
@@ -53,13 +65,38 @@ class Scope:
 
 
 class Function:
-    def __init__(self, type=None, name=None, args=[]):
+    def __init__(self, type=None, name=None, args=[], pre_type=None):
         self.type = type
         self.args = args
         self.name = name
+        self.pre_type = pre_type
+
+    def check_parameters(self, param_list, p=None):
+        args = self.args
+        
+        if len(param_list) != len(args):
+            print_err("Function " + self.name + " expects " + str(len(args)) + " arguments. " + str(len(param_list)) + " received", p)
+            return False
+
+        for i in xrange(len(param_list)):
+            param_type = param_list[i][1]
+            arg_type = args[i]["type"]
+
+            if arg_type == "Shape":
+                if param_type not in shapes_list:
+                    print_err("Function " + self.name + " expects argument of type '" + arg_type + "' at position " + str(i + 1) + ". " + param_type +" received instead" , p)
+                    return False
+            elif arg_type == "number":
+                if param_type not in numbers_list:
+                    print_err("Function " + self.name + " expects argument of type '" + arg_type + "' at position " + str(i + 1) + ". " + param_type +" received instead" , p)
+                    return False
+            elif args[i]['type'] != param_list[i][1]:
+                print_err("Function " + self.name + " expects argument of type '" + arg_type + "' at position " + str(i + 1) + ". " + param_type +" received instead" , p)
+                return False
+        return True
 
     def __str__(self):
-        return "(type=" + self.type +", args=" + str(self.args) + ", name=" + self.name + ")"
+        return "(type=" + self.type +", args=" + str(self.args) + ", name=" + self.name + ", pre_type=" + self.pre_type + ")"
 
     def __repr__(self):
         return str(self)
@@ -89,7 +126,8 @@ class Parse_Error(Exception):
 #@todo add builtin functions
 functions = {
     "print" : Function(type="unsassignable", args=[{"type" : "string", "pre_type": None}], name="print"),
-    "str" : Function(type="string", args=[{"type" : "any", "pre_type": None}], name="str")
+    "str" : Function(type="string", args=[{"type": "number", "pre_type": None}], name="str"),
+    "render": Function(type="null", args=[{"type": "Shape", "pre_type": None}], name="render")
 }
 scope_stack = ScopeStack()
 
@@ -101,11 +139,6 @@ flags = {
     "in_while" : 0, #nested whiles
     "return_expression" : None
 }
-
-numbers_list = [
-    "int",
-    "double"
-]
 
 def push_scope(p):
     scope_stack.add_scope()
@@ -177,5 +210,4 @@ def print_err(error, p=None, force=False):
         error = error + ": " + str(p.lineno(1))
 
     print >>sys.stderr, error
-
-        #raise Parse_Error(error)
+    raise Parse_Error(error)
