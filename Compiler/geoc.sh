@@ -15,6 +15,6 @@ echo "#!/usr/bin/env python" > $out
 echo >> $out
 echo >> $out
 
-python lex_yacc.py $1 >> $out
+python compiler.py $1 >> $out
 
 chmod +x $out

@@ -1,4 +1,4 @@
-import lex as lex
+import ply.lex as lex
 
 class Lexer:
 
@@ -104,4 +104,7 @@ class Lexer:
         t.lexer.skip(1)
 
     def __init__(self):
+        lex.lex(module=self)
+
+    def lex(self):
         lex.lex(module=self)
