@@ -1,21 +1,32 @@
 
-int x(int b) := b
-	b := b + 3
+bool i() := z
+
 end
 
-int y(bool b) := b
-        b := b && false 
+string j() := y
+
 end
 
+int k() := x
 
-int z(bool b) := c
-	c := 1
 end
 
-int w(bool b) := c
-   
+double l() := w
+
 end
 
-int l() := c
-	c := 10
+Triangle m() := v
+
+end
+
+Circle n() := u
+
+end
+
+Shape o() := t
+
+end
+
+Rectangle p() := s
+
 end

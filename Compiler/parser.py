@@ -236,6 +236,9 @@ class Parser:
                 else:
                     print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type, p)
 
+            if op == "=":
+                op = "=="
+
             expr_term.text = p[1].text + " " + op + " " + p[3].text
             expr_term.children = [p[1], p[2], p[3]]
 
