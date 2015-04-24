@@ -141,3 +141,7 @@ def listSort(ls):
 
 def listReverse(ls):
     ls.reverse()
+
+def printf(str):
+    print str
+    return None
