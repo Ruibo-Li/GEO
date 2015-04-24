@@ -98,3 +98,9 @@ def intersect(shape1, shape2):
 # determine whether a point p is inside a shape (either triangle or rectangle)
 def inside(p, shape):
     return is_inside(p, shape)
+
+
+# cast shape to triangle
+def shape_to_triangle(shape):
+    if isinstance(shape, GCircle):
+        return GTriangle(shape)
