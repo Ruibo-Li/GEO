@@ -1,14 +1,7 @@
-import ply.lex as lex
-import ply.yacc as yacc
-import sys
-import traceback
-
-
-# Build the lexer
-lexer = lex.lex()
-
+import lex as lex
 
 class Lexer:
+
     reserved = {
         'if' : 'K_IF',
         'ef' : 'K_EF',
@@ -87,19 +80,18 @@ class Lexer:
     t_DOUBLE = r'[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'
     t_COMMA = r','
 
-
-    def t_ID(t):
+    def t_ID(self, t):
         r'[_a-zA-Z][_a-zA-Z0-9]*'
         t.type = Lexer.reserved.get(t.value, 'ID')
         return t
 
     # Define a rule so we can track line numbers
-    def t_newline(t):
+    def t_newline(self, t):
         r'\n+'
         t.lexer.lineno += len(t.value)
 
 
-    def t_COMMENT(t):
+    def t_COMMENT(self, t):
          r'/\*(/|(\*)*[^\*])*(\*)+/|//.*'
     #    return t
 
@@ -107,13 +99,9 @@ class Lexer:
     t_ignore = ' \t'
 
     # Error handling rule
-    def t_error(t):
+    def t_error(self, t):
         print "Illegal character '%s'" % t.value[0]
         t.lexer.skip(1)
 
     def __init__(self):
-        self.lex_var = lex
-        self.lex()
-
-    def lex(self):
-        self.lexer = self.lex_var.lex()
+        lex.lex(module=self)
