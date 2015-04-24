@@ -31,7 +31,7 @@ reserved = {
 
 
 # List of token names.   This is always required
-tokens = [   
+tokens = [
     'ID',
     'GT',
     'LT',
@@ -49,11 +49,11 @@ tokens = [
     'OR',
     'ASSIGN',
     'LPAREN',
-    'RPAREN',   
+    'RPAREN',
     'STRING',
     'INTEGER',
     'DOUBLE',
-    'COMMA', 
+    'COMMA',
     'COMMENT'
 ] + list(reserved.values())
 
@@ -75,7 +75,7 @@ t_AND = r'&&'
 t_OR = r'\|\|'
 t_ASSIGN = r':='
 t_LPAREN = r'\('
-t_RPAREN = r'\)'  
+t_RPAREN = r'\)'
 t_STRING = r'\"([^\"]|\\")*\"'
 t_INTEGER = r'[0-9]+'
 t_DOUBLE = r'[0-9]+\.[0-9]*|[0-9]*\.[0-9]+'
