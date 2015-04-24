@@ -14,8 +14,6 @@ reserved = {
     'string' : 'K_STRING',
     'null' : 'K_NULL',
     'list' : 'K_LIST',
-    'set' : 'K_SET',
-    'dict' : 'K_DICT',
     'Window' : 'K_WINDOW',
     'Triangle' : 'K_TRIANGLE',
     'Circle' : 'K_CIRCLE',
@@ -144,7 +142,10 @@ class Scope:
         self.vars = {}
 
     def add_declaration(self, id, type, pre_type=None, global_var=False):
-        assert id not in self.vars
+        #@todo add line number to error by saving it with the var
+        if id in self.vars:
+            print_err("Variable '" + id + "' was already declared")
+
         self.vars[id] = {
             'type' : type,
             'pre_type' : pre_type,
@@ -319,17 +320,15 @@ def p_variable_declaration(p):
     if len(p) == 4:
         if p[1] == "":
             var_name = add_variable_declaration(p[3], p[2], p[1])
-            p[0] = var_name + " = None"
+
+            initializer = get_initializer(p[2])
+
+            p[0] = var_name + " = " + initializer
         elif p[1] == "list":
             var_name = add_variable_declaration(p[3], p[2], p[1])
             p[0] = var_name + " = []"
-        elif p[1] == "dict":
-            var_name = add_variable_declaration(p[3], p[2], p[1])
-            p[0] = var_name + " = {}"
-        elif p[1] == "set":
-            var_name = add_variable_declaration(p[3], p[2], p[1])
-            #@todo Don't know
-            p[0] = var_name + " = {}"
+
+        #Assignment (No declaration)
         elif p[2] == ":=":
             var_name = p[1]
 
@@ -356,6 +355,7 @@ def p_variable_declaration(p):
 
             p[0] = pre_global_definition + var_name + " = " + assign_expr
 
+    # Declaration and assignment
     elif len(p) == 6:
         var_name = add_variable_declaration(p[3], p[2], p[1])
         assign_expr = p[5].text
@@ -377,8 +377,6 @@ def p_pre_type_modifier(p):
     """
     pre_type_modifier :
     pre_type_modifier : K_LIST
-    pre_type_modifier : K_DICT
-    pre_type_modifier : K_SET
     """
     if len(p) == 1:
         p[0] = ""
@@ -892,17 +890,29 @@ def p_function_header(p):
     if len(p) == 12:
         init_ret = None
 
-        #if not an ID
-        ret_expression = p[10].text
-        if p[10].production_type == 'id':
-            var_name = add_variable_declaration(p[10].text, p[2], p[1])
-            init_ret = var_name + " = None"
-            ret_expression = var_name
-
-
         arg_list = [arg[0] for arg in p[6]]
         args_text = ", ".join(arg_list)
 
+        #if not an ID
+        ret_expression = p[10].text
+        if p[10].production_type == 'id':
+            if not check_variable_in_current_scope(p[10].text):
+                var_name = add_variable_declaration(p[10].text, p[2], p[1])
+
+                initializer = get_initializer(p[2])
+
+                init_ret = var_name + " = " + initializer
+                ret_expression = var_name
+
+            # check to make sure the argument has the same type
+            else:
+                var = scope_stack.get_var(p[10].text)
+                arg = [arg for arg in p[6] if arg[0] == var["given_name"]][0]
+
+                if arg[1] != p[2]:
+                    print_err("Argument '" + p[10].text + "' doesn't match the type of the function", p)
+
+                ret_expression = var['given_name']
 
         if in_function_parsing_phase():
             args = []
@@ -921,7 +931,10 @@ def p_function_header(p):
         ret_expression = p[9].text
         if p[9].production_type == 'id':
             var_name = add_variable_declaration(p[9].text, p[2], p[1])
-            init_ret = var_name + " = None"
+
+            initializer = get_initializer(p[2])
+
+            init_ret = var_name + " = " + initializer
             ret_expression = var_name
 
         text = "def " + p[3] + "():" + ("\n" if init_ret else "") + indent(init_ret)
@@ -986,7 +999,6 @@ def add_variable_declaration(id, type, pre_type=None):
 
     return scope.add_declaration(id, type, pre_type, global_var)
 
-
 def p_set_ignore_flag(p):
     """
     set_ignore_flag :
@@ -1004,6 +1016,14 @@ def p_unset_ignore_flag(p):
     p[0] = ""
 
 
+def check_variable_in_current_scope(var):
+    scope = scope_stack.get_current_scope()
+
+    if scope.get_var(var):
+        return True
+
+    return False
+
 def check_var_in_scope(var, p):
     if flags['ignore']:
         return 2
@@ -1015,6 +1035,19 @@ def check_var_in_scope(var, p):
     
     return 1
 
+
+def get_initializer(type):
+    initializer = "None"
+
+    if type == "int":
+        initializer = "0"
+    elif type == "double":
+        initializer = "0.0"
+    elif type == "string":
+        initializer = "\"\""
+    elif type == "bool":
+        initializer = "False"
+    return initializer
 
 def indent(p):
     if not p:
@@ -1043,7 +1076,7 @@ def print_err(error, p=None, force=False):
 
     print >>sys.stderr, error
 
-    raise Parse_Error(error)
+    #raise Parse_Error(error)
 
 
 parser = yacc.yacc()
