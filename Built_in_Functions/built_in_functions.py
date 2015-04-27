@@ -157,19 +157,11 @@ def printf(st):
     return None
 
 
-def split(st):
-    return st.split()
-
-
-def splitBy(st, sep):
+def split(st, sep=' '):
     return st.split(sep)
 
 
-def strip(st):
-    return st.strip()
-
-
-def stripBy(st, sep):
+def strip(st, sep=' '):
     return st.strip(sep)
 
 
