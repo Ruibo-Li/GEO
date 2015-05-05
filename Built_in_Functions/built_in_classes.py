@@ -39,8 +39,9 @@ class GCircle(GShape):
         return self.geo
 
 
-class GPoint:
+class GPoint(GShape):
     def __init__(self, x, y):
+        super(GPoint, self).__init__()
         self.geo = Point(x, y)
         self.x = x
         self.y = y
@@ -49,8 +50,9 @@ class GPoint:
         return self.geo
 
 
-class GLine:
+class GLine(GShape):
     def __init__(self, point1, point2):
+        super(GLine, self).__init__()
         vertices = [point1.geo, point2.geo]
         self.geo = Line(point1.geo, point2.geo)
         self.vertices = [point1, point2]
