@@ -1,5 +1,4 @@
-
-
+int a
 
 int max(int a, int b) := c
 	c := b
@@ -8,5 +7,7 @@ int max(int a, int b) := c
 	end	
 end
 
-max(3, "sdf")
+max(3, 3)
+
+int x := 9.8
 
