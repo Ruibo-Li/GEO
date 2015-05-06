@@ -104,8 +104,5 @@ class Table:
         for cell in self.cells:
             cell.geo.draw(window)
 
-    def getRowNum(self, x, y):
-        return (y - self.py) / self.cellHeight
-
-    def getColNum(self, x, y):
-        return (x - self.px) / self.cellLength
+    def getCell(self, x, y):
+        return (y - self.py) / self.cellHeight, (x - self.px) / self.cellLength
