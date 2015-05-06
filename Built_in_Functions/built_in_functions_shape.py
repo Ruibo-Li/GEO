@@ -25,9 +25,6 @@ def createTable(px, py, l, h, m, n):
     return Table(px, py, l, h, m, n)
 
 
-def setColor(shape, R, G, B):
-    return
-
 def render(window, shape):
     shape.geo.draw(window)
 
@@ -35,8 +32,10 @@ def render(window, shape):
 def remove(shape):
     shape.geo.undraw()
 
+
 def move(shape, x, y):
     shape.geo.move(x, y)
+
 
 def areSimilar(triangle1, triangle2):
     vertices1 = triangle1.vertices
@@ -123,4 +122,11 @@ def cast_shape(shape):
         return GLine(shape)
     return None
 
+
+# set the shape with the color specified by RGB value
+def setShapeColor(shape, r, g, b):
+    if isinstance(shape, GTriangle) or isinstance(shape, GRectangle) or isinstance(shape, GCircle):
+        color = GColor(r, g, b)
+        shape.setFill(color.geo)
+        shape.color = color
 

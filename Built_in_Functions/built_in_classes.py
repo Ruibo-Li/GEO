@@ -12,6 +12,7 @@ class GTriangle(GShape):
         vertices = [point1.geo, point2.geo, point3.geo]
         self.geo = Polygon(vertices)
         self.vertices = [point1, point2, point3]
+        self.color = None
 
     def get_triangle(self):
         return self.geo
@@ -23,6 +24,7 @@ class GRectangle(GShape):
         vertices = [point1.geo, point2.geo]
         self.geo = Rectangle(point1, point2)
         self.vertices = [point1, point2]
+        self.color = None
 
     def get_rectangle(self):
         return self.geo
@@ -34,6 +36,7 @@ class GCircle(GShape):
         self.geo = Circle(center.geo, radius)
         self.center = center
         self.radius = radius
+        self.color = None
 
     def get_circle(self):
         return self.geo
@@ -70,6 +73,17 @@ class GLine(GShape):
         return self.geo
 
 
+class GColor():
+    def __init__(self, r, g, b):
+        self.geo = color_rgb(r, g, b)
+        self.r = r
+        self.g = g
+        self.b = b
+
+    def get_color(self):
+        return self.r, self.g, self.b
+
+
 class Table:
     def __init__(self, px, py, l, h, m, n):
         self.px = px
@@ -78,14 +92,17 @@ class Table:
         self.cellHeight = h
         self.rowNum = m
         self.colNum = n
+        self.cells = []
+        for i in xrange(m):
+            for j in xrange(n):
+                lux = px + j * l
+                luy = py + i * h
+                newcell = GRectangle(GPoint(lux, luy), GPoint(lux + l, luy + h))
+                self.cells.append(newcell)
 
     def drawTable(self, window):
-        tablelength = self.cellLength * self.colNum
-        tableheight = self.cellHeight * self.rowNum
-        for i in xrange(self.rowNum+1):
-            Line(Point(self.px, self.py + i * self.cellHeight), Point(self.px + tablelength, self.py + i * self.cellHeight)).draw(window)
-        for i in xrange(self.colNum+1):
-            Line(Point(self.px + i * self.cellLength, self.py), Point(self.px + i * self.cellLength, self.py + tableheight)).draw(window)
+        for cell in self.cells:
+            cell.geo.draw(window)
 
     def getRowNum(self, x, y):
         return (y - self.py) / self.cellHeight
