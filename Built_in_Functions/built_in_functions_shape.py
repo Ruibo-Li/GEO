@@ -21,6 +21,13 @@ def createLine(point1, point2):
     return GLine(point1, point2)
 
 
+def createTable(px, py, l, h, m, n):
+    return Table(px, py, l, h, m, n)
+
+
+def setColor(shape, R, G, B):
+    return
+
 def render(window, shape):
     shape.geo.draw(window)
 
