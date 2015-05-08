@@ -50,8 +50,7 @@ class Parser:
 
     def p_function_call_statement(self, p):
         """
-        function_call_statement : ID LPAREN parameter_list RPAREN
-        function_call_statement : ID LPAREN RPAREN
+        function_call_statement : ID LPAREN opt_parameter_list RPAREN
         """
 
         if in_function_parsing_phase():
@@ -67,20 +66,25 @@ class Parser:
         function = functions[p[1]]
         type = function.type
 
-        if len(p) == 5:
-            function.check_parameters(p[3], p)
+        function.check_parameters(p[3], p)
 
-            param_list = [arg[0] for arg in p[3]]
-            args_text = ", ".join(param_list)
+        param_list = [arg[0] for arg in p[3]]
+        args_text = ", ".join(param_list)
 
-            text = p[1] + "(" + args_text + ")"
-            p[0] = Production(type=type, text=text, production_type="function_call") #fix me
+        text = p[1] + "(" + args_text + ")"
+        p[0] = Production(type=type, text=text, production_type="function_call") #fix me
+
+
+
+    def p_opt_parameter_list(self, p):
+        """
+        opt_parameter_list : parameter_list
+        opt_parameter_list :
+        """
+        if len(p) == 2:
+            p[0] = p[1]
         else:
-            function.check_parameters([], p)
-
-            text = p[1] + "()"
-            p[0] = Production(type=type, text=text, production_type="function_call")
-
+            p[0] = []
 
     def p_parameter_list(self, p):
         """
@@ -129,7 +133,7 @@ class Parser:
                 assign_expr = p[3].text
 
                 if check_var_in_scope(p[1], p):
-                    var = scope_stack.get_var(p[1])
+                    var = get_var(p[1])
                     var_name = var["given_name"]
 
                     if var["global_var"] and flags["in_function"]:
@@ -378,7 +382,8 @@ class Parser:
         check_result = check_var_in_scope(p[1], p)
 
         if check_result == 1:
-            var = scope_stack.get_var(p[1])
+            var = get_var(p[1])
+            print var
             prod.text = var['given_name']
 
             prod.type = var["type"]
@@ -662,9 +667,7 @@ class Parser:
 
     def p_function_header(self, p):
         """
-        function_header : pre_type_modifier type ID LPAREN push_scope argument_list RPAREN ASSIGN set_ignore_flag \
-                            primary_expression unset_ignore_flag
-        function_header : pre_type_modifier type ID LPAREN push_scope RPAREN ASSIGN set_ignore_flag \
+        function_header : pre_type_modifier type ID LPAREN push_scope opt_argument_list RPAREN ASSIGN set_ignore_flag \
                             primary_expression unset_ignore_flag
         """
 
@@ -682,57 +685,42 @@ class Parser:
             if p[3] in functions:
                 print_err("Redeclaration of function \"" + p[3] + "\"", p, True)
 
-        if len(p) == 12:
-            init_ret = None
+        init_ret = None
 
-            arg_list = [arg[0] for arg in p[6]]
-            args_text = ", ".join(arg_list)
+        arg_list = [arg[0] for arg in p[6]]
+        args_text = ", ".join(arg_list)
 
-            #if not an ID
-            ret_expression = p[10].text
-            if p[10].production_type == 'id':
-                if not check_variable_in_current_scope(p[10].text):
-                    var_name = add_variable_declaration(p[10].text, p[2], p[1])
-
-                    initializer = get_initializer(p[2])
-
-                    init_ret = var_name + " = " + initializer
-                    ret_expression = var_name
-
-                # check to make sure the argument has the same type
-                else:
-                    var = scope_stack.get_var(p[10].text)
-                    arg = [arg for arg in p[6] if arg[0] == var["given_name"]][0]
-
-                    if arg[1] != p[2]:
-                        print_err("Argument '" + p[10].text + "' doesn't match the type of the function", p)
-
-                    ret_expression = var['given_name']
-
-            if in_function_parsing_phase():
-                args = []
-                for arg in p[6]:
-                    args.append({
-                        "type" : arg[1],
-                        "pre_type" : arg[2]
-                    })
-                f.args = args
-
-            text = "def " + p[3] + "(" + args_text + "):" + ("\n" if init_ret else "") + indent(init_ret)
-        else:
-            init_ret = None
-
-            #if not an ID
-            ret_expression = p[9].text
-            if p[9].production_type == 'id':
-                var_name = add_variable_declaration(p[9].text, p[2], p[1])
+        #if not an ID
+        ret_expression = p[10].text
+        if p[10].production_type == 'id':
+            if not check_variable_in_current_scope(p[10].text):
+                var_name = add_variable_declaration(p[10].text, p[2], p[1])
 
                 initializer = get_initializer(p[2])
 
                 init_ret = var_name + " = " + initializer
                 ret_expression = var_name
 
-            text = "def " + p[3] + "():" + ("\n" if init_ret else "") + indent(init_ret)
+            # check to make sure the argument has the same type
+            else:
+                var = get_var(p[10].text)
+                arg = [arg for arg in p[6] if arg[0] == var["given_name"]][0]
+
+                if arg[1] != p[2]:
+                    print_err("Argument '" + p[10].text + "' doesn't match the type of the function", p)
+
+                ret_expression = var['given_name']
+
+        if in_function_parsing_phase():
+            args = []
+            for arg in p[6]:
+                args.append({
+                    "type" : arg[1],
+                    "pre_type" : arg[2]
+                })
+            f.args = args
+
+        text = "def " + p[3] + "(" + args_text + "):" + ("\n" if init_ret else "") + indent(init_ret)
 
         flags["in_function"] = True
         flags["return_expression"] = ret_expression
@@ -742,6 +730,16 @@ class Parser:
         if in_function_parsing_phase():
             functions[p[3]] = f
 
+
+    def p_opt_argument_list(self, p):
+        """
+        opt_argument_list : argument_list
+        opt_argument_list :
+        """
+        if len(p) == 2:
+            p[0] = p[1]
+        else:
+            p[0] = []
 
     def p_argument_list(self, p):
         """

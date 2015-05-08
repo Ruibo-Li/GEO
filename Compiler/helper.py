@@ -184,6 +184,10 @@ def check_var_in_scope(var, p):
 
     return 1
 
+
+def get_var(var):
+    return scope_stack.get_var(var)
+
 def get_initializer(type):
     initializer = "None"
 
