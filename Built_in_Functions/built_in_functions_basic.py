@@ -103,3 +103,8 @@ def isNumeric(st):
 
 def isDecimal(st):
     return st.isdecimal()
+
+
+def getMouse(win):
+    return win.getMouse()
+
