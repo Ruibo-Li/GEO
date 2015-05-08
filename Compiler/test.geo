@@ -8,5 +8,7 @@ int max(int a, int b) := c
 	end	
 end
 
-max(3, "sdf")
 
+int aaa() := x
+	x := 11
+end
