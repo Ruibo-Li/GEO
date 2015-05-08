@@ -36,6 +36,9 @@ def render(window, shape):
 def remove(shape):
     shape.geo.undraw()
 
+def drawTable(table, window):
+    table.drawTable(window)
+
 
 def move(shape, x, y):
     shape.geo.move(x, y)
