@@ -25,6 +25,10 @@ def createTable(px, py, l, h, m, n):
     return Table(px, py, l, h, m, n)
 
 
+def createText(p, text):
+    return GText(p, text)
+
+
 def render(window, shape):
     shape.geo.draw(window)
 
