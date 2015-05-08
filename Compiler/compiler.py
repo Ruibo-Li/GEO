@@ -10,7 +10,7 @@ if len(sys.argv) == 2:
         data = f.read()
         p.parser.parse(data)
         flags["function_parsing"] = False
-        scope_stack = ScopeStack()
+        init_scope_stack()
 
         #Had to call lex.lex() to restart line counting
         p.lexer.lex()

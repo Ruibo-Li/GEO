@@ -90,7 +90,7 @@ class Function:
                 if param_type not in numbers_list:
                     print_err("Function " + self.name + " expects argument of type '" + arg_type + "' at position " + str(i + 1) + ". " + param_type +" received instead" , p)
                     return False
-            elif args[i]['type'] != param_list[i][1]:
+            elif arg_type != param_type:
                 print_err("Function " + self.name + " expects argument of type '" + arg_type + "' at position " + str(i + 1) + ". " + param_type +" received instead" , p)
                 return False
         return True
@@ -129,7 +129,14 @@ functions = {
     "str" : Function(type="string", args=[{"type": "number", "pre_type": None}], name="str"),
     "render": Function(type="null", args=[{"type": "Shape", "pre_type": None}], name="render")
 }
-scope_stack = ScopeStack()
+
+scope_stack = None
+
+def init_scope_stack():
+    global scope_stack
+    scope_stack = ScopeStack()
+
+init_scope_stack()
 
 # Flag set to true to ignore variable declaration checking
 flags = {
