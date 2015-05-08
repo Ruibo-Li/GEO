@@ -383,7 +383,7 @@ class Parser:
 
         if check_result == 1:
             var = get_var(p[1])
-            print var
+
             prod.text = var['given_name']
 
             prod.type = var["type"]

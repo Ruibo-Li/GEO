@@ -1,20 +1,18 @@
-int sum(int a, int b) := c
-        c := a + b
+int a
+
+int max(int a, int b) := c
+        c := b
+        if(a > b)
+                c := a
+        end
 end
 
-int sub(int a, int b) := c
-        c := a - b
+
+int baa() := c
+        c := 10
 end
 
-int hello(int b) := a
-        a := 10 
-end
 
-int main() := k
-        int a := 10
-        int b := 20
-        print(str(a) + " + " + str(b) + " = " + str(sum(a, b)))
-        print(str(a) + " - " + str(b) + " = " + str(sub(a, b)))
-end
+max(3, 3)
 
-main()
+baa()
