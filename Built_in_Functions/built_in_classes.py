@@ -46,7 +46,7 @@ class GCircle(GShape):
 
 class GText(GShape):
     def __init__(self, point, text):
-        super(GPoint, self).__init__()
+        super(GText, self).__init__()
         self.geo = Text(point.geo, text)
 
     def get_text(self):
