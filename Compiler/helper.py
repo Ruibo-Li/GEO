@@ -148,7 +148,6 @@ class Parse_Error(Exception):
 functions = {
     "print" : Function(type="unsassignable", args=[{"type" : "string", "pre_type": None}], name="print"),
     "str" : Function(type="string", args=[{"type": "number", "pre_type": None}], name="str"),
-    "render": Function(type="null", args=[{"type": "Shape", "pre_type": None}], name="render"),
     "listAppend" : Function(type="null", args=[{"type": "any", "pre_type": "list", "match": [1]}, {"type": "any", "pre_type": None}], name="listAppend"),
     "createWindow" : Function(name="listAppend", type="Window", args=[{"type": "string", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}]),
     "getMouse" : Function(name="getMouse", type="Point", args=[{"type": "Window", "pre_type": None}]),
@@ -160,7 +159,16 @@ functions = {
     "inside" : Function(name="inside", type="bool", args=[{"type": "Point", "pre_type": None}, {"type": "Shape", "pre_type": None}]),
     "setColor" : Function(name="setColor", type="unassignable", args=[{"type": "Shape", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}]),
     "createCircle" : Function(name="createCircle", type="Circle", args=[{"type": "Point", "pre_type": None}, {"type": "int", "pre_type": None}]),
-    "createRectangle" : Function(name="createRectangle", type="Rectangle", args=[{"type": "Point", "pre_type": None}, {"type": "Point", "pre_type": None}])
+    "createRectangle" : Function(name="createRectangle", type="Rectangle", args=[{"type": "Point", "pre_type": None}, {"type": "Point", "pre_type": None}]),
+    "createTable" : Function(name="createTable", type="Table", args=[{type: "int", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None}]),
+    "getX" : Function(name="getX", type="int", args=[{type: "Point", "pre_type": None}]),
+    "getY" : Function(name="getY", type="int", args=[{type: "Point", "pre_type": None}]),
+    "setCellColor" : Function(name="setCellColor", type="unassignable", args=[{type: "Table", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None}]),
+    "getCell" : Function(name="getCell", type="Rectangle", args=[{type: "Table", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None}]),
+    "getRow" : Function(name="getRow", type="int", args=[{type: "Table", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None}]),
+    "getCol" : Function(name="getCol", type="int", args=[{type: "Table", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None}]),
+    "getVal" : Function(name="getVal", type="int", args=[{type: "Table", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None}]),
+    "hasSameColor" : Function(name="hasSameColor", type="bool", args=[{type: "Table", "pre_type": None}, {type: "int", "pre_type": None}, {type: "int", "pre_type": None}, {type: "int", "pre_type": None}])
 }
 
 scope_stack = None
