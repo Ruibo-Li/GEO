@@ -4,7 +4,7 @@ def randomNum():
     return random.random()
 
 def randomInt(min, max):
-    return randomInt(min, max)
+    return random.randint(min, max)
 
 # list operation functions
 def createList():
