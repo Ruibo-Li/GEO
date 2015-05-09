@@ -128,8 +128,14 @@ def isDecimal(st):
 
 def RGB2Str(r, g, b):
     s1 = str(hex(r))[2:].upper()
+    if len(s1) == 1:
+        s1 = '0' + s1
     s2 = str(hex(g))[2:].upper()
+    if len(s2) == 1:
+        s2 = '0' + s2
     s3 = str(hex(b))[2:].upper()
+    if len(s3) == 1:
+        s3 = '0' + s3
     return s1 + s2 + s3
 
 
