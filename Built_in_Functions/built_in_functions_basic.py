@@ -3,10 +3,12 @@ import random
 def randomNum():
     return random.random()
 
+def randomInt(min, max):
+    return randomInt(min, max)
+
 # list operation functions
 def createList():
     return list()
-
 
 def listAppend(ls, x):
     ls.append(x)

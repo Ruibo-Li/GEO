@@ -123,6 +123,8 @@ def is_inside(p, shape):
     if isinstance(shape, GRectangle):
         return p.x > min(vers[0].x, vers[1].x) and (p.x < max(vers[0].x, vers[1].x)) and (p.y > min(vers[0].y, vers[
             1].y)) and p.y < max(vers[0].y, vers[1].y)
+    if isinstance(shape, GCircle):
+        return True
 
 
 # determine on which side of the line(p1,p2) is the point p
