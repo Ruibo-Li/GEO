@@ -1,10 +1,20 @@
-// This test is for function
-
-// Invoke built-in readTriangle() function to read points from command line
-Triangle t1 := readTriangle()
-Triangle t2 := readTriangle()
-
-// Define function demo1() that returns a boolean value res
-bool demo1(Triangle t1, Triangle t2) := res
-	res := areSimilar(t1, t2)
+int sum(int a, int b) := c
+        c := a + b
 end
+
+int sub(int a, int b) := c
+        c := a - b
+end
+
+int hello(int b) := a
+        a := 10 
+end
+
+int main() := k
+        int a := 10
+        int b := 20
+        printl(str(a) + " + " + str(b) + " = " + str(sum(a, b)))
+        printl(str(a) + " - " + str(b) + " = " + str(sub(a, b)))
+end
+
+main()
