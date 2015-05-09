@@ -4,6 +4,7 @@ from graphics import *
 class GShape(object):
     def __init__(self):
         self.geo = None
+        self.value = 0
 
 
 class GTriangle(GShape):
@@ -104,5 +105,14 @@ class Table:
         for cell in self.cells:
             cell.geo.draw(window)
 
+    def getRow(self, x, y):
+        return (x - self.px) / self.cellLength
+
+    def getCol(self, x, y):
+        return (y - self.py) / self.cellHeight
+
     def getCell(self, x, y):
-        return (y - self.py) / self.cellHeight, (x - self.px) / self.cellLength
+        return (y - self.py) / self.cellHeight
+
+    def getVal(self, i, j):
+        return (y - self.py) / self.cellHeight
