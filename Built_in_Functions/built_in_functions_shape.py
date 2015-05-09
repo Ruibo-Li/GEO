@@ -155,10 +155,10 @@ def getCell(table, x, y):
 
 
 def getRow(table, x, y):
-    return table.get(x, y)
+    return table.getRow(x, y)
 
 def getCol(table, x, y):
-    return table.getCell(x, y)
+    return table.getCol(x, y)
 
 def getX(point):
     return point.x
