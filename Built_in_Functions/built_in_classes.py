@@ -85,7 +85,7 @@ class GColor():
         return self.r, self.g, self.b
 
 
-class Table:
+class Table(GShape):
     def __init__(self, px, py, l, h, m, n):
         self.px = px
         self.py = py
@@ -112,6 +112,9 @@ class Table:
         return (y - self.py) / self.cellHeight
 
     def getCell(self, x, y):
+        row = self.getRow(x, y)
+        col = self.getCol(x, y)
+        self.cells[row*self.colNum + col]
         return (y - self.py) / self.cellHeight
 
     def getVal(self, i, j):

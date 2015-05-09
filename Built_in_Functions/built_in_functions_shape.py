@@ -9,6 +9,10 @@ def createTriangle(point1, point2, point3):
     return GTriangle(point1, point2, point3)
 
 
+def createRectangle(point1, point2):
+    return GRectangle(point1, point2)
+
+
 def createCircle(center, radius):
     return GCircle(center, radius)
 
@@ -35,6 +39,7 @@ def render(window, shape):
 
 def remove(shape):
     shape.geo.undraw()
+
 
 def drawTable(table, window):
     table.drawTable(window)
