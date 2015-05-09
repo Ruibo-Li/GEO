@@ -138,6 +138,21 @@ def shapeToCircle(shape):
         return GCircle(shape)
     raise Exception('wrong shape')
 
+def shapeToLine(shape):
+    if isinstance(shape, GLine):
+        return GLine(shape)
+    raise Exception('wrong shape')
+
+def shapeToPoint(shape):
+    if isinstance(shape, GPoint):
+        return GPoint(shape)
+    raise Exception('wrong shape')
+
+def shapeToTable(shape):
+    if isinstance(shape, GTable):
+        return GTable(shape)
+    raise Exception('wrong shape')
+
 # set the shape with the color specified by RGB value
 def setColor(shape, str):
     if isinstance(shape, GTriangle) or isinstance(shape, GRectangle) or isinstance(shape, GCircle):
