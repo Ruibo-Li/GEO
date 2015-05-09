@@ -111,14 +111,14 @@ class GTable(GShape):
             cell.geo.undraw()
 
     def getRow(self, x, y):
-        if x < self.px or x > self.px + self.colNum*self.cellLength or x < self.px or x > self.px \
-                + self.colNum*self.cellLength:
+        if x < self.px or x > self.px + self.colNum*self.cellLength or y < self.py or y > self.py \
+                + self.rowNum*self.cellHeight:
             return -1
         return (y - self.py) / self.cellHeight
 
     def getCol(self, x, y):
-        if x < self.px or x > self.px + self.colNum*self.cellLength or x < self.px or x > self.px \
-                + self.colNum*self.cellLength:
+        if x < self.px or x > self.px + self.colNum*self.cellLength or y < self.py or y > self.py \
+                + self.rowNum*self.cellHeight:
             return -1
         return (x - self.px) / self.cellLength
 
