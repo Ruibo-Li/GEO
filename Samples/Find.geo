@@ -1,7 +1,7 @@
 int start(Window win) := 1
     int i := 2
     while(true)
-        Table table := createTable(100, 100, 300/i, 300/i, i, i)
+        GTable table := createTable(100, 100, 300/i, 300/i, i, i)
         render(window, table)
    
         list int rgb := createlist()
