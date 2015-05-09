@@ -179,8 +179,3 @@ def getB(str):
     else:
         v2 -= 48
     return v1 * 16 + v2
-
-
-print getR(RGB2Str(109, 156, 253))
-print getG(RGB2Str(109, 156, 253))
-print getB(RGB2Str(109, 156, 253))
