@@ -202,6 +202,7 @@ class Parser:
         type : K_CIRCLE
         type : K_POINT
         type : K_TEXT
+        type : K_TABLE
         """
         p[0] = p[1]
 

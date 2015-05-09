@@ -1,10 +1,8 @@
-Triangle a() := null
+Table a() := c
 
 end
 
-Shape b() := null
 
-end
-
-Shape x := a()
-Triangle y := b()
+Table x
+Table y := a()
+x := y

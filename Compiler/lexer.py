@@ -20,6 +20,7 @@ class Lexer:
         'Rectangle' : 'K_RECTANGLE',
         'Point' : 'K_POINT',
         'Text' : 'K_TEXT',
+        'Table' : 'K_TABLE',
         'bool' : 'K_BOOL',
         'true' : 'K_TRUE',
         'false' : 'K_FALSE',
