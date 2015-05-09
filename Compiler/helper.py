@@ -212,7 +212,7 @@ functions = {
     "intersect" : Function(name="intersect", type="bool", args=[{"type": "Shape", "pre_type": None}, {"type": "Shape", "pre_type": None}]),
     "inside" : Function(name="inside", type="bool", args=[{"type": "Point", "pre_type": None}, {"type": "Shape", "pre_type": None}]),
     "setColor" : Function(name="setColor", type="unassignable", args=[{"type": "Shape", "pre_type": None}, {"type": "string", "pre_type": None}]),
-    "setCellColor" : Function(name="setCellColor", type="unassignable", args=[{"type": "Table", "pre_type": None},{"type": "string", "pre_type": None}]),
+    "setCellColor" : Function(name="setCellColor", type="unassignable", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "string", "pre_type": None}]),
     "getCell" : Function(name="getCell", type="Rectangle", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
     "getRow" : Function(name="getRow", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
     "getCol" : Function(name="getCol", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
