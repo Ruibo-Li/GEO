@@ -179,3 +179,7 @@ def getMouse(win):
 
 def hasSameColor(table, r, g, b):
     return table.hasSameColor(r, g, b)
+
+
+def shapeHaveSameColor(shape1, shape2):
+    return shape1.color == shape2.color
