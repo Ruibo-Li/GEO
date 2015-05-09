@@ -1,7 +1,7 @@
 int start(Window win) := 1
     int i := 2
     while(true)
-        GTable table := createTable(100, 100, 300/i, 300/i, i, i)
+        Table table := createTable(100, 100, 300/i, 300/i, i, i)
         render(window, table)
    
         list int rgb := createlist()
@@ -14,18 +14,21 @@ int start(Window win) := 1
         tmp := tmp + 60/i
         if(tmp > 255)
             tmp = tmp - 120/i
+        end
         listSet(rgb, changeInd, tmp)
 
         int cellInd := randomInt(0, i*i-1)
         setCellColor(table, cellInd / i, cellInd % i, listGet(rgb,0), listGet(rgb,1), listGet(rgb,2))
 
-        GPoint p := getMouse(win)
+        Point p := getMouse(win)
         if(getRow(table, getX(p), getY(p)) * i + getCol(table, getX(p), getY(p)) != changeInd)
             printl("You lost")
             break
+        end
         if(i = 6)
             printl("You Win")
             break
+        end
         remove(table)    
     end
 end
