@@ -160,7 +160,7 @@ def setColor(shape, str):
         shape.geo.setFill(color.geo)
         shape.color = color
     elif isinstance(shape, GTable):
-        shape.setColor(getR(str), getG(str), getB(str))
+        shape.setColor(str)
     return None
 
 
