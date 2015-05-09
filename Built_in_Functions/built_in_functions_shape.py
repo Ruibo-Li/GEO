@@ -137,3 +137,18 @@ def setShapeColor(shape, r, g, b):
         shape.setFill(color.geo)
         shape.color = color
 
+
+def getCell(table, x, y):
+    return table.getCell(x, y)
+
+
+def getRow(table, x, y):
+    return table.get(x, y)
+
+
+def getCol(table, x, y):
+    return table.getCell(x, y)
+
+
+def getVal(table, row, col):
+    return table.getVal(row, col)
