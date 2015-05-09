@@ -125,11 +125,11 @@ class GTable(GShape):
     def setColor(self, r, g, b):
         color = GColor(r, g, b)
         for cell in self.cells:
-            cell.setFill(color.geo)
+            cell.geo.setFill(color.geo)
 
     def getColor(self, i, j):
         pass
 
     def setCellColor(self, i, j, r, g, b):
         color = GColor(r, g, b)
-        self.cells[i*self.colNum + j].setFill(color.geo)
+        self.cells[i*self.colNum + j].geo.setFill(color.geo)

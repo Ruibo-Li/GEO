@@ -139,7 +139,7 @@ def cast_shape(shape):
 def setColor(shape, r, g, b):
     if isinstance(shape, GTriangle) or isinstance(shape, GRectangle) or isinstance(shape, GCircle):
         color = GColor(r, g, b)
-        shape.setFill(color.geo)
+        shape.geo.setFill(color.geo)
         shape.color = color
     elif isinstance(shape, GTable):
         shape.setColor(r, g, b)
@@ -156,6 +156,11 @@ def getCell(table, x, y):
 def getRow(table, x, y):
     return table.get(x, y)
 
+def getX(point):
+    return point.x
+
+def getY(point):
+    return point.y
 
 def getCol(table, x, y):
     return table.getCell(x, y)
