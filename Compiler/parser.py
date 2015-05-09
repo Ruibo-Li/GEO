@@ -659,20 +659,20 @@ class Parser:
             else:
                 #@todo Don't know if this should go here or not
                 p[0] = ""
-                print_err("\"" + p[1] + "\"" + " can only be used inside a function", p)
+                print_err("\"" + p[1] + "\"" + " can only be used inside a function", p, False, True)
 
         elif p[1] == "break":
             if flags["in_while"] > 0:
                 p[0] = "break"
             else:
                 p[0] = ""
-                print_err("\"" + p[1] + "\"" + " can only be used inside a while loop", p)
+                print_err("\"" + p[1] + "\"" + " can only be used inside a while loop", p, False, True)
         else:
             if flags["in_while"] > 0:
                 p[0] = "continue"
             else:
                 p[0] = ""
-                print_err("\"" + p[1] + "\"" + " can only be used inside a while loop", p)
+                print_err("\"" + p[1] + "\"" + " can only be used inside a while loop", p, False, True)
 
 
     def p_function_declaration(self, p):

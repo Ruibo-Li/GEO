@@ -49,6 +49,8 @@ class Scope:
         if id in self.vars:
             print_err("Variable '" + id + "' was already declared")
 
+        pre_type = pre_type if pre_type and pre_type != '' else None
+
         self.vars[id] = {
             'type' : type,
             'pre_type' : pre_type,
@@ -226,7 +228,7 @@ def indent(p):
 def in_function_parsing_phase():
     return flags['function_parsing']
 
-def print_err(error, p=None, force=False):
+def print_err(error, p=None, force=False, ignore=False):
     if in_function_parsing_phase() and not force:
         return
 
@@ -234,4 +236,6 @@ def print_err(error, p=None, force=False):
         error = error + ": " + str(p.lineno(1))
 
     print >>sys.stderr, error
-    raise Parse_Error(error)
+
+    if not ignore:
+        raise Parse_Error(error)
