@@ -14,6 +14,7 @@ class Lexer:
         'null' : 'K_NULL',
         'list' : 'K_LIST',
         'Window' : 'K_WINDOW',
+        'Line' : 'K_LINE',
         'Triangle' : 'K_TRIANGLE',
         'Circle' : 'K_CIRCLE',
         'Shape' : 'K_SHAPE',
