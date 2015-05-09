@@ -41,9 +41,12 @@ def listReverse(ls):
 
 # string operation functions
 def printf(st):
-    print st
+    print st,
     return None
 
+def printl(st):
+    print st
+    return None
 
 def split(st, sep=' '):
     return st.split(sep)
