@@ -8,7 +8,7 @@ for i in {1..10}
         program="test_cases/program$i.geo"
         benchmark="test_cases/program$i.py"
         actual="test_cases/program""$i""_actual.py"
-        python ../Compiler/lex_yacc.py $program > $actual
+        python ../Compiler/compiler.py $program > $actual
         if cmp -s $benchmark $actual
         then
 	        echo "test$i passes"
