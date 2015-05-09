@@ -4,20 +4,28 @@ def randomNum():
     return random.random()
 
 # list operation functions
+def createList():
+    return list()
+
+
 def listAppend(ls, x):
     ls.append(x)
+    return None
 
 
 def listExtend(ls1, ls2):
     ls1.extend(ls2)
+    return None
 
 
 def listInsert(ls, i, x):
     ls.insert(i, x)
+    return None
 
 
 def listRemove(ls, x):
     ls.remove(x)
+    return None
 
 
 def listPop(ls, i=0):
@@ -34,10 +42,18 @@ def listCount(ls, x):
 
 def listSort(ls):
     ls.sort()
-
+    return None
 
 def listReverse(ls):
     ls.reverse()
+    return None
+
+def listGet(ls, i):
+    return ls[0]
+
+def listSet(ls, i, x):
+    ls[i] = x
+    return None
 
 # string operation functions
 def printf(st):

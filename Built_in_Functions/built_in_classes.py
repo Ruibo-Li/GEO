@@ -85,7 +85,7 @@ class GColor():
         return self.r, self.g, self.b
 
 
-class Table(GShape):
+class GTable(GShape):
     def __init__(self, px, py, l, h, m, n):
         self.px = px
         self.py = py
@@ -119,5 +119,15 @@ class Table(GShape):
     def getVal(self, i, j):
         return self.cells[i*self.colNum + j].value
 
-    def getVal(self, i, j):
+    def getColor(self, i, j):
         return self.cells[i*self.colNum + j].value
+
+    def setColor(self, r, g, b):
+        color = GColor(r, g, b)
+        for cell in self.cells:
+            cell.setFill(color.geo)
+
+    def getColor(self, i, j):
+
+
+    def setCellColor(self, i, j):

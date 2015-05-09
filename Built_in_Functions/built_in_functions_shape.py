@@ -136,11 +136,17 @@ def cast_shape(shape):
 
 
 # set the shape with the color specified by RGB value
-def setShapeColor(shape, r, g, b):
+def setColor(shape, r, g, b):
     if isinstance(shape, GTriangle) or isinstance(shape, GRectangle) or isinstance(shape, GCircle):
         color = GColor(r, g, b)
         shape.setFill(color.geo)
         shape.color = color
+    elif isinstance(shape, GTable):
+        shape.setColor(r, g, b)
+
+
+def setCellColor(table, i, j, r, g, b):
+    table.setCellColor(i, j, r, g, b)
 
 
 def getCell(table, x, y):
