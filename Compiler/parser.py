@@ -206,6 +206,7 @@ class Parser:
         type : K_POINT
         type : K_TEXT
         type : K_TABLE
+        type : K_LINE
         """
         p[0] = p[1]
 
