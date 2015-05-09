@@ -109,7 +109,7 @@ class Function:
                     for m in arg["match"]:
                         if param_type != param_list[m][1]:
                             param_pre_type_text = param_list[m][2] if param_list[m][2] else ""
-                            print_err("Function " + self.name + " expects argument of type " + param_type + " at position " + m + ". " +  + " " + param_list[m][1] + " received instead", p)
+                            print_err("Function " + self.name + " expects argument of type " + param_type + " at position " + str(m) + ". " + param_pre_type_text + " " + param_list[m][1] + " received instead", p)
                             return False
             elif arg_type == "Shape":
                 if param_type not in shapes_list:
@@ -154,12 +154,30 @@ class Parse_Error(Exception):
 
 #@todo add builtin functions
 functions = {
+    "randomNum" : Function(name="randomNum", type="double", args=[]),
+    "randomInt" : Function(name="randomInt", type="int", args=[{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
+
+    # List functions
+    "listAppend" : Function(name="listAppend", type="null", args=[{"type": "any", "pre_type": "list", "match": [1]}, {"type": "any", "pre_type": None}]),
+    "listExtend" : Function(name="listExtend", type="unassignable", pre_type="list", args=[{"type": "any", "pre_type": "list", "match": [1]}, {"type": "any", "pre_type": "list"}]),
+    "listInsert" : Function(name="listInsert", type="unassignable", args=[{"type": "any", "pre_type": "list", "match": [2]}, {"type": "int", "pre_type": None}, {"type": "any", "pre_type": None}]),
+    "listRemove" : Function(name="listRemove", type="unassignable", args=[{"type": "any", "pre_type": "list"}, {"type": "int", "pre_type": None}]),
+    "listIndex" : Function(name="listIndex", type="int", args=[{"type": "any", "pre_type": "list", "match":[1]}, {"type": "any", "pre_type": None}]),
+    "listCount" : Function(name="listCount", type="int", args=[{"type": "any", "pre_type": "list", "match":[1]}, {"type": "any", "pre_type": None}]),
+    "listSort" : Function(name="listSort", type="unassignable", args=[{"type": "any", "pre_type": "list"}]),
+    "listReverse" : Function(name="listReverse", type="unassignable", args=[{"type": "any", "pre_type": "list"}]),
+
+
+
+    "listGet" : Function(name="listGet", type="any", match=1, args=[{"type": "any", "pre_type": "list"}, {"type": "int", "pre_type": None}]),
+    "listPop" : Function(name="listPop", type="any", match=0, args=[{"type": "any", "pre_type": "list"}]),
+    "listSet" : Function(name="listSet", type="unassignable", args=[{"type": "any", "pre_type": "list", "match": [2]}, {"type": "int", "pre_type": None}, {"type": "any", "pre_type": None}]),
+
+
     "print" : Function(type="unsassignable", args=[{"type" : "string", "pre_type": None}], name="print"),
     "str" : Function(type="string", args=[{"type": "number", "pre_type": None}], name="str"),
-    "listAppend" : Function(name="listAppend", type="null", args=[{"type": "any", "pre_type": "list", "match": [1]}, {"type": "any", "pre_type": None}]),
     "createWindow" : Function(name="listAppend", type="Window", args=[{"type": "string", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}]),
     "getMouse" : Function(name="getMouse", type="Point", args=[{"type": "Window", "pre_type": None}]),
-    "randomNum" : Function(name="randomNum", type="double", args=[]),
     "createTriangle" : Function(name="createTriangle", type="Triangle", args=[{"type": "Point", "pre_type": None}, {"type": "Point", "pre_type": None}, {"type": "Point", "pre_type": None}]),
     "render" : Function(name="render", type="unsassignable", args=[{"type": "Window", "pre_type": None}, {"type": "Shape", "pre_type": None}]),
     "createPoint" : Function(name="createPoint", type="Point", args=[{"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}]),
@@ -177,11 +195,7 @@ functions = {
     "getCol" : Function(name="getCol", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
     "getVal" : Function(name="getVal", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
     "hasSameColor" : Function(name="hasSameColor", type="bool", args=[{"type": "Table", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}]),
-    "randomInt" : Function(name="randomInt", type="int", args=[{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
-    "listGet" : Function(name="listGet", type="any", match=1, args=[{"type": "any", "pre_type": "list"}, {"type": "int", "pre_type": None}]),
-    "listSet" : Function(name="listSet", type="unassignable", args=[{"type": "any", "pre_type": "list", "match": [2]}, {"type": "int", "pre_type": None}, {"type": "any", "pre_type": None}]),
     "printl" : Function(name="printl", type="unsassignable", args=[{"type" : "string", "pre_type": None}]),
-    "listExtend" : Function(name="listExtend", type="unassignable", pre_type="list", args=[{"type": "any", "pre_type": "list", "match": [1]}, {"type": "any", "pre_type": "list"}])
 }
 
 scope_stack = None
