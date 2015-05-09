@@ -1,14 +1,19 @@
 import random
 # generate random number
+
+
 def randomNum():
     return random.random()
+
 
 def randomInt(min, max):
     return random.randint(min, max)
 
+
 # list operation functions
 def createList():
     return list()
+
 
 def listAppend(ls, x):
     ls.append(x)
@@ -46,25 +51,30 @@ def listSort(ls):
     ls.sort()
     return None
 
+
 def listReverse(ls):
     ls.reverse()
     return None
 
+
 def listGet(ls, i):
     return ls[i]
+
 
 def listSet(ls, i, x):
     ls[i] = x
     return None
 
-# string operation functions
+
 def printf(st):
     print st,
     return None
 
+
 def printl(st):
     print st
     return None
+
 
 def split(st, sep=' '):
     return st.split(sep)
