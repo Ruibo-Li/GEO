@@ -205,7 +205,7 @@ functions = {
     "getRow" : Function(name="getRow", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
     "getCol" : Function(name="getCol", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
     "getVal" : Function(name="getVal", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
-    "hasSameColor" : Function(name="hasSameColor", type="bool", args=[{"type": "Table", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}]),
+    "hasSameColor" : Function(name="hasSameColor", type="bool", args=[{"type": "Table", "pre_type": None}, {"type" : "string", "pre_type": None}]),
 }
 
 scope_stack = None
