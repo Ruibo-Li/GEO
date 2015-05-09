@@ -1,4 +1,5 @@
 from graphics import *
+from built_in_functions_shape import *
 
 
 class GShape(object):
@@ -110,15 +111,23 @@ class GTable(GShape):
             cell.geo.undraw()
 
     def getRow(self, x, y):
+        if x < self.px or x > self.px + self.colNum*self.cellLength or x < self.px or x > self.px \
+                + self.colNum*self.cellLength:
+            return -1
         return (y - self.py) / self.cellHeight
 
     def getCol(self, x, y):
+        if x < self.px or x > self.px + self.colNum*self.cellLength or x < self.px or x > self.px \
+                + self.colNum*self.cellLength:
+            return -1
         return (x - self.px) / self.cellLength
 
     def getCell(self, x, y):
         row = self.getRow(x, y)
         col = self.getCol(x, y)
-        return self.cells[row*self.colNum + col]
+        if row != -1 and col != -1:
+            return self.cells[row*self.colNum + col]
+        return None
 
     def getVal(self, i, j):
         return self.cells[i*self.colNum + j].value
@@ -126,23 +135,16 @@ class GTable(GShape):
     def getColor(self, i, j):
         return self.cells[i*self.colNum + j].value
 
-    def setColor(self, r, g, b):
-        color = GColor(r, g, b)
+    def getColor(self, i, j):
+        return self.cells[i*self.colNum + j].color
+
+    def setColor(self, str):
+        color = GColor(getR(str), getG(str), getB(str))
         for cell in self.cells:
             cell.color = color
             cell.geo.setFill(color.geo)
 
-    def getColor(self, i, j):
-        return self.cells[i*self.colNum + j].color
-
-    def setCellColor(self, i, j, r, g, b):
-        color = GColor(r, g, b)
+    def setCellColor(self, i, j, str):
+        color = GColor(getR(str), getG(str), getB(str))
         self.cells[i*self.colNum + j].color = color
         self.cells[i*self.colNum + j].geo.setFill(color.geo)
-
-    def hasSameColor(self, r, g, b):
-        color = self.cells[0].color
-        for cell in self.cells:
-            if cell.color != color:
-                return False
-        return True
