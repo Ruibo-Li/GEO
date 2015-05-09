@@ -115,7 +115,7 @@ def circle_oth_in(c, shape):
 
 def is_inside(p, shape):
     if isinstance(shape, GCircle):
-        if get_distance(p, shape.center)<= shape.radius:
+        if get_distance(p, shape.center) <= shape.radius:
             return True
         else:
             return False
