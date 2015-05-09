@@ -14,7 +14,15 @@ if len(sys.argv) == 2:
 
         #Had to call lex.lex() to restart line counting
         p.lexer.lex()
-        sys.stdout.write(p.parser.parse(data))
+
+        program = p.parser.parse(data)
+
+        print "import sys"
+        print "import os.path"
+        print "sys.path.append(os.path.join(os.path.dirname(__file__), '..'))"
+        print "from Built_in_Functions.built_in import *"
+
+        sys.stdout.write(program)
 
     except Parse_Error:
         exit(1)
