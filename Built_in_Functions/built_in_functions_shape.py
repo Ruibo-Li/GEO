@@ -143,10 +143,12 @@ def setColor(shape, r, g, b):
         shape.color = color
     elif isinstance(shape, GTable):
         shape.setColor(r, g, b)
+    return None
 
 
 def setCellColor(table, i, j, r, g, b):
     table.setCellColor(i, j, r, g, b)
+    return None
 
 
 def getCell(table, x, y):
@@ -156,11 +158,14 @@ def getCell(table, x, y):
 def getRow(table, x, y):
     return table.get(x, y)
 
+
 def getX(point):
     return point.x
 
+
 def getY(point):
     return point.y
+
 
 def getCol(table, x, y):
     return table.getCell(x, y)
@@ -173,3 +178,7 @@ def getVal(table, row, col):
 def getMouse(win):
     p = win.getMouse()
     return createPoint(p.getX(), p.getY())
+
+
+def hasSameColor(table, r, g, b):
+    return table.hasSameColor(r, g, b)
