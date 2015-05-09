@@ -164,10 +164,13 @@ class Parser:
                 else:
                     assign_expr = "int(" + assign_expr + ")"
 
-            #@todo pre_type checking
+            elif p[2] != p[5].type and p[2] in shapes_list:
+                if p[2] != "Shape":
+                    print_err("Invalid assignment: Trying to assign \"" + pre_type + " " + p[5].type + "\" to variable of type \"" + p[1] + " " +p[2] + "\"", p)
 
             elif p[2] != p[5].type:
                 print_err("Invalid assignment: Trying to assign \"" + pre_type + " " + p[5].type + "\" to variable of type \"" + p[1] + " " +p[2] + "\"", p)
+
 
             if p[1] != pre_type:
                 print_err("Invalid assignment: Trying to assign \"" + pre_type + " " + p[5].type + "\" to variable of type \"" + p[1] + " " +p[2] + "\"", p)
@@ -199,6 +202,7 @@ class Parser:
         type : K_CIRCLE
         type : K_POINT
         type : K_TEXT
+        type : K_TABLE
         """
         p[0] = p[1]
 
@@ -378,6 +382,7 @@ class Parser:
         primary_expression : id_expression
         primary_expression : function_call_statement
         primary_expression : MINUS primary_expression
+        primary_expression : null_expression
         """
         #@todo type checking
         if len(p) == 3:
@@ -484,6 +489,11 @@ class Parser:
         else:
             p[0] = p[1]
 
+    def p_null_expression(self, p):
+        """
+        null_expression : K_NULL
+        """
+        p[0] = Production(type="Shape", text="None", children=[p[1]])
 
     def p_comparator(self, p):
         """

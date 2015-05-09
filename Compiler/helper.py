@@ -9,7 +9,10 @@ shapes_list = [
     "Shape",
     "Rectangle",
     "Circle",
-    "Triangle"
+    "Triangle",
+    "Point",
+    "Line",
+    "Text"
 ]
 
 class ScopeStack:
