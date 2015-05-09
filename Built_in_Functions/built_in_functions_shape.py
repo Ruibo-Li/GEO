@@ -157,3 +157,8 @@ def getCol(table, x, y):
 
 def getVal(table, row, col):
     return table.getVal(row, col)
+
+
+def getMouse(win):
+    x, y = win.getMouse()
+    return createPoint(x, y)
