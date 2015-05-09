@@ -1,3 +1,7 @@
+"break" can only be used inside a while loop: 3
+"continue" can only be used inside a while loop: 4
+"break" can only be used inside a while loop: 19
+"continue" can only be used inside a while loop: 20
 import sys
 import os.path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
