@@ -831,7 +831,10 @@ class Parser:
         p[0] = ""
 
     def p_error(self, p):
-        print_err("unknown text at " + p.value + ": line no " + str(p.lineno))
+        if p:
+            print_err("unknown text at \"" + p.value + "\": line no " + str(p.lineno))
+        else:
+            print_err("Unexpected end of file")
 
     def __init__(self):
         self.lexer = lexer = Lexer()
