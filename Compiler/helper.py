@@ -79,19 +79,29 @@ class Function:
             return False
 
         for i in xrange(len(param_list)):
-            param_type = param_list[i][1]
-            arg_type = args[i]["type"]
+            param = param_list[i]
+            param_type = param[1]
+            param_pre_type = param[2]
+            arg = args[i]
+            arg_type = arg["type"]
+            arg_pre_type = arg["pre_type"]
+
+            param_pre_type_text = param_pre_type if param_pre_type else ""
+            arg_pre_type_text = arg_pre_type if arg_pre_type else ""
+
+            if param_pre_type != arg_pre_type:
+                print_err("Function " + self.name + " expects argument of type '" + arg_pre_type_text + " " + arg_type + "' at position " + str(i + 1) + ". " + param_pre_type_text + " " + param_type + " received instead" , p)
 
             if arg_type == "Shape":
                 if param_type not in shapes_list:
-                    print_err("Function " + self.name + " expects argument of type '" + arg_type + "' at position " + str(i + 1) + ". " + param_type +" received instead" , p)
+                    print_err("Function " + self.name + " expects argument of type '" + arg_pre_type_text + " " + arg_type + "' at position " + str(i + 1) + ". " + param_pre_type_text + " " + param_type + " received instead" , p)
                     return False
             elif arg_type == "number":
                 if param_type not in numbers_list:
-                    print_err("Function " + self.name + " expects argument of type '" + arg_type + "' at position " + str(i + 1) + ". " + param_type +" received instead" , p)
+                    print_err("Function " + self.name + " expects argument of type '" + arg_pre_type_text + " " + arg_type + "' at position " + str(i + 1) + ". " + param_pre_type_text + " " + param_type + " received instead" , p)
                     return False
             elif arg_type != param_type:
-                print_err("Function " + self.name + " expects argument of type '" + arg_type + "' at position " + str(i + 1) + ". " + param_type +" received instead" , p)
+                print_err("Function " + self.name + " expects argument of type '" + arg_pre_type_text + " " + arg_type + "' at position " + str(i + 1) + ". " + param_pre_type_text + " " + param_type + " received instead" , p)
                 return False
         return True
 
@@ -188,7 +198,10 @@ def check_var_in_scope(var, p):
 def get_var(var):
     return scope_stack.get_var(var)
 
-def get_initializer(type):
+def get_initializer(type, pre_type=None):
+    if pre_type == "list":
+        return "[]"
+
     initializer = "None"
 
     if type == "int":
