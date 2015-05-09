@@ -41,7 +41,10 @@ def render(window, shape):
 
 
 def remove(shape):
-    shape.geo.undraw()
+    if isinstance(shape, GTable):
+        shape.undrawTable()
+    else:
+        shape.geo.undraw()
 
 
 def move(shape, x, y):
@@ -182,3 +185,14 @@ def hasSameColor(table, r, g, b):
 
 def shapeHaveSameColor(shape1, shape2):
     return shape1.color == shape2.color
+
+def RGB2Str(r, g, b):
+
+
+def getR(str):
+
+
+def getG(str):
+
+
+def getB(str):

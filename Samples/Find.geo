@@ -1,6 +1,6 @@
 int start(Window win) := 1
     int i := 2
-    while(true)
+    while(i <= 6)
         Table table := createTable(100, 100, 300/i, 300/i, i, i)
         render(win, table)
   
@@ -9,9 +9,8 @@ int start(Window win) := 1
         listAppend(rgb, randomInt(0,255))
         listAppend(rgb, randomInt(0,255))
         setColor(table, listGet(rgb,0), listGet(rgb,1), listGet(rgb,2))
-        int changeInd := randomInt(0,2)
-        int tmp := listGet(rgb, changeInd)
-        tmp := tmp + 60/i
+        int changeInd := randomInt(0, 2)
+        int tmp := listGet(rgb, changeInd) + 60/i
         if(tmp > 255)
             tmp := tmp - 120/i
         end
@@ -21,20 +20,18 @@ int start(Window win) := 1
         setCellColor(table, cellInd / i, cellInd % i, listGet(rgb,0), listGet(rgb,1), listGet(rgb,2))
 
         Point p := getMouse(win)
-        if(getRow(table, getX(p), getY(p)) * i + getCol(table, getX(p), getY(p)) != changeInd)
+        if(getRow(table, getX(p), getY(p)) * i + getCol(table, getX(p), getY(p)) != cellInd)
             printl("You lost")
-            break
-        end
-        if(i = 6)
-            printl("You Win")
-            break
+            done
         end
         remove(table)
+        i := i + 1
     end
+    printl("You Win")
 end
 
 int main() := 1
-    Window win := createWindow("Battle Ship", 500, 500)
+    Window win := createWindow("Find Game", 500, 500)
     start(win)
 end
 

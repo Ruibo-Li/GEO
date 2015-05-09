@@ -105,11 +105,15 @@ class GTable(GShape):
         for cell in self.cells:
             cell.geo.draw(window)
 
+    def undrawTable(self):
+        for cell in self.cells:
+            cell.geo.undraw()
+
     def getRow(self, x, y):
-        return (x - self.px) / self.cellLength
+        return (y - self.py) / self.cellHeight
 
     def getCol(self, x, y):
-        return (y - self.py) / self.cellHeight
+        return (x - self.px) / self.cellLength
 
     def getCell(self, x, y):
         row = self.getRow(x, y)
