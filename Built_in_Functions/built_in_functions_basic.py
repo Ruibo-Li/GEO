@@ -51,7 +51,7 @@ def listReverse(ls):
     return None
 
 def listGet(ls, i):
-    return ls[0]
+    return ls[i]
 
 def listSet(ls, i, x):
     ls[i] = x
