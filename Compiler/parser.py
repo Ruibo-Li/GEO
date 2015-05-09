@@ -64,9 +64,10 @@ class Parser:
             print_err("Call to undefined function '" + p[1] + "'", p)
 
         function = functions[p[1]]
-        type = function.type
 
         function.check_parameters(p[3], p)
+
+        type = function.getType(p[3])
 
         param_list = [arg[0] for arg in p[3]]
         args_text = ", ".join(param_list)

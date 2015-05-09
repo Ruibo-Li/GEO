@@ -12,7 +12,8 @@ shapes_list = [
     "Triangle",
     "Point",
     "Line",
-    "Text"
+    "Text",
+    "Table"
 ]
 
 class ScopeStack:
@@ -70,11 +71,17 @@ class Scope:
 
 
 class Function:
-    def __init__(self, type=None, name=None, args=[], pre_type=None):
+    def __init__(self, type=None, name=None, args=[], pre_type=None, match=None):
         self.type = type
         self.args = args
         self.name = name
         self.pre_type = pre_type
+        self.match = match
+
+    def getType(self, params):
+        if self.type == "any":
+            return params[self.match][1]
+        return self.type
 
     def check_parameters(self, param_list, p=None):
         args = self.args
@@ -97,13 +104,14 @@ class Function:
             if param_pre_type != arg_pre_type:
                 print_err("Function " + self.name + " expects argument of type '" + arg_pre_type_text + " " + arg_type + "' at position " + str(i + 1) + ". " + param_pre_type_text + " " + param_type + " received instead" , p)
 
-            if "match" in arg:
-                for m in arg["match"]:
-                    if param_type != param_list[m][1]:
-                        param_pre_type_text = param_list[m][2] if param_list[m][2] else ""
-                        print_err("Function " + self.name + " expects argument of type " + param_type + " at position " + m + ". " +  + " " + param_list[m][1] + " received instead", p)
-
-            if arg_type == "Shape":
+            if arg_type == "any":
+                if "match" in arg:
+                    for m in arg["match"]:
+                        if param_type != param_list[m][1]:
+                            param_pre_type_text = param_list[m][2] if param_list[m][2] else ""
+                            print_err("Function " + self.name + " expects argument of type " + param_type + " at position " + m + ". " +  + " " + param_list[m][1] + " received instead", p)
+                            return False
+            elif arg_type == "Shape":
                 if param_type not in shapes_list:
                     print_err("Function " + self.name + " expects argument of type '" + arg_pre_type_text + " " + arg_type + "' at position " + str(i + 1) + ". " + param_pre_type_text + " " + param_type + " received instead" , p)
                     return False
@@ -148,7 +156,7 @@ class Parse_Error(Exception):
 functions = {
     "print" : Function(type="unsassignable", args=[{"type" : "string", "pre_type": None}], name="print"),
     "str" : Function(type="string", args=[{"type": "number", "pre_type": None}], name="str"),
-    "listAppend" : Function(type="null", args=[{"type": "any", "pre_type": "list", "match": [1]}, {"type": "any", "pre_type": None}], name="listAppend"),
+    "listAppend" : Function(name="listAppend", type="null", args=[{"type": "any", "pre_type": "list", "match": [1]}, {"type": "any", "pre_type": None}]),
     "createWindow" : Function(name="listAppend", type="Window", args=[{"type": "string", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}]),
     "getMouse" : Function(name="getMouse", type="Point", args=[{"type": "Window", "pre_type": None}]),
     "randomNum" : Function(name="randomNum", type="double", args=[]),
@@ -160,15 +168,19 @@ functions = {
     "setColor" : Function(name="setColor", type="unassignable", args=[{"type": "Shape", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}]),
     "createCircle" : Function(name="createCircle", type="Circle", args=[{"type": "Point", "pre_type": None}, {"type": "int", "pre_type": None}]),
     "createRectangle" : Function(name="createRectangle", type="Rectangle", args=[{"type": "Point", "pre_type": None}, {"type": "Point", "pre_type": None}]),
-    "createTable" : Function(name="createTable", type="Table", args=[{type: "int", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None}]),
-    "getX" : Function(name="getX", type="int", args=[{type: "Point", "pre_type": None}]),
-    "getY" : Function(name="getY", type="int", args=[{type: "Point", "pre_type": None}]),
-    "setCellColor" : Function(name="setCellColor", type="unassignable", args=[{type: "Table", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None}]),
-    "getCell" : Function(name="getCell", type="Rectangle", args=[{type: "Table", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None}]),
-    "getRow" : Function(name="getRow", type="int", args=[{type: "Table", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None}]),
-    "getCol" : Function(name="getCol", type="int", args=[{type: "Table", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None}]),
-    "getVal" : Function(name="getVal", type="int", args=[{type: "Table", "pre_type": None},{type: "int", "pre_type": None},{type: "int", "pre_type": None}]),
-    "hasSameColor" : Function(name="hasSameColor", type="bool", args=[{type: "Table", "pre_type": None}, {type: "int", "pre_type": None}, {type: "int", "pre_type": None}, {type: "int", "pre_type": None}])
+    "createTable" : Function(name="createTable", type="Table", args=[{"type": "int", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
+    "getX" : Function(name="getX", type="int", args=[{"type": "Point", "pre_type": None}]),
+    "getY" : Function(name="getY", type="int", args=[{"type": "Point", "pre_type": None}]),
+    "setCellColor" : Function(name="setCellColor", type="unassignable", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
+    "getCell" : Function(name="getCell", type="Rectangle", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
+    "getRow" : Function(name="getRow", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
+    "getCol" : Function(name="getCol", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
+    "getVal" : Function(name="getVal", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
+    "hasSameColor" : Function(name="hasSameColor", type="bool", args=[{"type": "Table", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}]),
+    "randomInt" : Function(name="randomInt", type="int", args=[{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
+    "listGet" : Function(name="listGet", type="any", match=1, args=[{"type": "any", "pre_type": "list"}, {"type": "int", "pre_type": None}]),
+    "listSet" : Function(name="listSet", type="unassignable", args=[{"type": "any", "pre_type": "list", "match": [2]}, {"type": "int", "pre_type": None}, {"type": "any", "pre_type": None}]),
+    "printl" : Function(name="printl", type="unsassignable", args=[{"type" : "string", "pre_type": None}])
 }
 
 scope_stack = None
