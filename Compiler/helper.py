@@ -166,16 +166,27 @@ functions = {
     "listCount" : Function(name="listCount", type="int", args=[{"type": "any", "pre_type": "list", "match":[1]}, {"type": "any", "pre_type": None}]),
     "listSort" : Function(name="listSort", type="unassignable", args=[{"type": "any", "pre_type": "list"}]),
     "listReverse" : Function(name="listReverse", type="unassignable", args=[{"type": "any", "pre_type": "list"}]),
-
-
-
     "listGet" : Function(name="listGet", type="any", match=1, args=[{"type": "any", "pre_type": "list"}, {"type": "int", "pre_type": None}]),
     "listPop" : Function(name="listPop", type="any", match=0, args=[{"type": "any", "pre_type": "list"}]),
     "listSet" : Function(name="listSet", type="unassignable", args=[{"type": "any", "pre_type": "list", "match": [2]}, {"type": "int", "pre_type": None}, {"type": "any", "pre_type": None}]),
 
-
-    "print" : Function(type="unsassignable", args=[{"type" : "string", "pre_type": None}], name="print"),
+    #String functions
     "str" : Function(type="string", args=[{"type": "number", "pre_type": None}], name="str"),
+    "print" : Function(name="print", type="unsassignable", args=[{"type" : "string", "pre_type": None}]),
+    "printf" : Function(name="printf", type="unsassignable", args=[{"type" : "string", "pre_type": None}]),
+    "printl" : Function(name="printl", type="unsassignable", args=[{"type" : "string", "pre_type": None}]),
+    "split" : Function(name="split", type="string", pre_type="list", args=[{"type" : "string", "pre_type": None}, {"type" : "string", "pre_type": None}]),
+    "strip" : Function(name="strip", type="string", args=[{"type" : "string", "pre_type": None}, {"type" : "string", "pre_type": None}]),
+    "replaceString" : Function(name="strip", type="string", args=[{"type" : "string", "pre_type": None}, {"type" : "string", "pre_type": None}, {"type" : "string", "pre_type": None}]),
+    "findSubstring" : Function(name="findSubstring", type="int", args=[{"type" : "string", "pre_type": None}, {"type" : "string", "pre_type": None}]),
+    "isDigit" : Function(name="isDigit", type="bool", args=[{"type" : "string", "pre_type": None}]),
+    "isUpper" : Function(name="isUpper", type="bool", args=[{"type" : "string", "pre_type": None}]),
+    "isLower" : Function(name="isLower", type="bool", args=[{"type" : "string", "pre_type": None}]),
+    "lower" : Function(name="lower", type="string", args=[{"type" : "string", "pre_type": None}]),
+    "upper" : Function(name="upper", type="string", args=[{"type" : "string", "pre_type": None}]),
+    "joinString" : Function(name="joinString", type="string", args=[{"type" : "string", "pre_type": None}, {"type" : "string", "pre_type": "list"}]),
+
+
     "createWindow" : Function(name="listAppend", type="Window", args=[{"type": "string", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}]),
     "getMouse" : Function(name="getMouse", type="Point", args=[{"type": "Window", "pre_type": None}]),
     "createTriangle" : Function(name="createTriangle", type="Triangle", args=[{"type": "Point", "pre_type": None}, {"type": "Point", "pre_type": None}, {"type": "Point", "pre_type": None}]),
@@ -194,8 +205,7 @@ functions = {
     "getRow" : Function(name="getRow", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
     "getCol" : Function(name="getCol", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
     "getVal" : Function(name="getVal", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
-    "hasSameColor" : Function(name="hasSameColor", type="bool", args=[{"type": "Table", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}]),
-    "printl" : Function(name="printl", type="unsassignable", args=[{"type" : "string", "pre_type": None}]),
+    "hasSameColor" : Function(name="hasSameColor", type="bool", args=[{"type": "Table", "pre_type": None}, {"type" : "string", "pre_type": None}]),
 }
 
 scope_stack = None

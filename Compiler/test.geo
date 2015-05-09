@@ -1,28 +1,50 @@
-list int list1
-list int list2
-list string list3
+string a := "this is"
+string b := " a"
 
-listAppend(list1, 10)
-listAppend(list1, 20)
-listAppend(list2, 30)
+string c := a + b + " test  "
 
-listExtend(list1, list2)
+printf(c)
+printl(c)
 
-listInsert(list1, 1, 10)
+list string l1 := split(c, " ")
 
-listRemove(list1, 1)
+string d := strip(c, " ")
 
-int n := listIndex(list1, 10)
+printl(d)
 
-int count := listCount(list1, 10)
+string e := replaceString(c, "test", "Test")
 
-listSort(list1)
+printl(e)
 
-listReverse(list1)
 
-int x := listPop(list1)
+int f := findSubstring(c, "test")
 
-//These are errors
-x := listPop(list3)
-listInsert(list1, 1, "error")
+printl("Substring: " + str(f))
+
+
+string g := "12344"
+
+bool h := isDigit(g)
+
+bool i := isUpper(c)
+
+bool j := isLower(c)
+
+string k := lower(d)
+
+printl(k)
+
+string l := upper(c)
+
+printl(l)
+
+
+list string m 
+
+listAppend(m, "hello")
+listAppend(m, "world!")
+
+string n := joinString(" ", m)
+
+printl(n)
 
