@@ -164,7 +164,7 @@ def setColor(shape, str):
     return None
 
 def getColor(shape):
-    r,g,b = shape.color.get_color
+    r,g,b = shape.color.get_color()
     return RGB2Str(r,g,b)
 
 def setCellColor(table, i, j, str):
