@@ -126,3 +126,38 @@ def isDecimal(st):
     return st.isdecimal()
 
 
+def RGB2Str(r, g, b):
+    s1 = str(hex(r))[2:].upper()
+    s2 = str(hex(g))[2:].upper()
+    s3 = str(hex(b))[2:].upper()
+    return s1 + s2 + s3
+
+
+def getR(str):
+    v1 = ord(str[0])
+    if not 48 <= v1 <= 57:
+        v1 = v1 - 56
+    v2 = ord(str[1])
+    if not 48 <= v2 <= 57:
+        v2 = v2 - 56
+    return v1 * 16 + v2
+
+
+def getG(str):
+    v1 = ord(str[2])
+    if not 48 <= v1 <= 57:
+        v1 -= 56
+    v2 = ord(str[3])
+    if not 48 <= v2 <= 57:
+        v2 -= 56
+    return v1 * 16 + v2
+
+
+def getB(str):
+    v1 = ord(str[4])
+    if not 48 <= v1 <= 57:
+        v1 -= 56
+    v2 = ord(str[5])
+    if not 48 <= v2 <= 57:
+        v2 -= 56
+    return v1 * 16 + v2

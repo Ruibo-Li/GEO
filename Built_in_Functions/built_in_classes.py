@@ -1,5 +1,5 @@
 from graphics import *
-from built_in_functions_shape import *
+from built_in_functions_basic import *
 
 
 class GShape(object):
