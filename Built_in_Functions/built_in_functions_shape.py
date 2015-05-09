@@ -123,19 +123,20 @@ def inside(p, shape):
 
 
 # cast shape to triangle
-def cast_shape(shape):
+def shapeToTriangle(shape):
     if isinstance(shape, GTriangle):
         return GTriangle(shape)
+    raise Exception('wrong shape')
+
+def shapeToRectangle(shape):
     if isinstance(shape, GRectangle):
         return GRectangle(shape)
+    raise Exception('wrong shape')
+
+def shapeToCircle(shape):
     if isinstance(shape, GCircle):
         return GCircle(shape)
-    if isinstance(shape, GPoint):
-        return GPoint(shape)
-    if isinstance(shape, GLine):
-        return GLine(shape)
-    return None
-
+    raise Exception('wrong shape')
 
 # set the shape with the color specified by RGB value
 def setColor(shape, str):
@@ -179,8 +180,8 @@ def getMouse(win):
     return createPoint(p.getX(), p.getY())
 
 
-def hasSameColor(table):
-    return table.hasSameColor()
+def hasSameColor(table, str):
+    return table.hasSameColor(str)
 
 
 def shapeHaveSameColor(shape1, shape2):
