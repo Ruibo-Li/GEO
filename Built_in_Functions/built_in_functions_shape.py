@@ -125,32 +125,32 @@ def inside(p, shape):
 # cast shape to triangle
 def shapeToTriangle(shape):
     if isinstance(shape, GTriangle):
-        return GTriangle(shape)
+        return shape
     raise Exception('wrong shape')
 
 def shapeToRectangle(shape):
     if isinstance(shape, GRectangle):
-        return GRectangle(shape)
+        return shape
     raise Exception('wrong shape')
 
 def shapeToCircle(shape):
     if isinstance(shape, GCircle):
-        return GCircle(shape)
+        return shape
     raise Exception('wrong shape')
 
 def shapeToLine(shape):
     if isinstance(shape, GLine):
-        return GLine(shape)
+        return shape
     raise Exception('wrong shape')
 
 def shapeToPoint(shape):
     if isinstance(shape, GPoint):
-        return GPoint(shape)
+        return shape
     raise Exception('wrong shape')
 
 def shapeToTable(shape):
     if isinstance(shape, GTable):
-        return GTable(shape)
+        return shape
     raise Exception('wrong shape')
 
 # set the shape with the color specified by RGB value
@@ -204,4 +204,3 @@ def hasSameColor(table, str):
 
 def shapeHaveSameColor(shape1, shape2):
     return shape1.color == shape2.color
-
