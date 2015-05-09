@@ -1,18 +1,19 @@
-int a
-
-int max(int a, int b) := c
-        c := b
-        if(a > b)
-                c := a
+int a := 0
+break
+continue
+while(a < 100)
+        if(a % 2 = 0)
+                a := a + 1
+                continue
         end
+        print("a = " + str(a))
+
+        if (a > 30)
+                break
+        end
+
+        a := a + 1
 end
 
-
-int baa() := c
-        c := 10
-end
-
-
-max(3, 3)
-
-baa()
+break
+continue

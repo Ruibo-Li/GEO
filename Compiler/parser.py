@@ -72,7 +72,7 @@ class Parser:
         args_text = ", ".join(param_list)
 
         text = p[1] + "(" + args_text + ")"
-        p[0] = Production(type=type, text=text, production_type="function_call") #fix me
+        p[0] = Production(type=type, text=text, production_type="function_call", pre_type=function.pre_type)
 
 
 
@@ -156,6 +156,8 @@ class Parser:
             var_name = add_variable_declaration(p[3], p[2], p[1])
             assign_expr = p[5].text
 
+            pre_type = p[5].pre_type if p[5].pre_type else ""
+
             if p[2] != p[5].type and p[2] in numbers_list and p[5].type in numbers_list:
                 if p[2] == "double":
                     assign_expr = "float(" + assign_expr + ")"
@@ -163,8 +165,13 @@ class Parser:
                     assign_expr = "int(" + assign_expr + ")"
 
             #@todo pre_type checking
+
             elif p[2] != p[5].type:
-                print_err("Invalid assignment: Trying to assign \"" + p[5].type + "\" to variable of type " + p[2], p)
+                print_err("Invalid assignment: Trying to assign \"" + pre_type + " " + p[5].type + "\" to variable of type \"" + p[1] + " " +p[2] + "\"", p)
+
+            if p[1] != pre_type:
+                print_err("Invalid assignment: Trying to assign \"" + pre_type + " " + p[5].type + "\" to variable of type \"" + p[1] + " " +p[2] + "\"", p)
+
 
             p[0] = var_name + " = " + assign_expr
 
@@ -206,7 +213,10 @@ class Parser:
             return
 
         if len(p) == 4:
-            expr = Production()
+            expr = Production(pre_type=None)
+
+            if p[1].pre_type == "list" or p[3].pre_type == "list":
+                print_err("Expressions of type list are not compatible with \"" + p[2] + "\" operator", p)
 
             if p[1].type == "bool" and p[3].type == "bool":
                 expr.type = "bool"
@@ -231,7 +241,10 @@ class Parser:
             return
 
         if len(p) == 4:
-            expr_term = Production()
+            expr_term = Production(pre_type=None)
+
+            if p[1].pre_type == "list" or p[3].pre_type == "list":
+                print_err("Expressions of type list are not compatible with \"" + p[2] + "\" operator", p)
 
             op = p[2]
 
@@ -266,7 +279,10 @@ class Parser:
             return
 
         if len(p) == 4:
-            expr_term = Production()
+            expr_term = Production(pre_type=None)
+
+            if p[1].pre_type == "list" or p[3].pre_type == "list":
+                print_err("Expressions of type list are not compatible with \"" + p[2] + "\" operator", p)
 
             op = p[2]
 
@@ -298,7 +314,10 @@ class Parser:
             return
 
         if len(p) == 4:
-            expr_factor = Production()
+            expr_factor = Production(pre_type=None)
+
+            if p[1].pre_type == "list" or p[3].pre_type == "list":
+                print_err("Expressions of type list are not compatible with \"" + p[2] + "\" operator", p)
 
             op = p[2]
 
@@ -363,6 +382,9 @@ class Parser:
         #@todo type checking
         if len(p) == 3:
             if p[2].type in numbers_list:
+                if p[2].pre_type == "list":
+                    print_err("Expressions of type list are not compatible with - operator", p)
+
                 p[2].text = "-" + p[2].text
                 p[0] = p[2]
             else:
@@ -387,7 +409,7 @@ class Parser:
             prod.text = var['given_name']
 
             prod.type = var["type"]
-            prod.pre_typ = var["pre_type"]
+            prod.pre_type = var["pre_type"]
         elif check_result == 2: #Variable is assigned as return value of function. Ignoreflag is true
             pass
         else:
@@ -443,12 +465,18 @@ class Parser:
             p[0] = p[2]
         elif len(p) == 3:
             if p[2].type == "bool":
+                if p[2].pre_type == "list":
+                    print_err("Expressions of type list are not compatible with \"!\" operator", p)
+
                 p[2].text = " not " + p[2].text
                 p[0] = p[2]
             else:
                 print_err("\"!\" operator can only be used with boolean expressions", p)
         elif len(p) == 5:
             if p[3].type == "bool":
+                if p[3].pre_type == "list":
+                    print_err("Expressions of type list are not compatible with \"!\" operator", p)
+
                 p[3].text = " not (" + p[3].text + ")"
                 p[0] = p[3]
             else:
@@ -631,20 +659,20 @@ class Parser:
             else:
                 #@todo Don't know if this should go here or not
                 p[0] = ""
-                print_err("\"" + p[1] + "\"" + " can only be used inside a function", p)
+                print_err("\"" + p[1] + "\"" + " can only be used inside a function", p, False, True)
 
         elif p[1] == "break":
             if flags["in_while"] > 0:
                 p[0] = "break"
             else:
                 p[0] = ""
-                print_err("\"" + p[1] + "\"" + " can only be used inside a while loop", p)
+                print_err("\"" + p[1] + "\"" + " can only be used inside a while loop", p, False, True)
         else:
             if flags["in_while"] > 0:
                 p[0] = "continue"
             else:
                 p[0] = ""
-                print_err("\"" + p[1] + "\"" + " can only be used inside a while loop", p)
+                print_err("\"" + p[1] + "\"" + " can only be used inside a while loop", p, False, True)
 
 
     def p_function_declaration(self, p):
@@ -696,7 +724,7 @@ class Parser:
             if not check_variable_in_current_scope(p[10].text):
                 var_name = add_variable_declaration(p[10].text, p[2], p[1])
 
-                initializer = get_initializer(p[2])
+                initializer = get_initializer(p[2], p[1])
 
                 init_ret = var_name + " = " + initializer
                 ret_expression = var_name
