@@ -97,6 +97,12 @@ class Function:
             if param_pre_type != arg_pre_type:
                 print_err("Function " + self.name + " expects argument of type '" + arg_pre_type_text + " " + arg_type + "' at position " + str(i + 1) + ". " + param_pre_type_text + " " + param_type + " received instead" , p)
 
+            if "match" in arg:
+                for m in arg["match"]:
+                    if param_type != param_list[m][1]:
+                        param_pre_type_text = param_list[m][2] if param_list[m][2] else ""
+                        print_err("Function " + self.name + " expects argument of type " + param_type + " at position " + m + ". " +  + " " + param_list[m][1] + " received instead", p)
+
             if arg_type == "Shape":
                 if param_type not in shapes_list:
                     print_err("Function " + self.name + " expects argument of type '" + arg_pre_type_text + " " + arg_type + "' at position " + str(i + 1) + ". " + param_pre_type_text + " " + param_type + " received instead" , p)
@@ -142,7 +148,19 @@ class Parse_Error(Exception):
 functions = {
     "print" : Function(type="unsassignable", args=[{"type" : "string", "pre_type": None}], name="print"),
     "str" : Function(type="string", args=[{"type": "number", "pre_type": None}], name="str"),
-    "render": Function(type="null", args=[{"type": "Shape", "pre_type": None}], name="render")
+    "render": Function(type="null", args=[{"type": "Shape", "pre_type": None}], name="render"),
+    "listAppend" : Function(type="null", args=[{"type": "any", "pre_type": "list", "match": [1]}, {"type": "any", "pre_type": None}], name="listAppend"),
+    "createWindow" : Function(name="listAppend", type="Window", args=[{"type": "string", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}]),
+    "getMouse" : Function(name="getMouse", type="Point", args=[{"type": "Window", "pre_type": None}]),
+    "randomNum" : Function(name="randomNum", type="double", args=[]),
+    "createTriangle" : Function(name="createTriangle", type="Triangle", args=[{"type": "Point", "pre_type": None}, {"type": "Point", "pre_type": None}, {"type": "Point", "pre_type": None}]),
+    "render" : Function(name="render", type="unsassignable", args=[{"type": "Window", "pre_type": None}, {"type": "Shape", "pre_type": None}]),
+    "createPoint" : Function(name="createPoint", type="Point", args=[{"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}]),
+    "remove" : Function(name="remove", type="unassignable", args=[{"type": "Shape", "pre_type": None}]),
+    "inside" : Function(name="inside", type="bool", args=[{"type": "Point", "pre_type": None}, {"type": "Shape", "pre_type": None}]),
+    "setColor" : Function(name="setColor", type="unassignable", args=[{"type": "Shape", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}]),
+    "createCircle" : Function(name="createCircle", type="Circle", args=[{"type": "Point", "pre_type": None}, {"type": "int", "pre_type": None}]),
+    "createRectangle" : Function(name="createRectangle", type="Rectangle", args=[{"type": "Point", "pre_type": None}, {"type": "Point", "pre_type": None}])
 }
 
 scope_stack = None

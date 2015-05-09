@@ -145,7 +145,9 @@ class Parser:
                         else:
                             assign_expr = "int(" + assign_expr + ")"
 
-                    #@todo pre_type checking
+                    elif var["type"] != p[3].type and var["type"] in shapes_list:
+                        if var["type"] != "Shape":
+                            print_err("Invalid assignment: Trying to assign \"" + p[3].type + "\" to variable of type " + var["type"], p)
                     elif var["type"] != p[3].type:
                         print_err("Invalid assignment: Trying to assign \"" + p[3].type + "\" to variable of type " + var["type"], p)
 
