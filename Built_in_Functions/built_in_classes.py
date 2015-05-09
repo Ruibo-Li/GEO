@@ -23,7 +23,7 @@ class GRectangle(GShape):
     def __init__(self, point1, point2):
         super(GRectangle, self).__init__()
         vertices = [point1.geo, point2.geo]
-        self.geo = Rectangle(point1, point2)
+        self.geo = Rectangle(point1.geo, point2.geo)
         self.vertices = [point1, point2]
         self.color = None
 
