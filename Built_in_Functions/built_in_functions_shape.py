@@ -41,7 +41,10 @@ def render(window, shape):
 
 
 def remove(shape):
-    shape.geo.undraw()
+    if isinstance(shape, GTable):
+        shape.undrawTable()
+    else:
+        shape.geo.undraw()
 
 
 def move(shape, x, y):
