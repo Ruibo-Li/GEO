@@ -185,3 +185,14 @@ def hasSameColor(table, r, g, b):
 
 def shapeHaveSameColor(shape1, shape2):
     return shape1.color == shape2.color
+
+def RGB2Str(r, g, b):
+
+
+def getR(str):
+
+
+def getG(str):
+
+
+def getB(str):
