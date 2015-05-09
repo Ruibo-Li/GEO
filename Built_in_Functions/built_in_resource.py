@@ -130,7 +130,6 @@ def is_inside(p, shape):
             1].y)) and p.y < max(vers[0].y, vers[1].y)
 
 
-
 # determine on which side of the line(p1,p2) is the point p
 def sign(p, p1, p2):
     return (p.x - p2.x) * (p1.y - p2.y) - (p1.x - p2.x) * (p.y - p2.y)

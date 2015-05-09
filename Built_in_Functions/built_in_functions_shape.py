@@ -128,30 +128,36 @@ def shapeToTriangle(shape):
         return shape
     raise Exception('wrong shape')
 
+
 def shapeToRectangle(shape):
     if isinstance(shape, GRectangle):
         return shape
     raise Exception('wrong shape')
+
 
 def shapeToCircle(shape):
     if isinstance(shape, GCircle):
         return shape
     raise Exception('wrong shape')
 
+
 def shapeToLine(shape):
     if isinstance(shape, GLine):
         return shape
     raise Exception('wrong shape')
+
 
 def shapeToPoint(shape):
     if isinstance(shape, GPoint):
         return shape
     raise Exception('wrong shape')
 
+
 def shapeToTable(shape):
     if isinstance(shape, GTable):
         return shape
     raise Exception('wrong shape')
+
 
 # set the shape with the color specified by RGB value
 def setColor(shape, str):
@@ -163,9 +169,11 @@ def setColor(shape, str):
         shape.setColor(str)
     return None
 
+
 def getColor(shape):
     r,g,b = shape.color.get_color()
     return RGB2Str(r,g,b)
+
 
 def setCellColor(table, i, j, str):
     table.setCellColor(i, j, str)
@@ -179,8 +187,10 @@ def getCell(table, x, y):
 def getRow(table, x, y):
     return table.getRow(x, y)
 
+
 def getCol(table, x, y):
     return table.getCol(x, y)
+
 
 def getX(point):
     return point.x
@@ -188,6 +198,7 @@ def getX(point):
 
 def getY(point):
     return point.y
+
 
 def getVal(table, row, col):
     return table.getVal(row, col)
