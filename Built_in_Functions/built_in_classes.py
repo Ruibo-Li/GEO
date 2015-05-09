@@ -116,6 +116,8 @@ class Table(GShape):
         col = self.getCol(x, y)
         return self.cells[row*self.colNum + col]
 
+    def getVal(self, i, j):
+        return self.cells[i*self.colNum + j].value
 
     def getVal(self, i, j):
         return self.cells[i*self.colNum + j].value
