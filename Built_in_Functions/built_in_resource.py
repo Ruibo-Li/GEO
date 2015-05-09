@@ -124,7 +124,10 @@ def is_inside(p, shape):
         return p.x > min(vers[0].x, vers[1].x) and (p.x < max(vers[0].x, vers[1].x)) and (p.y > min(vers[0].y, vers[
             1].y)) and p.y < max(vers[0].y, vers[1].y)
     if isinstance(shape, GCircle):
-        return True
+        if get_distance(p, shape.center)<= shape.radius:
+            return True
+        else:
+            return False
 
 
 # determine on which side of the line(p1,p2) is the point p
