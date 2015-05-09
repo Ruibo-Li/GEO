@@ -1,5 +1,6 @@
 from parser import *
-import traceback, sys
+import traceback
+import sys
 
 
 p = Parser()
@@ -12,7 +13,7 @@ if len(sys.argv) == 2:
         flags["function_parsing"] = False
         init_scope_stack()
 
-        #Had to call lex.lex() to restart line counting
+        # Had to call lex.lex() to restart line counting
         p.lexer.lex()
 
         program = p.parser.parse(data)
@@ -26,20 +27,14 @@ if len(sys.argv) == 2:
 
     except Parse_Error:
         exit(1)
-    except :
+    except RuntimeError:
         traceback.print_exc()
 else:
     while True:
         try:
             expressions = raw_input("geo> ")
-        except :
+        except RuntimeError:
             traceback.print_exc()
             continue
         if expressions:
             p.parser.parse(expressions)
-
-
-
-
-
-
