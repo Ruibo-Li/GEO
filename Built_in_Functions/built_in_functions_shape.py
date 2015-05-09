@@ -34,15 +34,14 @@ def createText(p, text):
 
 
 def render(window, shape):
-    shape.geo.draw(window)
+    if isinstance(shape, GTable):
+        shape.drawTable(window)
+    else:
+        shape.geo.draw(window)
 
 
 def remove(shape):
     shape.geo.undraw()
-
-
-def drawTable(table, window):
-    table.drawTable(window)
 
 
 def move(shape, x, y):
