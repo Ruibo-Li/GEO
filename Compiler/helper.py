@@ -180,7 +180,8 @@ functions = {
     "randomInt" : Function(name="randomInt", type="int", args=[{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
     "listGet" : Function(name="listGet", type="any", match=1, args=[{"type": "any", "pre_type": "list"}, {"type": "int", "pre_type": None}]),
     "listSet" : Function(name="listSet", type="unassignable", args=[{"type": "any", "pre_type": "list", "match": [2]}, {"type": "int", "pre_type": None}, {"type": "any", "pre_type": None}]),
-    "printl" : Function(name="printl", type="unsassignable", args=[{"type" : "string", "pre_type": None}])
+    "printl" : Function(name="printl", type="unsassignable", args=[{"type" : "string", "pre_type": None}]),
+    "listExtend" : Function(name="listExtend", type="unassignable", pre_type="list", args=[{"type": "any", "pre_type": "list", "match": [1]}, {"type": "any", "pre_type": "list"}])
 }
 
 scope_stack = None
