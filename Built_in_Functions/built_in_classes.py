@@ -148,3 +148,10 @@ class GTable(GShape):
         color = GColor(getR(str), getG(str), getB(str))
         self.cells[i*self.colNum + j].color = color
         self.cells[i*self.colNum + j].geo.setFill(color.geo)
+
+    def hasSameColor(self):
+        color = self.cells[0].color
+        for cell in self.cells:
+            if cell.color != color:
+                return False
+        return True

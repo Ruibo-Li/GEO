@@ -138,18 +138,18 @@ def cast_shape(shape):
 
 
 # set the shape with the color specified by RGB value
-def setColor(shape, r, g, b):
+def setColor(shape, str):
     if isinstance(shape, GTriangle) or isinstance(shape, GRectangle) or isinstance(shape, GCircle):
-        color = GColor(r, g, b)
+        color = GColor(getR(str), getG(str), getB(str))
         shape.geo.setFill(color.geo)
         shape.color = color
     elif isinstance(shape, GTable):
-        shape.setColor(r, g, b)
+        shape.setColor(getR(str), getG(str), getB(str))
     return None
 
 
-def setCellColor(table, i, j, r, g, b):
-    table.setCellColor(i, j, r, g, b)
+def setCellColor(table, i, j, str):
+    table.setCellColor(i, j, str)
     return None
 
 
@@ -179,8 +179,8 @@ def getMouse(win):
     return createPoint(p.getX(), p.getY())
 
 
-def hasSameColor(table, r, g, b):
-    return table.hasSameColor(r, g, b)
+def hasSameColor(table):
+    return table.hasSameColor()
 
 
 def shapeHaveSameColor(shape1, shape2):
