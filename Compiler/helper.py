@@ -205,18 +205,23 @@ functions = {
     "remove" : Function(name="remove", type="unassignable", args=[{"type": "Shape", "pre_type": None}]),
     "move" : Function(name="move", type="unsassignable", args=[{"type": "Shape", "pre_type": None}, {"type": "int", "pre_type": None}, {"type": "int", "pre_type": None}]),
     "areSimilar" : Function(name="areSimilar", type="bool", args=[{"type" : "Triangle", "pre_type" : None}, {"type" : "Triangle", "pre_type" : None}]),
-
-    "getMouse" : Function(name="getMouse", type="Point", args=[{"type": "Window", "pre_type": None}]),
+    "getDistance" : Function(name="getDistance", type="double", args=[{"type": "Point", "pre_type": None}, {"type": "Point", "pre_type": None}]),
+    "isVertical" : Function(name="isVertical", type="bool", args=[{"type": "Line", "pre_type": None}]),
+    "cross" : Function(name="cross", type="bool", args=[{"type": "Line", "pre_type": None}, {"type": "Line", "pre_type": None}]),
+    "pointToLine" : Function(name="pointToLine", type="double", args=[{"type": "Point", "pre_type": None},{"type": "Line", "pre_type": None}]),
+    "intersect" : Function(name="intersect", type="bool", args=[{"type": "Shape", "pre_type": None}, {"type": "Shape", "pre_type": None}]),
     "inside" : Function(name="inside", type="bool", args=[{"type": "Point", "pre_type": None}, {"type": "Shape", "pre_type": None}]),
     "setColor" : Function(name="setColor", type="unassignable", args=[{"type": "Shape", "pre_type": None}, {"type": "string", "pre_type": None}]),
-    "getX" : Function(name="getX", type="int", args=[{"type": "Point", "pre_type": None}]),
-    "getY" : Function(name="getY", type="int", args=[{"type": "Point", "pre_type": None}]),
     "setCellColor" : Function(name="setCellColor", type="unassignable", args=[{"type": "Table", "pre_type": None},{"type": "string", "pre_type": None}]),
     "getCell" : Function(name="getCell", type="Rectangle", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
     "getRow" : Function(name="getRow", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
     "getCol" : Function(name="getCol", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
+    "getX" : Function(name="getX", type="int", args=[{"type": "Point", "pre_type": None}]),
+    "getY" : Function(name="getY", type="int", args=[{"type": "Point", "pre_type": None}]),
     "getVal" : Function(name="getVal", type="int", args=[{"type": "Table", "pre_type": None},{"type": "int", "pre_type": None},{"type": "int", "pre_type": None}]),
+    "getMouse" : Function(name="getMouse", type="Point", args=[{"type": "Window", "pre_type": None}]),
     "hasSameColor" : Function(name="hasSameColor", type="bool", args=[{"type": "Table", "pre_type": None}, {"type" : "string", "pre_type": None}]),
+    "shapeHaveSameColor" : Function(name="shapeHaveSameColor", type="bool", args=[{"type": "Shape", "pre_type": None}, {"type": "Shape", "pre_type": None}])
 }
 
 scope_stack = None
