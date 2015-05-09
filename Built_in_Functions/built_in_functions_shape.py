@@ -26,7 +26,7 @@ def createLine(point1, point2):
 
 
 def createTable(px, py, l, h, m, n):
-    return Table(px, py, l, h, m, n)
+    return GTable(px, py, l, h, m, n)
 
 
 def createText(p, text):
@@ -158,6 +158,8 @@ def getCell(table, x, y):
 def getRow(table, x, y):
     return table.get(x, y)
 
+def getCol(table, x, y):
+    return table.getCell(x, y)
 
 def getX(point):
     return point.x
@@ -165,11 +167,6 @@ def getX(point):
 
 def getY(point):
     return point.y
-
-
-def getCol(table, x, y):
-    return table.getCell(x, y)
-
 
 def getVal(table, row, col):
     return table.getVal(row, col)
