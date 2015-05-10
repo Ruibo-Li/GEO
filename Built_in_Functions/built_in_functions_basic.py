@@ -149,13 +149,13 @@ def RGB2Str(r, g, b):
     return s1 + s2 + s3
 
 
-def getR(str):
-    v1 = ord(str[0])
+def getR(st):
+    v1 = ord(st[0])
     if not 48 <= v1 <= 57:
         v1 -= 55
     else:
         v1 -= 48
-    v2 = ord(str[1])
+    v2 = ord(st[1])
     if not 48 <= v2 <= 57:
         v2 -= 55
     else:
@@ -163,13 +163,13 @@ def getR(str):
     return v1 * 16 + v2
 
 
-def getG(str):
-    v1 = ord(str[2])
+def getG(st):
+    v1 = ord(st[2])
     if not 48 <= v1 <= 57:
         v1 -= 55
     else:
         v1 -= 48
-    v2 = ord(str[3])
+    v2 = ord(st[3])
     if not 48 <= v2 <= 57:
         v2 -= 55
     else:
@@ -177,13 +177,13 @@ def getG(str):
     return v1 * 16 + v2
 
 
-def getB(str):
-    v1 = ord(str[4])
+def getB(st):
+    v1 = ord(st[4])
     if not 48 <= v1 <= 57:
         v1 -= 55
     else:
         v1 -= 48
-    v2 = ord(str[5])
+    v2 = ord(st[5])
     if not 48 <= v2 <= 57:
         v2 -= 55
     else:

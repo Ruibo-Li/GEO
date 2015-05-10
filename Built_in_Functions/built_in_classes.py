@@ -88,6 +88,7 @@ class GColor():
 
 class GTable(GShape):
     def __init__(self, px, py, l, h, m, n):
+        super(GTable, self).__init__()
         self.px = px
         self.py = py
         self.cellLength = l
@@ -133,24 +134,21 @@ class GTable(GShape):
         return self.cells[i*self.colNum + j].value
 
     def getColor(self, i, j):
-        return self.cells[i*self.colNum + j].value
-
-    def getColor(self, i, j):
         return self.cells[i*self.colNum + j].color
 
-    def setColor(self, str):
-        color = GColor(getR(str), getG(str), getB(str))
+    def setColor(self, st):
+        color = GColor(getR(st), getG(st), getB(st))
         for cell in self.cells:
             cell.color = color
             cell.geo.setFill(color.geo)
 
-    def setCellColor(self, i, j, str):
-        color = GColor(getR(str), getG(str), getB(str))
+    def setCellColor(self, i, j, st):
+        color = GColor(getR(st), getG(st), getB(st))
         self.cells[i*self.colNum + j].color = color
         self.cells[i*self.colNum + j].geo.setFill(color.geo)
 
-    def hasSameColor(self, str):
-        color = GColor(getR(str), getG(str), getB(str))
+    def hasSameColor(self, st):
+        color = GColor(getR(st), getG(st), getB(st))
         for cell in self.cells:
             if cell.color != color:
                 return False
