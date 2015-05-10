@@ -528,7 +528,8 @@ class Parser:
             return
 
         if p[3].type == "bool":
-            p[0] = "if " + p[3].text + ":\n" + indent(p[6])
+            body = p[6] if p[6] != "" else "pass"
+            p[0] = "if " + p[3].text + ":\n" + indent(body)
             pop_scope(p)
         else:
             print_err("if statement expects a boolean inside its parentheses, \"" + p[3].type + "\" given", p)
@@ -562,10 +563,11 @@ class Parser:
             return
 
         if p[3].type == "bool":
-            p[0] = "elif " + p[3].text + ":\n" + indent(p[6])
+            body = p[6] if p[6] != "" else "pass"
+            p[0] = "elif " + p[3].text + ":\n" + indent(body)
             pop_scope(p)
         else:
-            print_err("if statement expects a boolean inside its parentheses, \"" + p[3].type + "\" given", p)
+            print_err("ef statement expects a boolean inside its parentheses, \"" + p[3].type + "\" given", p)
 
 
     def p_else_statement(self, p):
@@ -580,7 +582,9 @@ class Parser:
         if len(p) == 1:
             p[0] = ""
         else:
-            p[0] = "else:\n" + indent(p[3])
+            body = p[3] if p[3] != "" else "pass"
+
+            p[0] = "else:\n" + indent(body)
             pop_scope(p)
 
     def p_compound_statement_list(self, p):
@@ -606,7 +610,10 @@ class Parser:
             p[0] = ""
             return
 
-        p[0] = p[1] + ":\n" + indent(p[2])
+        body = p[2] if p[2] != "" else "pass"
+
+        p[0] = p[1] + ":\n" + indent(body)
+
         pop_scope(p)
         flags["in_while"] -= 1
 
@@ -618,9 +625,12 @@ class Parser:
             p[0] = ""
             return
 
-        p[0] = "while " + p[3].text
-        flags["in_while"] += 1
-        push_scope(p)
+        if p[3].type == "bool":
+            p[0] = "while " + p[3].text
+            flags["in_while"] += 1
+            push_scope(p)
+        else:
+            print_err("while statement expects a boolean inside its parentheses, \"" + p[3].type + "\" given", p)
 
     def p_jump_statement(self, p):
         """

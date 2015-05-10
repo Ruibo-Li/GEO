@@ -1,7 +1,5 @@
-int maximum(int x, int y) := z
-	if (x > y)
-		z := x
-	el
-		x := y
-	end
+int a := 10
+
+while (a)
+	a := a -1 
 end

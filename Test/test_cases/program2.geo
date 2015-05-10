@@ -11,7 +11,7 @@ int main() := k
                 b := b - 1
                 a := a + 1
 
-                if (b % 2)
+                if (b % 2 = 1)
                         int b := 100
                         int a := 5000
                         printl("b = " + str(b))

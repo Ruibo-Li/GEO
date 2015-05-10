@@ -11,7 +11,7 @@ def main():
         print("a = " + str(a_3))
         b_2 = b_2 - 1
         a_3 = a_3 + 1
-        if b_2 % 2:
+        if b_2 % 2 == 1:
             b_4 = 100
             a_4 = 5000
             printl("b = " + str(b_4))
