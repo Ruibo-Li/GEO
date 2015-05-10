@@ -1,5 +1,5 @@
 int maximum(int x, int y) := z
-	if (x)
+	if (x > y)
 		z := x
 	el
 		x := y

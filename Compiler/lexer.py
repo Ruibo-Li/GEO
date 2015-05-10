@@ -1,37 +1,37 @@
 import ply.lex as lex
 
+
 class Lexer:
 
     reserved = {
-        'if' : 'K_IF',
-        'ef' : 'K_EF',
-        'el' : 'K_EL',
-        'end' : 'K_END',
-        'while' : 'K_WHILE',
-        'int' : 'K_INT',
-        'double' : 'K_DOUBLE',
-        'string' : 'K_STRING',
-        'null' : 'K_NULL',
-        'list' : 'K_LIST',
-        'Window' : 'K_WINDOW',
-        'Line' : 'K_LINE',
-        'Triangle' : 'K_TRIANGLE',
-        'Circle' : 'K_CIRCLE',
-        'Shape' : 'K_SHAPE',
-        'Rectangle' : 'K_RECTANGLE',
-        'Point' : 'K_POINT',
-        'Text' : 'K_TEXT',
-        'Table' : 'K_TABLE',
-        'bool' : 'K_BOOL',
-        'true' : 'K_TRUE',
-        'false' : 'K_FALSE',
-        'done' : 'K_DONE',
-        'continue' : 'K_CONTINUE',
-        'break' : 'K_BREAK'
+        'if': 'K_IF',
+        'ef': 'K_EF',
+        'el': 'K_EL',
+        'end': 'K_END',
+        'while': 'K_WHILE',
+        'int': 'K_INT',
+        'double': 'K_DOUBLE',
+        'string': 'K_STRING',
+        'null': 'K_NULL',
+        'list': 'K_LIST',
+        'Window': 'K_WINDOW',
+        'Line': 'K_LINE',
+        'Triangle': 'K_TRIANGLE',
+        'Circle': 'K_CIRCLE',
+        'Shape': 'K_SHAPE',
+        'Rectangle': 'K_RECTANGLE',
+        'Point': 'K_POINT',
+        'Text': 'K_TEXT',
+        'Table': 'K_TABLE',
+        'bool': 'K_BOOL',
+        'true': 'K_TRUE',
+        'false': 'K_FALSE',
+        'done': 'K_DONE',
+        'continue': 'K_CONTINUE',
+        'break': 'K_BREAK'
     }
 
-
-    # List of token names.   This is always required
+    # List of token names. This is always required
     tokens = [
         'ID',
         'GT',
@@ -91,7 +91,6 @@ class Lexer:
     def t_newline(self, t):
         r'\n+'
         t.lexer.lineno += len(t.value)
-
 
     def t_COMMENT(self, t):
          r'/\*(/|(\*)*[^\*])*(\*)+/|//.*'

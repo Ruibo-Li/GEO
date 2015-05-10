@@ -56,10 +56,10 @@ class Scope:
         pre_type = pre_type if pre_type and pre_type != '' else None
 
         self.vars[id] = {
-            'type' : type,
-            'pre_type' : pre_type,
-            'given_name' : id + '_' + str(len(scope_stack.scopes)),
-            'global_var' : global_var
+            'type': type,
+            'pre_type': pre_type,
+            'given_name': id + '_' + str(len(scope_stack.scopes)),
+            'global_var': global_var
         }
 
         return self.vars[id]['given_name']
@@ -78,7 +78,7 @@ class Function:
         self.pre_type = pre_type
         self.match = match
 
-    def getType(self, params):
+    def get_type(self, params):
         if self.type == "any":
             return params[self.match][1]
         return self.type
@@ -149,10 +149,10 @@ class Production:
 class Parse_Error(Exception):
     def __init__(self, value):
         self.value = value
+
     def __str__(self):
         return repr(self.value)
 
-#@todo add builtin functions
 functions = {
     "randomNum" : Function(
         name="randomNum",
@@ -693,6 +693,7 @@ functions = {
 
 scope_stack = None
 
+
 def init_scope_stack():
     global scope_stack
     scope_stack = ScopeStack()
@@ -701,12 +702,13 @@ init_scope_stack()
 
 # Flag set to true to ignore variable declaration checking
 flags = {
-    "ignore" : False,
-    "function_parsing" : True,
-    "in_function" : False,
-    "in_while" : 0, #nested whiles
-    "return_expression" : None
+    "ignore": False,
+    "function_parsing": True,
+    "in_function": False,
+    "in_while": 0,  # nested whiles
+    "return_expression": None
 }
+
 
 def push_scope(p):
     scope_stack.add_scope()
@@ -726,6 +728,7 @@ def add_variable_declaration(id, type, pre_type=None):
 
     return scope.add_declaration(id, type, pre_type, global_var)
 
+
 def check_variable_in_current_scope(var):
     scope = scope_stack.get_current_scope()
 
@@ -734,13 +737,14 @@ def check_variable_in_current_scope(var):
 
     return False
 
+
 def check_var_in_scope(var, p):
     if flags['ignore']:
         return 2
 
     if not scope_stack.get_var(p[1]):
         print_err("Variable \"" + p[1] + "\" hasn't been declared", p)
-        #exit?
+        # exit?
         return 0
 
     return 1
@@ -748,6 +752,7 @@ def check_var_in_scope(var, p):
 
 def get_var(var):
     return scope_stack.get_var(var)
+
 
 def get_initializer(type, pre_type=None):
     if pre_type == "list":
@@ -765,6 +770,7 @@ def get_initializer(type, pre_type=None):
         initializer = "False"
     return initializer
 
+
 def indent(p):
     if not p:
         return ""
@@ -774,8 +780,10 @@ def indent(p):
         ret.append("    " + s)
     return "\n".join(ret)
 
+
 def in_function_parsing_phase():
     return flags['function_parsing']
+
 
 def print_err(error, p=None, force=False, ignore=False):
     if in_function_parsing_phase() and not force:

@@ -160,23 +160,23 @@ def shapeToTable(shape):
 
 
 # set the shape with the color specified by RGB value
-def setColor(shape, str):
+def setColor(shape, st):
     if isinstance(shape, GTriangle) or isinstance(shape, GRectangle) or isinstance(shape, GCircle):
-        color = GColor(getR(str), getG(str), getB(str))
+        color = GColor(getR(st), getG(st), getB(st))
         shape.geo.setFill(color.geo)
         shape.color = color
     elif isinstance(shape, GTable):
-        shape.setColor(str)
+        shape.setColor(st)
     return None
 
 
 def getColor(shape):
-    r,g,b = shape.color.get_color()
-    return RGB2Str(r,g,b)
+    r, g, b = shape.color.get_color()
+    return RGB2Str(r, g, b)
 
 
-def setCellColor(table, i, j, str):
-    table.setCellColor(i, j, str)
+def setCellColor(table, i, j, st):
+    table.setCellColor(i, j, st)
     return None
 
 
@@ -209,8 +209,8 @@ def getMouse(win):
     return createPoint(p.getX(), p.getY())
 
 
-def hasSameColor(table, str):
-    return table.hasSameColor(str)
+def hasSameColor(table, st):
+    return table.hasSameColor(st)
 
 
 def shapeHaveSameColor(shape1, shape2):
