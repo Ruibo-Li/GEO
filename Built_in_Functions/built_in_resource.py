@@ -119,18 +119,20 @@ def is_inside(p, shape):
             return True
         else:
             return False
-    vers = shape.vertices
-    if isinstance(shape, GTriangle):
+    elif isinstance(shape, GTriangle):
+        vers = shape.vertices
         b1 = sign(p, vers[0], vers[1]) < 0
         b2 = sign(p, vers[1], vers[2]) < 0
         b3 = sign(p, vers[2], vers[0]) < 0
         return (b1 == b2) and (b2 == b3)
-    if isinstance(shape, GRectangle):
+    elif isinstance(shape, GRectangle):
+        vers = shape.vertices
         return p.x > min(vers[0].x, vers[1].x) and (p.x < max(vers[0].x, vers[1].x)) and (p.y > min(vers[0].y, vers[
             1].y)) and p.y < max(vers[0].y, vers[1].y)
-    if isinstance(shape, GTable):
+    elif isinstance(shape, GTable):
         return shape.px + shape.colNum*shape.cellLength >= p.x >= shape.px and \
             shape.py <= p.y <= shape.py + shape.rowNum*shape.cellHeight
+    return False
 
 
 # determine on which side of the line(p1,p2) is the point p
