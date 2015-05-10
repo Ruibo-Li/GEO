@@ -3,7 +3,7 @@
 rm -fr test_cases/*_actual.py
 
 echo "-----------------------------------------"
-for i in {1..16}
+for i in {1..21}
     do
         program="test_cases/program$i.geo"
         benchmark="test_cases/program$i.py"
