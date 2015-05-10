@@ -130,6 +130,9 @@ class GTable(GShape):
             return self.cells[row*self.colNum + col]
         return None
 
+    def getACell(self, i, j):
+        return self.cells[i*self.colNum + j]
+
     def getVal(self, i, j):
         return self.cells[i*self.colNum + j].value
 

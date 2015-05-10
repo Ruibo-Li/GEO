@@ -184,6 +184,10 @@ def getCell(table, x, y):
     return table.getCell(x, y)
 
 
+def getACell(table, i, j):
+    return table.getACell(i, j)
+
+
 def getRow(table, x, y):
     return table.getRow(x, y)
 
