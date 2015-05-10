@@ -49,7 +49,6 @@ class Scope:
         self.vars = {}
 
     def add_declaration(self, id, type, pre_type=None, global_var=False, p=None):
-        #@todo add line number to error by saving it with the var
         if id in self.vars:
             print_err("Variable '" + id + "' was already declared", p)
 
