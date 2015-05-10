@@ -624,6 +624,15 @@ functions = {
                 {"type": "int", "pre_type": None}
         ]
     ),
+    "getACell" : Function(
+        name="getACell",
+        type="Rectangle",
+        args=[
+            {"type": "Table", "pre_type": None},
+            {"type": "int", "pre_type": None},
+            {"type": "int", "pre_type": None}
+        ]
+    ),
     "getRow" : Function(
         name="getRow",
         type="int",
