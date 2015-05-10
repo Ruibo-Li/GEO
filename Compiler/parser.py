@@ -2,6 +2,7 @@ import ply.yacc as yacc
 from lexer import *
 from helper import *
 
+
 class Parser:
 
     def p_program(self, p):
@@ -9,7 +10,6 @@ class Parser:
         program : statement_list
         """
         p[0] = p[1]
-
 
     def p_statement_list(self, p):
         """
@@ -21,14 +21,12 @@ class Parser:
         else:
             p[0] = p[1] + ("\n" if p[1] else "") + p[2]
 
-
     def p_statement(self, p):
         """
         statement : function_declaration
         statement : compound_statement
         """
         p[0] = p[1]
-
 
     def p_compound_statement(self, p):
         """
@@ -46,7 +44,6 @@ class Parser:
             p[0] = p[1]
         else:
             p[0] = p[1].text
-
 
     def p_function_call_statement(self, p):
         """
@@ -67,15 +64,13 @@ class Parser:
 
         function.check_parameters(p[3], p)
 
-        type = function.getType(p[3])
+        type = function.get_type(p[3])
 
         param_list = [arg[0] for arg in p[3]]
         args_text = ", ".join(param_list)
 
         text = p[1] + "(" + args_text + ")"
         p[0] = Production(type=type, text=text, production_type="function_call", pre_type=function.pre_type)
-
-
 
     def p_opt_parameter_list(self, p):
         """
@@ -101,7 +96,6 @@ class Parser:
         else:
             p[0] = [(p[1].text, p[1].type, p[1].pre_type)]
 
-
     def p_variable_declaration(self, p):
         """
         variable_declaration : pre_type_modifier type ID
@@ -111,8 +105,6 @@ class Parser:
         if in_function_parsing_phase():
             p[0] = ""
             return
-
-        #@todo add all information about var. Process type modifier
 
         if len(p) == 4:
             if p[1] == "":
@@ -125,7 +117,7 @@ class Parser:
                 var_name = add_variable_declaration(p[3], p[2], p[1])
                 p[0] = var_name + " = []"
 
-            #Assignment (No declaration)
+            # Assignment (No declaration)
             elif p[2] == ":=":
                 var_name = p[1]
 
@@ -174,13 +166,10 @@ class Parser:
             elif p[2] != p[5].type:
                 print_err("Invalid assignment: Trying to assign \"" + pre_type + " " + p[5].type + "\" to variable of type \"" + p[1] + " " +p[2] + "\"", p)
 
-
             if p[1] != pre_type:
                 print_err("Invalid assignment: Trying to assign \"" + pre_type + " " + p[5].type + "\" to variable of type \"" + p[1] + " " +p[2] + "\"", p)
 
-
             p[0] = var_name + " = " + assign_expr
-
 
     def p_pre_type_modifier(self, p):
         """
@@ -210,7 +199,6 @@ class Parser:
         """
         p[0] = p[1]
 
-
     def p_expression(self, p):
         """
         expression : expression boolean_operator expression_pre_term
@@ -237,7 +225,6 @@ class Parser:
 
         else:
             p[0] = p[1]
-
 
     def p_expression_pre_term(self, p):
         """
@@ -276,7 +263,6 @@ class Parser:
         else:
             p[0] = p[1]
 
-
     def p_expression_term(self, p):
         """
         expression_term : expression_term comparator expression_factor
@@ -311,7 +297,6 @@ class Parser:
         else:
             p[0] = p[1]
 
-
     def p_expression_factor(self, p):
         """
         expression_factor : expression_factor op unary_expression
@@ -329,7 +314,6 @@ class Parser:
 
             op = p[2]
 
-            #@todo no number type. Change to double or int
             if op == "+":
                 if p[1].type in numbers_list and p[3].type in numbers_list:
                     if p[1].type == p[3].type:
@@ -342,13 +326,13 @@ class Parser:
                     print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type, p)
 
             elif op == "-" or op == "/" or op == "*" or op == "%":
-                 if p[1].type in numbers_list and p[3].type in numbers_list:
+                if p[1].type in numbers_list and p[3].type in numbers_list:
                     if p[1].type == p[3].type:
                         expr_factor.type = p[3].type
                     else:
                         expr_factor.type = "double"
-                 else:
-                     print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type, p)
+                else:
+                    print_err("\"" + op + "\" symbol is not compatible with " + p[1].type + " " + p[3].type, p)
 
             expr_factor.text = p[1].text + " " + p[2] + " " + p[3].text
             expr_factor.children = [p[1], p[2], p[3]]
@@ -356,7 +340,6 @@ class Parser:
             p[0] = expr_factor
         else:
             p[0] = p[1]
-
 
     def p_op(self, p):
         """
@@ -368,7 +351,6 @@ class Parser:
         """
         p[0] = p[1]
 
-
     def p_boolean_operator(self, p):
         """
         boolean_operator : AND
@@ -379,7 +361,6 @@ class Parser:
         else:
             p[0] = "or"
 
-
     def p_primary_expression(self, p):
         """
         primary_expression : constant
@@ -388,12 +369,11 @@ class Parser:
         primary_expression : MINUS primary_expression
         primary_expression : null_expression
         """
-        #@todo type checking
+
         if len(p) == 3:
             if p[2].type in numbers_list:
                 if p[2].pre_type == "list":
                     print_err("Expressions of type list are not compatible with - operator", p)
-
                 p[2].text = "-" + p[2].text
                 p[0] = p[2]
             else:
@@ -401,7 +381,6 @@ class Parser:
                 p[0] = p[2]
         else:
             p[0] = p[1]
-
 
     def p_id_expression(self, p):
         """
@@ -426,7 +405,6 @@ class Parser:
 
         p[0] = prod
 
-
     def p_constant(self, p):
         """
         constant : boolean_constant
@@ -436,13 +414,11 @@ class Parser:
         p[1].production_type = "constant"
         p[0] = p[1]
 
-
     def p_string_constant(self, p):
         """
         string_constant : STRING
         """
         p[0] = Production(type="string", text=p[1], children=[p[1]])
-
 
     def p_boolean_constant(self, p):
         """
@@ -456,7 +432,6 @@ class Parser:
             text = "False"
 
         p[0] = Production(type="bool", text=text, children=[p[1]])
-
 
     def p_unary_expression(self, p):
         """
@@ -508,7 +483,6 @@ class Parser:
         """
         p[0] = p[1]
 
-
     def p_eq_comparator(self, p):
         """
         eq_comparator : EQ
@@ -523,13 +497,11 @@ class Parser:
         """
         p[0] = p[1]
 
-
     def p_integer_number(self, p):
         """
         integer_number : INTEGER
         """
         p[0] = Production(type="int", text=p[1], children=[p[1]])
-
 
     def p_double_number(self, p):
         """
@@ -546,7 +518,6 @@ class Parser:
         """
         p[0] = p[1] + ("\n" if p[2] else "") + p[2] + ("\n" if p[3] else "") + p[3]
 
-
     def p_if_statement(self, p):
         """
         if_statement : K_IF LPAREN expression RPAREN \
@@ -561,7 +532,6 @@ class Parser:
         #@todo make sure it's bool
         p[0] = "if " + p[3].text + ":\n" + indent(p[6])
         pop_scope(p)
-
 
     def p_else_if_statement_list(self, p):
         """
@@ -580,7 +550,6 @@ class Parser:
             else:
                 p[0] = p[1] + "\n" + p[2]
 
-
     def p_else_if_statement(self, p):
         """
         else_if_statement : K_EF LPAREN expression RPAREN \
@@ -592,10 +561,8 @@ class Parser:
             p[0] = ""
             return
 
-        #@todo ensure boolean
         p[0] = "elif " + p[3].text + ":\n" + indent(p[6])
         pop_scope(p)
-
 
     def p_else_statement(self, p):
         """
@@ -612,7 +579,6 @@ class Parser:
             p[0] = "else:\n" + indent(p[3])
             pop_scope(p)
 
-
     def p_compound_statement_list(self, p):
         """
         compound_statement_list :
@@ -626,7 +592,6 @@ class Parser:
             else:
                 # @todo indent
                 p[0] = p[1] + "\n" + p[2]
-
 
     def p_iteration_statement(self, p):
         """
@@ -642,7 +607,6 @@ class Parser:
         pop_scope(p)
         flags["in_while"] -= 1
 
-
     def p_iteration_statement_header(self, p):
         """
         iteration_statement_header : K_WHILE LPAREN expression RPAREN
@@ -651,11 +615,9 @@ class Parser:
             p[0] = ""
             return
 
-        #@todo check is boolean expression
         p[0] = "while " + p[3].text
         flags["in_while"] += 1
         push_scope(p)
-
 
     def p_jump_statement(self, p):
         """
@@ -671,7 +633,6 @@ class Parser:
             if flags["in_function"]:
                 p[0] = "return " + flags["return_expression"]
             else:
-                #@todo Don't know if this should go here or not
                 p[0] = ""
                 print_err("\"" + p[1] + "\"" + " can only be used inside a function", p, False, True)
 
@@ -687,7 +648,6 @@ class Parser:
             else:
                 p[0] = ""
                 print_err("\"" + p[1] + "\"" + " can only be used inside a while loop", p, False, True)
-
 
     def p_function_declaration(self, p):
         """
@@ -706,7 +666,6 @@ class Parser:
         if in_function_parsing_phase():
             p[0] = ""
 
-
     def p_function_header(self, p):
         """
         function_header : pre_type_modifier type ID LPAREN push_scope opt_argument_list RPAREN ASSIGN set_ignore_flag \
@@ -717,7 +676,6 @@ class Parser:
             print_err("Error: redeclaration of function " + p[3], p)
 
         f = Function(type=p[2], name=p[3])
-
 
         text = None
         ret_expression = None
@@ -732,7 +690,7 @@ class Parser:
         arg_list = [arg[0] for arg in p[6]]
         args_text = ", ".join(arg_list)
 
-        #if not an ID
+        # if not an ID
         ret_expression = p[10].text
         if p[10].production_type == 'id':
             if not check_variable_in_current_scope(p[10].text):
@@ -772,7 +730,6 @@ class Parser:
         if in_function_parsing_phase():
             functions[p[3]] = f
 
-
     def p_opt_argument_list(self, p):
         """
         opt_argument_list : argument_list
@@ -793,7 +750,6 @@ class Parser:
         else:
             p[0] = [p[1]]
 
-
     def p_argument(self, p):
         """
         argument : pre_type_modifier type ID
@@ -806,8 +762,7 @@ class Parser:
         var_name = add_variable_declaration(p[3], p[2], pre_type)
         p[0] = (var_name, p[2], pre_type)
 
-
-    #Should only be called by the grammar. Call push_scope if needed instead
+    # Should only be called by the grammar. Call push_scope if needed instead
     def p_push_scope(self, p):
         """
         push_scope :
