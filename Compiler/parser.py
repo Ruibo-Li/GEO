@@ -108,13 +108,13 @@ class Parser:
 
         if len(p) == 4:
             if p[1] == "":
-                var_name = add_variable_declaration(p[3], p[2], p[1])
+                var_name = add_variable_declaration(p[3], p[2], p[1], p)
 
                 initializer = get_initializer(p[2])
 
                 p[0] = var_name + " = " + initializer
             elif p[1] == "list":
-                var_name = add_variable_declaration(p[3], p[2], p[1])
+                var_name = add_variable_declaration(p[3], p[2], p[1], p)
                 p[0] = var_name + " = []"
 
             # Assignment (No declaration)
@@ -148,7 +148,7 @@ class Parser:
 
         # Declaration and assignment
         elif len(p) == 6:
-            var_name = add_variable_declaration(p[3], p[2], p[1])
+            var_name = add_variable_declaration(p[3], p[2], p[1], p)
             assign_expr = p[5].text
 
             pre_type = p[5].pre_type if p[5].pre_type else ""
@@ -707,7 +707,7 @@ class Parser:
         ret_expression = p[10].text
         if p[10].production_type == 'id':
             if not check_variable_in_current_scope(p[10].text):
-                var_name = add_variable_declaration(p[10].text, p[2], p[1])
+                var_name = add_variable_declaration(p[10].text, p[2], p[1], p)
 
                 initializer = get_initializer(p[2], p[1])
 
@@ -772,7 +772,7 @@ class Parser:
         if p[1] != "":
             pre_type = p[1]
 
-        var_name = add_variable_declaration(p[3], p[2], pre_type)
+        var_name = add_variable_declaration(p[3], p[2], pre_type, p)
         p[0] = (var_name, p[2], pre_type)
 
     # Should only be called by the grammar. Call push_scope if needed instead
@@ -800,7 +800,7 @@ class Parser:
 
     def p_error(self, p):
         if p:
-            print_err("unknown text at \"" + p.value + "\": line no " + str(p.lineno))
+            print_err("unknown text at \"" + p.value + "\". Line no " + str(p.lineno))
         else:
             print_err("Unexpected end of file")
 

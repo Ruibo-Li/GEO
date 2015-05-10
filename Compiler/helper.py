@@ -48,10 +48,10 @@ class Scope:
     def __init__(self):
         self.vars = {}
 
-    def add_declaration(self, id, type, pre_type=None, global_var=False):
+    def add_declaration(self, id, type, pre_type=None, global_var=False, p=None):
         #@todo add line number to error by saving it with the var
         if id in self.vars:
-            print_err("Variable '" + id + "' was already declared")
+            print_err("Variable '" + id + "' was already declared", p)
 
         pre_type = pre_type if pre_type and pre_type != '' else None
 
@@ -718,7 +718,7 @@ def pop_scope(p):
     scope_stack.pop_scope()
 
 
-def add_variable_declaration(id, type, pre_type=None):
+def add_variable_declaration(id, type, pre_type=None, p=None):
     scope = scope_stack.get_current_scope()
 
     global_var = False
@@ -726,7 +726,7 @@ def add_variable_declaration(id, type, pre_type=None):
     if not pre_type and scope_stack.scopes.index(scope) == 0:
         global_var = True
 
-    return scope.add_declaration(id, type, pre_type, global_var)
+    return scope.add_declaration(id, type, pre_type, global_var, p)
 
 
 def check_variable_in_current_scope(var):
@@ -790,7 +790,8 @@ def print_err(error, p=None, force=False, ignore=False):
         return
 
     if p:
-        error = error + ": " + str(p.lineno(1))
+        lineError = ": " + str(p.lineno(1)) if p.lineno(1) != 0 else ""
+        error = error + lineError
 
     print >>sys.stderr, error
 

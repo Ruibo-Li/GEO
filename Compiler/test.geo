@@ -1,5 +1,5 @@
 int a := 10
 
-while (a)
-	a := a -1 
-end
+int b := 10
+
+int a := 20
