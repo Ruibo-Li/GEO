@@ -112,8 +112,6 @@ class Parser:
             p[0] = ""
             return
 
-        #@todo add all information about var. Process type modifier
-
         if len(p) == 4:
             if p[1] == "":
                 var_name = add_variable_declaration(p[3], p[2], p[1])
@@ -329,7 +327,6 @@ class Parser:
 
             op = p[2]
 
-            #@todo no number type. Change to double or int
             if op == "+":
                 if p[1].type in numbers_list and p[3].type in numbers_list:
                     if p[1].type == p[3].type:
@@ -388,7 +385,6 @@ class Parser:
         primary_expression : MINUS primary_expression
         primary_expression : null_expression
         """
-        #@todo type checking
         if len(p) == 3:
             if p[2].type in numbers_list:
                 if p[2].pre_type == "list":
@@ -557,10 +553,11 @@ class Parser:
             p[0] = ""
             return
 
-
-        #@todo make sure it's bool
-        p[0] = "if " + p[3].text + ":\n" + indent(p[6])
-        pop_scope(p)
+        if p[3].type == "bool":
+            p[0] = "if " + p[3].text + ":\n" + indent(p[6])
+            pop_scope(p)
+        else:
+            print_err("if statement expects a boolean inside its parentheses, \"" + p[3].type + "\" given", p)
 
 
     def p_else_if_statement_list(self, p):
@@ -592,9 +589,11 @@ class Parser:
             p[0] = ""
             return
 
-        #@todo ensure boolean
-        p[0] = "elif " + p[3].text + ":\n" + indent(p[6])
-        pop_scope(p)
+        if p[3].type == "bool":
+            p[0] = "elif " + p[3].text + ":\n" + indent(p[6])
+            pop_scope(p)
+        else:
+            print_err("if statement expects a boolean inside its parentheses, \"" + p[3].type + "\" given", p)
 
 
     def p_else_statement(self, p):
@@ -624,7 +623,6 @@ class Parser:
             if p[1] == "":
                 p[0] = p[2]
             else:
-                # @todo indent
                 p[0] = p[1] + "\n" + p[2]
 
 
@@ -671,7 +669,6 @@ class Parser:
             if flags["in_function"]:
                 p[0] = "return " + flags["return_expression"]
             else:
-                #@todo Don't know if this should go here or not
                 p[0] = ""
                 print_err("\"" + p[1] + "\"" + " can only be used inside a function", p, False, True)
 
