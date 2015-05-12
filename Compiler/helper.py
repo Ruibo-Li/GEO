@@ -463,6 +463,7 @@ functions = {
     ),
     "createText" : Function(
         name="createText",
+
         type="Text",
         args=[
                 {"type": "Point", "pre_type": None},

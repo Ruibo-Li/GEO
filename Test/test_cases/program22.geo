@@ -1,6 +1,6 @@
 // Sample program
 
-nt width := 500
+int width := 500
 int height := 400
 
 Window my_window := createWindow("Hello world", width, height)
